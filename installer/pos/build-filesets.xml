@@ -1,0 +1,424 @@
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/installer/pos/build-filesets.xml /rgbustores_13.4x_generic_branch/9 2011/10/27 16:35:34 sgu Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    sgu       10/26/11 - remove jpos jars from installer bundle
+ *    drbarber  10/23/11 - BugDB 13243217: Auto : Build the database with
+ *                         qatest (qa_data)
+ *    tzgarba   08/19/11 - Removed dbbuild scripts from POS bin directory
+ *    drbarber  07/21/11 - BUG 12573758: Removing RSA client libraries
+ *    cgreene   06/07/11 - update to first pass of removing pospal project
+ *    mchellap  05/24/11 - Remove Axis wsdl4j.jar from product distribution
+ *    ohorne    05/17/11 - removed installer.common.isd.server.fileset
+ *    mchellap  04/08/11 - Axis2 rampart 1.5.1 migration
+ *    sgu       11/11/10 - added more rsa jars to the rsa fileset
+ *    blarsen   11/05/10 - Fixing installer.common.rsa.fileset. (The jars have
+ *                         moved.) Added installer.config.rsa.fileset to
+ *                         support better control of when these files are
+ *                         included and not included. (Only included if RSA is
+ *                         enabled.)
+ *    asinton   09/15/10 - Update ISD libraries.
+ *    asinton   08/04/10 - make posfoundation.properties writable.
+ *    asinton   08/03/10 - Install ISD jars only when desired by installer
+ *                         choice.
+ *    cgreene   07/09/10 - rename returns-jaxb jar
+ *    asinton   06/25/10 - Make sql and parameter xmls writable.
+ *    mchellap  06/23/10 - Added billpay filesets
+ *    mszekely  06/16/10 - BUG 9720757: Adding 6 additional languages
+ *    djenning  05/20/10 - add jaxb implementation
+ *    cgreene   05/17/10 - upgrade to commons-httpclient 3.1
+ *    mchellap  05/14/10 - Fixed PSI classpath issues
+ *    cgreene   05/11/10 - remove axis.jar
+ *    cgreene   05/10/10 - remove 360 form common folder
+ *    cgreene   04/14/10 - rename deployment jars oracle.stores
+ *    cgreene   04/12/10 - ignore ant-contrib since it will be copied
+ *                         individually
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    mszekely  02/22/10 - BUG 9388040: Install xercesImpl.jar from thirdparty
+ *                         area
+ *    abondala  02/10/10 - refactored axis2 jar files
+ *    abondala  02/03/10 - updated
+ *    abondala  01/30/10 - use commons-logging-1.1.1.jar in all applications to
+ *                         be consistent
+ *    abondala  01/02/10 - Update Header date
+ *    mchellap  12/23/09 - Code clean up: Removed psib.jar and psir.jar
+ *    mchellap  09/25/09 - BUG#8932741 Enable RM Webservice authentication
+ *    mchellap  09/16/09 - BUG 8848037 CSF Changes : Added CSF filesets
+ *    asinton   04/07/09 - Build and installer support to package verifone
+ *                         screens.
+ *    mszekely  02/12/09 - BUG 8241193 - ItemBasket integration
+ *    mszekely  01/28/09 - BUG 7639984 Inventory Reservation DueFiles
+ *    mszekely  01/23/09 - BUG 7639984 Inventory Reservation support
+ *    asinton   01/13/09 - removed unnecessary files and updated build/install.
+ *    mszekely  12/11/08 - BUG 7635240 PosPal cleanup
+ *    mszekely  11/12/08 - BUG 7555392 RSA for installers
+ *
+ * ===========================================================================
+ */
+-->
+<project name="install-pos-filesets" basedir=".">
+
+    <target name="init-filesets" depends="init-properties,init-installer-filesets,init-staging-filesets,init-deploy-filesets, post-deploy-filesets"/>
+
+    <target name="init-installer-filesets">
+
+        <fileset id="installer.common.xerces.fileset" dir="${installer.product.shared.common.dir}">
+            <include name="common/lib/ext/xercesimpl.jar"/>
+        </fileset>
+
+        <fileset id="installer.common.rsa.fileset" dir="${installer.product.shared.common.dir}">
+            <include name="lib/oracle.stores.rsakeystore.jar" />
+        </fileset>
+
+    	<!-- User entered RSA library files -->
+        <fileset id="installer.common.rsa.userinput.fileset" dir="${installer.product.user.rsa.dir}">
+            <include name="kmsclient.jar" />
+            <include name="cryptoj.jar" />
+            <include name="sslj.jar" />
+        </fileset>
+
+        <fileset id="installer.config.rsa.fileset" dir="${installer.product.shared.config.dir}">
+            <include name="rsa_config.properties" />
+        </fileset>
+
+        <fileset id="installer.common.base.fileset" dir="${installer.product.common.dir}">
+            <include name="**/*"/>
+            <exclude name="db/lib/ant-contrib-1.0b3.jar"/>
+            <exclude name="lib/ext/sim-ws.jar"/>
+        	<exclude name="lib/ext/sim-ws-secure.jar"/>
+        </fileset>
+
+        <fileset id="installer.shared.common.base.fileset" dir="${installer.product.shared.common.dir}">
+            <include name="**/*"/>
+            <exclude name="lib/oracle.stores.rsakeystore.jar"/>
+            <exclude name="lib/kmsclient.jar"/>
+            <exclude name="lib/locales"/>
+            <exclude name="lib/locales/*"/>
+            <exclude name="lib/auditlog_resource_all.jar" />
+            <exclude name="${installer.pos.bin.fileset.exclude}"/>
+        </fileset>
+
+        <!-- Set up bin directory file sets -->
+        <fileset id="installer.pos.bin.fileset" dir="${installer.product.bin.dir}">
+            <include name="**/*"/>
+            <exclude name="${installer.pos.bin.fileset.exclude}"/>
+        </fileset>
+
+        <fileset id="installer.shared.pos.bin.fileset" dir="${installer.product.shared.bin.dir}">
+            <include name="**/*"/>
+            <exclude name="${installer.pos.bin.fileset.exclude}"/>
+        </fileset>
+
+        <fileset id="installer.pos.config.fileset" dir="${installer.product.install.type.dir}/config">
+            <include name="**/*"/>
+        </fileset>
+
+        <fileset id="installer.shared.pos.config.fileset" dir="${installer.product.shared.config.dir}">
+            <include name="**/*"/>
+            <exclude name="rsa_config.properties"/>
+        </fileset>
+
+        <fileset id="installer.common.sim.fileset" dir="${installer.product.common.dir}/lib/ext">
+            <!--<include name="sim-ws.jar"/>-->
+            <include name="jaxb-libs.jar"/>
+
+        	<!-- jaxb is also required for centralized customer retrieval and transaction retrieval -->
+        </fileset>
+
+        <fileset id="installer.common.sim.stub.secure.fileset" dir="${installer.product.common.dir}/lib/ext">
+            <include name="sim-ws-secure.jar"/>
+        </fileset>
+
+    	<fileset id="installer.common.sim.stub.fileset" dir="${installer.product.common.dir}/lib/ext">
+            <include name="sim-ws.jar"/>
+        </fileset>
+
+        <fileset id="installer.server.rm.fileset" dir="${installer.product.lib.dir}">
+            <include name="oracle.stores.posrm.jar" />
+            <include name="oracle.stores.returns-jaxb.jar" />
+        </fileset>
+
+        <!-- CSF Jars -->
+        <fileset id="installer.common.csf.fileset" dir="${installer.product.shared.common.dir}">
+            <include name="lib/ext/commons-logging-1.1.1.jar"/>
+            <include name="lib/ext/identitystore.jar"/>
+            <include name="lib/ext/jacc-api.jar"/>
+            <include name="lib/ext/jacc-spi.jar"/>
+            <include name="lib/ext/jps-api.jar"/>
+            <include name="lib/ext/jps-common.jar"/>
+            <include name="lib/ext/jps-ee.jar"/>
+            <include name="lib/ext/jps-internal.jar"/>
+            <include name="lib/ext/jps-manifest.jar"/>
+            <include name="lib/ext/jps-mbeans.jar"/>
+            <include name="lib/ext/jps-unsupported-api.jar"/>
+            <include name="lib/ext/jps-upgrade.jar"/>
+            <include name="lib/ext/jps-wls.jar"/>
+            <include name="lib/ext/jsr173_1.0_api.jar"/>
+            <include name="lib/ext/oraclepki.jar"/>
+            <include name="lib/ext/osdt_cert.jar"/>
+            <include name="lib/ext/osdt_core.jar"/>
+            <include name="lib/ext/retail-public-security-api.jar"/>
+            <include name="lib/ext/sjsxp.jar"/>
+        </fileset>
+
+        <!-- CSF Config files -->
+        <fileset id="installer.pos.csfconfig.fileset" dir=".">
+             <include name="jazn-data.xml"/>
+             <include name="jps-config.xml"/>
+             <include name="cwallet.sso"/>
+         </fileset>
+
+       <!-- Axis2 Jars -->
+       <fileset id="installer.common.axis2.fileset" dir="${installer.product.shared.common.dir}">
+             <include name="lib/ext/axiom-api-1.2.10.jar"/>
+             <include name="lib/ext/axiom-dom-1.2.10.jar"/>
+             <include name="lib/ext/axiom-impl-1.2.10.jar"/>
+             <include name="lib/ext/axis2-adb-1.5.4.jar"/>
+             <include name="lib/ext/axis2-codegen-1.5.4.jar"/>
+             <include name="lib/ext/axis2-kernel-1.5.4.jar"/>
+             <include name="lib/ext/axis2-mex-1.2.jar"/>
+             <include name="lib/ext/axis2-transport-http-1.5.4.jar"/>
+             <include name="lib/ext/axis2-transport-local-1.5.4.jar"/>
+             <include name="lib/ext/commons-httpclient-3.1.jar"/>
+             <include name="lib/ext/commons-logging-1.1.1.jar"/>
+             <include name="lib/ext/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
+             <include name="lib/ext/httpcore-4.0.jar"/>
+           	 <!-- Using jaxen from thirdparty/oracle/oas -->
+             <!--<include name="lib/ext/jaxen-1.1.1.jar"/>-->
+             <include name="lib/ext/neethi-2.0.4.jar"/>
+             <include name="lib/ext/woden-api-1.0M8.jar"/>
+             <include name="lib/ext/woden-impl-dom-1.0M8.jar"/>
+             <include name="lib/ext/com.oracle.ws.orawsdl_1.1.0.0.jar"/>
+             <include name="lib/ext/wss4j-1.5.10.jar"/>
+             <include name="lib/ext/wstx-asl-3.2.9.jar"/>
+             <include name="lib/ext/XmlSchema-1.4.3.jar"/>
+             <include name="lib/ext/opensaml-2.2.3.jar"/>
+             <include name="lib/ext/rampart-core-1.5.1.jar"/>
+             <include name="lib/ext/rampart-policy-1.5.1.jar"/>
+             <include name="lib/ext/rampart-trust-1.5.1.jar"/>
+             <include name="lib/ext/xmlsec-1.4.2.jar"/>
+             <include name="lib/ext/xmltooling-1.2.0.jar"/>
+             <include name="lib/ext/rampart-1.5.1.mar"/>
+             <include name="lib/ext/rahas-1.5.1.mar"/>
+        </fileset>
+
+        <fileset id="installer.common.billpay.fileset" dir="${installer.product.shared.lib.dir}">
+            <include name="oracle.stores.billpay.jar" />
+        </fileset>
+
+        <fileset id="installer.common.sim.client.fileset" dir="${installer.product.shared.lib.dir}">
+            <include name="oracle.stores.psi.jar" />
+        </fileset>
+
+        <fileset id="installer.common.inventory.inquiry.fileset" dir="${installer.product.shared.lib.dir}">
+            <include name="oracle.stores.psi.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.receipts.fileset" dir="${installer.product.dir}/client/receipts">
+            <exclude name="*_mock.bpt"/>
+            <exclude name="*.ser"/>
+            <include name="**/*"/>
+        </fileset>
+
+        <fileset id="installer.pos.lib.classes.fileset" dir="${installer.product.dir}/shared/lib/com">
+            <include name="**/*"/>
+        </fileset>
+
+        <fileset id="installer.pos.lib.jars.fileset" dir="${installer.product.dir}">
+            <include name="shared/lib/oracle.stores.pos.jar"/>
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.en.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/en.jar"/>
+            <include name="common/lib/locales/auditlog_resource_en.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.de.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/de.jar"/>
+            <include name="common/lib/locales/auditlog_resource_de.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.fr.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/fr.jar"/>
+            <include name="common/lib/locales/auditlog_resource_fr.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.es.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/es.jar"/>
+            <include name="common/lib/locales/auditlog_resource_es.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.ja.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/ja.jar"/>
+            <include name="common/lib/locales/auditlog_resource_ja.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.ko.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/ko.jar"/>
+            <include name="common/lib/locales/auditlog_resource_ko.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.ru.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/ru.jar"/>
+            <include name="common/lib/locales/auditlog_resource_ru.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.zh.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/zh.jar"/>
+            <include name="common/lib/locales/auditlog_resource_zh.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.zh_TW.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/zh_TW.jar"/>
+            <include name="common/lib/locales/auditlog_resource_zh_TW.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.pt.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/pt.jar"/>
+            <include name="common/lib/locales/auditlog_resource_pt.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.it.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/it.jar"/>
+            <include name="common/lib/locales/auditlog_resource_it.jar" />
+        </fileset>
+
+        <!-- Adding additional languages -->
+        <fileset id="installer.pos.lib.locale.tr.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/tr.jar"/>
+            <include name="common/lib/locales/auditlog_resource_tr.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.hu.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/hu.jar"/>
+            <include name="common/lib/locales/auditlog_resource_hu.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.nl.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/nl.jar"/>
+            <include name="common/lib/locales/auditlog_resource_nl.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.el.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/el.jar"/>
+            <include name="common/lib/locales/auditlog_resource_el.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.pl.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/pl.jar"/>
+            <include name="common/lib/locales/auditlog_resource_pl.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.sv.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/sv.jar"/>
+            <include name="common/lib/locales/auditlog_resource_sv.jar" />
+        </fileset>
+
+        <fileset id="installer.pos.lib.locale.hr.fileset" dir="${installer.product.dir}/shared">
+            <include name="lib/locales/hr.jar"/>
+            <include name="common/lib/locales/auditlog_resource_hr.jar" />
+        </fileset>
+
+ </target>
+
+    <target name="init-staging-filesets">
+
+        <fileset id="staging.install.fileset" dir="${installer.staging.dir}">
+            <include name="**/*"/>
+            <exclude name="pos/bin/db.xml"/>
+            <exclude name="pos/bin/db.properties"/>
+            <exclude name="pos/bin/dbbuild.bat"/>
+            <exclude name="pos/bin/scratchpad.bat"/>
+            <exclude name="pos/bin/dbbuild.sh"/>
+            <exclude name="pos/bin/scratchpad.sh"/>
+        </fileset>
+
+        <fileset id="staging.common.scripts.windows.fileset" dir="${installer.staging.common.dir}">
+            <include name="common_env.bat"/>
+        </fileset>
+
+        <fileset id="staging.common.scripts.unix.fileset" dir="${installer.staging.common.dir}">
+            <include name="common_env.sh"/>
+        </fileset>
+
+        <fileset id="staging.server.unused.fileset" dir="${installer.staging.dir}">
+            <include name="pos/config/centraloffice.jndi.properties"/>
+            <include name="pos/config/backoffice.jndi.properties"/>
+            <include name="pos/config/manager/PosLDBDataTechnician.xml"/>
+        </fileset>
+
+        <fileset id="staging.client.unused.fileset" dir="${installer.staging.dir}">
+            <include name="pos/config/*.jndi.properties"/>
+            <include name="pos/config/EnterpriseDataTechnician.xml"/>
+            <include name="pos/config/DefaultDataTechnician.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.conduit.storeserver.fileset" dir="${installer.staging.pos.config.conduit.dir}">
+            <include name="StoreServerConduit.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.conduit.client.fileset" dir="${installer.staging.pos.config.conduit.dir}">
+            <include name="ClientConduit.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.conduit.collapsed.fileset" dir="${installer.staging.pos.config.conduit.dir}">
+            <include name="CollapsedConduitFF.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.manager.journal.fileset" dir="${installer.staging.pos.config.manager.dir}">
+            <include name="PosJournalManager.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.device.posdevices.fileset" dir="${installer.staging.pos.config.technician.dir}">
+            <include name="PosDeviceTechnician.xml"/>
+        </fileset>
+
+        <fileset id="staging.pos.bin.device.posenv.fileset" dir="${installer.staging.pos.bin.dir}">
+            <include name="posenv.sh"/>
+            <include name="posenv.bat"/>
+        </fileset>
+
+        <fileset id="staging.pos.config.images-excluded.fileset" dir="${installer.staging.pos.config.dir}">
+            <exclude name="**/*.gif"/>
+            <exclude name="**/*.jpg"/>
+            <exclude name="**/*.jpeg"/>
+            <exclude name="**/*.pcx"/>
+            <exclude name="**/*.icf"/>
+        </fileset>
+
+    </target>
+
+    <target name="init-deploy-filesets">
+    </target>
+
+    <target name="post-deploy-filesets">
+        <fileset id="post-install.writable.filesets" dir="${input.install.directory}">
+            <include name="common/db/sql/logs/*.sql"/>
+            <include name="pos/**/*.log"/>
+            <include name="pos/bin/IDDI/**/*"/>
+            <include name="pos/bin/*.lock"/>
+            <include name="pos/config/DefaultDataTechnician.xml"/>
+            <include name="pos/config/conduit/StoreServerConduit.xml"/>
+            <include name="pos/config/technician/DefaultConnectorTechnician.xml"/>
+            <include name="pos/config/technician/DefaultDataTechnician.xml"/>
+            <include name="pos/config/technician/EnterpriseDataTechnician.xml"/>
+            <include name="pos/config/technician/RetailTransactionTechnician.xml"/>
+            <include name="pos/config/conduit/ClientConduit.xml"/>
+            <include name="pos/config/parameter/**/*.xml"/>
+            <include name="pos/config/technician/PosLDBDataTechnician.xml"/>
+        	<include name="pos/config/BillPaySimulatorConfig.xml"/>
+            <include name="pos/config/posfoundation.properties"/>
+        </fileset>
+        <fileset id="post-install.writable.rsa.filesets" dir="${input.install.directory}">
+            <include name="pos/bin/cwallet.sso"/>
+            <include name="pos/config/rsa_config.properties"/>
+        </fileset>
+    </target>
+
+</project>

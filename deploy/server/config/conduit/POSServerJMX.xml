@@ -1,0 +1,52 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/conduit/POSServerJMX.xml /rgbustores_13.4x_generic_branch/2 2011/09/16 15:17:07 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+     $Log:
+      2    360Commerce 1.1         12/21/2007 2:01:48 PM  Charles D. Baker CR
+           29815 - removal of HTML JMX adapter in favor of JMX included with
+           JVM 1.5. This code and configuration files were reviewed by Ed
+           Thorne, Ron Haight and Dan Baker.
+      1    360Commerce 1.0         5/2/2006 5:31:21 PM    Charles D. Baker
+     $
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+
+<!DOCTYPE JMXCONFIG SYSTEM "classpath://oracle/retail/stores/foundation/jmx/jmxconfig.dtd">
+<JMXCONFIG >
+    <MBEANS>
+
+		<MBEAN mbeanclass="oracle.retail.stores.commext.utility.jmx.ShutdownHook"
+		       mbeanname="Adapter:name=shutdownhook">
+		</MBEAN>
+
+        <!-- REMOVE THE COMMENTS AROUND THE NEXT SECTION TO ACTIVATE THE SYSTEM OUT -->
+	    <!--
+        <MBEAN       mbeanclass="oracle.retail.stores.foundation.jmx.sysout.SysoutConnector"
+                     mbeanname="Adapter:name=system_out" >
+     		<PROPERTY propname="delineateMessages" propvalue="true" proptype="BOOLEAN"/>
+        </MBEAN>
+        -->
+
+
+     </MBEANS>
+
+</JMXCONFIG>
+

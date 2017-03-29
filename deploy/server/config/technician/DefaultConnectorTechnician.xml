@@ -1,0 +1,334 @@
+<?xml version='1.0' ?>
+<!--
+       /* ===========================================================================
+* Copyright (c) 1998, 2011, Oracle and/or its affiliates. All rights reserved. 
+    * ===========================================================================
+    * ===========================================================================
+    * NOTES
+    * <other useful comments, qualifications, etc.>
+    *
+    * MODIFIED    (MM/DD/YY)
+    *    rsnayak   04/15/11 - XbranchMerge rsnayak_bug-12360131 from main
+    *    rsnayak   03/17/11 - pos sim webservice security fix
+    *    rsnayak   03/08/11 - pos lat intergration for label batch
+    *    cgreene   02/01/11 - refactor commext for payment auth
+    *    ohorne    12/16/10 - Siebel web services now use Language Independent
+    *                         Code (LIC) values instead of LDC values
+    *    sgu       09/27/10 - change Siebel timeout seconds
+    *    sgu       09/24/10 - fix identation
+    *    sgu       09/24/10 - add security properties to siebel webservice config
+    *    sgu       09/24/10 - fix identation
+    *    sgu       09/24/10 - add service and operation properties to sibel
+    *                         webservice connector to initiate service client
+    *    ohorne    08/05/10 - changed default value for globalViewMode to 'All'
+    *    ohorne    08/04/10 - configurable OrderTypes
+    *    mchellap  07/29/10 - Changes for ORSIM webservice migration
+    *    ohorne    07/14/10 - added viewMode properties to
+    *                         SiebelOrderQueryFormatter
+    *    ohorne    07/13/10 - Siebel mappings now loaded via Spring
+    *    mchellap  06/22/10 - Added billpay connectors
+    *    ohorne    06/11/10 - replaced SiebelOrderUnlockFormatter with
+    *                         SiebelOrderCancelFormatter and
+    *                         SiebelOrderRejectFormatter
+    *    ohorne    06/09/10 - added ActionCode and MaxLineItems properties to
+    *                         SiebelOrderQueryFormatter
+    *    ohorne    06/05/10 - added Siebel formatter mapping for securityType
+    *                         property
+    *    abondala  06/03/10 - wiring the formatter to a connector to translate the
+    *                         reponse during the flow if the message is sent from
+    *                         a QueuedForward connector where the message is taken
+    *                         from the file queue and then given to the chained
+    *                         connector.
+    *    abondala  06/02/10 - updated
+    *    abondala  06/02/10 - Siebel updte flow
+    *    abondala  06/01/10 - Siebel integration changes
+    *    ohorne    05/27/10 - UserName is now UserID for Siebel Formatters
+    *    ohorne    05/26/10 - removed passwordAlias option from Siebel formatters
+    *    abondala  05/27/10 - Siebel installer updates
+    *    abondala  05/27/10 - Installer changes for Siebel CMU integration
+    *    ohorne    05/24/10 - siebel: added WebServiceConnector,use of
+    *                         statusCodeFactoryClass and removed user/pw from
+    *                         endpointurls
+    *    sgu       05/14/10 - add lock and unlock message routes
+    *    sgu       05/13/10 - add jars necessary to run external order manager
+    *    sgu       05/12/10 - configure ExternalOrderQuery formatter
+    *    sgu       05/12/10 - add message routes for ExternalOrderQuery
+    *    mchellap  03/24/10 - SIM Webservice user password encryption
+    *    abhayg    03/23/10 - Enabling POS SIM WebService Security
+    *    abhayg    03/23/10 - POS SIM secure webservice invocation
+    *    nkgautam  01/28/10 - Added config property to UIN Formatter
+    *    abondala  01/02/10 - Update Header date
+    *    nganesh   12/21/09 - Added placeholder for PSI URL in UIN Service
+    *    nkgautam  12/18/09 - Installer change for serialisation
+    *    nkgautam  12/16/09 - Configuring connector for UIN Service
+    *    vikini    12/15/09 - Chainging comments on DefaultConnectorTechnician
+    *    vikini    12/15/09 - Configuring connectors for ItemBasket and
+    *                         InventoryInquiry
+    *    vikini    12/14/09 - adding Inventory Inquiry connector Info
+    *    vikini    12/10/09 - Installer for Itembasket and InventoryUpdate
+    *    vikini    12/10/09 - changes to Itembasket
+    *    vikini    12/10/09 - changes for Item Inquiry
+    *    mchellap  12/01/09 - Fixed item basket installer issue
+    *    nkgautam  11/20/09 - itembasket installer changes
+    * ===========================================================================
+    */
+-->
+<!DOCTYPE MSGDISP SYSTEM "classpath://oracle/retail/stores/platform/client/message/config/msgdisp.dtd">
+
+<MSGDISP monitorinterval="300">
+    <COMMENT>
+        Default ConnectorTechnician configuration XML. This technician uses this
+        XML script to define how messages are routed for integrating ORPOS with
+        ORSIM, Siebel, and BillPay. Messages from ORPOS are routed by the
+        dispatcher and first formatted by Formatters, then sent to Connectors to
+        connect to the external applications. 
+    </COMMENT>
+
+    <!--  Message formatters are listed below. Formatters must implement 
+         oracle.retail.stores.commext.message.formatter.FormatterIfc -->
+    <FORMATTERS>
+        <FORMATTER name="PassThruFormatter" javaclass="oracle.retail.stores.commext.message.formatter.PassThroughFormatter" />
+
+        <!-- Begin ItemBasket Formatter
+        <FORMATTER name="ItemBasketFormatter" javaclass="oracle.retail.stores.pos.services.inventoryconnector.ItemBasketFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://retail.oracle.com/SIM/ItemBasket/v1" />
+            <PROPERTY propname="OperationLocalPart" propvalue="LookupItemBasketRequest"/>
+            <PROPERTY propname="nameSpace" propvalue="ns1"/>
+            <PROPERTY propname="action" propvalue="urn:processMultiplePosTxns" />
+            <PROPERTY propname="endPtURL" propvalue="$PSI_URL" />
+            <PROPERTY propname="svcName" propvalue="LookupItemBasketRequest" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+        </FORMATTER>
+        End ItemBasket Formatter -->
+
+        <!-- Begin Inventory Inquiry
+        <FORMATTER name="InvEnquiryFormatter" javaclass="oracle.retail.stores.pos.formatter.PSIInventoryInquiryFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://retail.oracle.com/SIM/InventoryLookup/v1" />
+            <PROPERTY propname="OperationLocalPart" propvalue="LookupInventoryRequest"/>
+            <PROPERTY propname="nameSpace" propvalue="ns1"/>
+            <PROPERTY propname="action" propvalue="urn:processMultiplePosTxns" />
+            <PROPERTY propname="endPtURL" propvalue="$PSI_URL" />
+            <PROPERTY propname="svcName" propvalue="LookupInventoryRequest" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+        </FORMATTER>
+        End Inventory Inquiry -->
+
+        <!-- Begin UinService
+        <FORMATTER name="UinFormatter" javaclass="oracle.retail.stores.pos.formatter.PSIUINLookUpFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://retail.oracle.com/SIM/UINSerialization/v1" />
+            <PROPERTY propname="OperationLocalPart" propvalue="UINInquiryRequest"/>
+            <PROPERTY propname="nameSpace"          propvalue="ns1"/>
+            <PROPERTY propname="configFileName"     propvalue="classpath://config/SerialValidationStatusMapping.xml"/>
+            <PROPERTY propname="action" propvalue="urn:processMultiplePosTxns" />
+            <PROPERTY propname="endPtURL" propvalue="$PSI_URL" />
+            <PROPERTY propname="svcName" propvalue="UinRequest" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+        </FORMATTER>
+        End UinService -->
+
+        <!--Begin Siebel
+        <FORMATTER name="SiebelOrderQueryFormatter" javaclass="oracle.retail.stores.formatter.siebel.QueryFormatter">
+            <PROPERTY propname="myStoreUserID" propvalue="$SIEBEL_MYSTORE_USER"/>
+            <PROPERTY propname="myStorePassword" propvalue="$SIEBEL_MYSTORE_PASSWD"/>
+            <PROPERTY propname="globalUserID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="globalPassword" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+            <PROPERTY propname="maxLineItems" propvalue="50"/>
+            <PROPERTY propname="myStoreViewMode" propvalue="Organization"/>
+            <PROPERTY propname="globalViewMode" propvalue="All"/>
+            <PROPERTY propname="sellActionCode" propvalue="New"/>
+            <PROPERTY propname="returnActionCode" propvalue="Deleted"/>
+            <PROPERTY propname="supportedOrderTypes" propvalue="Sales Order"/>
+        </FORMATTER>
+
+        <FORMATTER name="SiebelOrderLockFormatter" javaclass="oracle.retail.stores.formatter.siebel.StatusUpdateFormatter">
+            <PROPERTY propname="function" propvalue="Lock"/>
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+        </FORMATTER>
+
+        <FORMATTER name="SiebelOrderCancelFormatter" javaclass="oracle.retail.stores.formatter.siebel.StatusUpdateFormatter">
+            <PROPERTY propname="function" propvalue="Cancel"/>
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+        </FORMATTER>
+
+        <FORMATTER name="SiebelOrderRejectFormatter" javaclass="oracle.retail.stores.formatter.siebel.StatusUpdateFormatter">
+            <PROPERTY propname="function" propvalue="Reject"/>
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+        </FORMATTER>
+        End Siebel-->
+
+        <!-- Begin BillPay
+        <FORMATTER name="BillPayLookupFormatter" javaclass="oracle.retail.stores.pos.formatter.BillPayLookupFormatter"/>
+        End BillPay -->
+        
+        
+       <!-- Begin LAT Webservice
+        <FORMATTER name="LATRequestTicketFormatter" javaclass="oracle.retail.stores.pos.formatter.LATRequestTicketFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://app.label.stores.retail.oracle" />
+            <PROPERTY propname="OperationLocalPart" propvalue="createLabelBatch"/>
+            <PROPERTY propname="nameSpace" propvalue="ns1"/>
+            <PROPERTY propname="action" propvalue="urn:createLabelBatch" />
+            <PROPERTY propname="endPtURL" propvalue="$LAT_URL" />
+            <PROPERTY propname="svcName" propvalue="WSRequestTicketService" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+        </FORMATTER>
+        End LAT -->   
+
+    </FORMATTERS>
+
+    <!-- Connectors to external systems are listed below. Connector classes must
+        implement oracle.retail.stores.commext.message.connector.ConnectorIfc -->
+     <CONNECTORS>
+        <CONNECTOR name="PassThruConnector"
+            javaclass="oracle.retail.stores.commext.connector.PassThruConnector"/>
+
+        <!-- Do not change Service factory unless using any other method to
+        invoke Sim webservice .Provider URL Needs points to the SIM web service.
+        -->
+        <!-- Begin ItemBasket Connector
+        <CONNECTOR name="InventoryService" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+            <PROPERTY propname="passwdEnabled" propvalue="$PASSWD_EN"/>
+            <PROPERTY propname="userID" propvalue="$PSI_WS_UID"/>
+            <PROPERTY propname="password" propvalue="$PSI_WS_PWD"/>
+            <PROPERTY propname="rampartFileLocation" propvalue="classpath://config/rampart-policy-sim.xml"/>
+            <PROPERTY propname="securityModule" propvalue="rampart" />
+        </CONNECTOR>
+        End ItemBasket Connector -->
+
+        <!-- Begin Inventory Inquiry
+        <CONNECTOR name="InventoryInquiryConnector" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+            <PROPERTY propname="passwdEnabled" propvalue="$PASSWD_EN"/>
+            <PROPERTY propname="userID" propvalue="$PSI_WS_UID"/>
+            <PROPERTY propname="password" propvalue="$PSI_WS_PWD"/>
+            <PROPERTY propname="rampartFileLocation" propvalue="classpath://config/rampart-policy-sim.xml"/>
+            <PROPERTY propname="securityModule" propvalue="rampart" />
+        </CONNECTOR>
+        End Inventory Inquiry -->
+
+        <!-- Begin UinService
+            <CONNECTOR name="UinService" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+            <PROPERTY propname="passwdEnabled" propvalue="$PASSWD_EN"/>
+            <PROPERTY propname="userID" propvalue="$PSI_WS_UID"/>
+            <PROPERTY propname="password" propvalue="$PSI_WS_PWD"/>
+            <PROPERTY propname="rampartFileLocation" propvalue="classpath://config/rampart-policy-sim.xml"/>
+            <PROPERTY propname="securityModule" propvalue="rampart" />
+        </CONNECTOR>
+        End UinService -->
+
+        <!-- Generic webservice connector
+        <CONNECTOR name="GenericWebService" javaclass="oracle.retail.stores.commext.connector.webservice.GenericWebServiceConnector"/>
+        -->
+
+        <!--Begin Siebel
+        <CONNECTOR name="SiebelWebService" javaclass="oracle.retail.stores.connector.siebel.WebServiceConnector">
+            <PROPERTY propname="serviceName" propvalue="ORPOS_Order_WebService" />
+            <PROPERTY propname="operationNameSpace" propvalue="http://siebel.com/ORPOS/Order" />
+            <PROPERTY propname="operation" propvalue="ORPOS_QueryPage" />
+            <PROPERTY propname="userID" propvalue="$SIEBEL_MYSTORE_USER"/>
+        </CONNECTOR>
+        End Siebel-->
+
+        <!-- Begin BillPay
+        <CONNECTOR name="BillPayLookupConnector" javaclass="oracle.retail.stores.commext.connector.technician.TechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="BillPayTechnician" />
+        </CONNECTOR>
+        End BillPay -->
+        
+        <!-- Begin LAT Webservice
+        <CONNECTOR name="LATWebService" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+            <PROPERTY propname="serviceName" propvalue="WSRequestTicket" />
+            <PROPERTY propname="passwdEnabled" propvalue="$PASSWD_EN"/>
+            <PROPERTY propname="operationNameSpace" propvalue="http://app.label.stores.retail.oracle" />
+            <PROPERTY propname="operation" propvalue="createLabelBatch" />
+            <PROPERTY propname="userID" propvalue="$LAT_USER"/>
+            <PROPERTY propname="password" propvalue="$LAT_WS_PWD"/>
+            <PROPERTY propname="rampartFileLocation" propvalue="classpath://config/rampart-policy.xml"/>
+            <PROPERTY propname="securityModule" propvalue="rampart" />
+            
+        </CONNECTOR>
+         End LAT -->   
+     
+    </CONNECTORS>
+
+    <!-- Rules to determine actions to be performed after a route is run are
+        listed below. Rule classes must implement
+        oracle.retail.stores.commext.message.rule.SubsequentActionRuleIfc -->
+    <RULES>
+        <RULE name="RetryRule"
+            javaclass="oracle.retail.stores.commext.message.rule.RetryActionRule">
+        </RULE>
+        <RULE name="StopOnErrorRule"
+            javaclass="oracle.retail.stores.commext.message.rule.StopOnErrorActionRule">
+        </RULE>
+    </RULES>
+
+    <!-- The actual routes that the message dispatcher can send messages to are
+        listed below. -->
+    <MSGROUTERS>
+        <DEFAULTROUTER rule="RetryRule">
+            <MSGCONNECTOR connector="PassThruConnector" formatter="PassThruFormatter" />
+        </DEFAULTROUTER>
+
+        <!--  Begin ItemBasket Message Route
+        <MSGROUTER type="ITEM_BASKET" rule="RetryRule">
+            <MSGCONNECTOR connector="InventoryService" formatter="ItemBasketFormatter" />
+        </MSGROUTER>
+        End Item BasketMessage Route -->
+
+        <!--  Begin Inventory Inquiry
+        <MSGROUTER type="INVENTORY_INQUIRY" rule="RetryRule">
+            <MSGCONNECTOR connector="InventoryInquiryConnector" formatter="InvEnquiryFormatter" />
+        </MSGROUTER>
+        End Inventory Inquiry -->
+
+        <!-- Begin UinService
+        <MSGROUTER type="UinRequest" rule="RetryRule">
+            <MSGCONNECTOR connector="UinService" formatter="UinFormatter" />
+        </MSGROUTER>
+        End UinService -->
+
+        <!--Begin Siebel
+        <MSGROUTER type="ExternalOrderQuery" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SiebelWebService" formatter="SiebelOrderQueryFormatter" />
+        </MSGROUTER>
+        <MSGROUTER type="ExternalOrderLock" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SiebelWebService" formatter="SiebelOrderLockFormatter" />
+        </MSGROUTER>
+        <MSGROUTER type="ExternalOrderCancel" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SiebelWebService" formatter="SiebelOrderCancelFormatter" />
+        </MSGROUTER>
+        <MSGROUTER type="ExternalOrderReject" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SiebelWebService" formatter="SiebelOrderRejectFormatter" />
+        </MSGROUTER>
+        End Siebel-->
+
+        <!-- Begin BillPay
+        <MSGROUTER type="BILL_PAY_LOOKUP" rule="RetryRule">
+            <MSGCONNECTOR connector="BillPayLookupConnector" formatter="BillPayLookupFormatter" />
+        </MSGROUTER>
+        End BillPay -->
+        
+         <!-- Begin LAT Webservice
+        <MSGROUTER type="LAT_REQUEST_TICKET" rule="RetryRule">
+            <MSGCONNECTOR connector="LATWebService" formatter="LATRequestTicketFormatter" />
+        </MSGROUTER>
+        End LAT -->
+        
+
+    </MSGROUTERS>
+
+</MSGDISP>

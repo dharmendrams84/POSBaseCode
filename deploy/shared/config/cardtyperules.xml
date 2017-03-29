@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/shared/config/cardtyperules.xml /rgbustores_13.4x_generic_branch/1 2011/10/04 14:46:35 asinton Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   10/03/11 - Moved cardtyperules from client to shared in order
+ *                         to support card type determination on store server
+ *    asinton   09/30/11 - moved from client to shared
+ *    ohorne    06/16/11 - added Housecard mask
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Add ADE Header
+ *
+ * ===========================================================================
+ */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ *
+ * $Log:
+ *  1    360Commerce 1.0         12/13/2005 4:46:52 PM  Barry A. Pape
+ * $
+ * Revision 1.2  2004/02/12 16:46:36  mcs
+ * Forcing head revision
+ *
+ * Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+ * updating to pvcs 360store-current
+ *
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE CardRules SYSTEM "classpath://config/cardtyperules.dtd">
+
+<!--
+Note; The 'name' attribute of the 'Card' element should use same definitions
+      as defined in:
+      oracle.retail.stores.domain.utility.CardTypeIfc,  (Credit types)
+-->
+
+<CardRules>
+    <Card name="Visa" type="Credit" typeCode="1">
+        <Rule>
+            <Length>13</Length>
+            <Length>16</Length>
+        </Rule>
+        <Rule>
+            <Mask>4</Mask>
+        </Rule>
+    </Card>
+    <Card name="MasterCard" type="Credit" typeCode="1">
+        <Rule>
+            <Length>16</Length>
+        </Rule>
+        <Rule>
+            <BinRange>
+                <MinValue>51</MinValue>
+                <MaxValue>55</MaxValue>
+            </BinRange>
+        </Rule>
+    </Card>
+    <Card name="AmEx" type="Credit" typeCode="1">
+        <Rule>
+            <Length>15</Length>
+        </Rule>
+        <Rule>
+            <Mask>34</Mask>
+            <Mask>37</Mask>
+        </Rule>
+    </Card>
+    <Card name="Discover" type="Credit" typeCode="1">
+        <Rule>
+            <BinRange>
+                <MinValue>601100</MinValue>
+                <MaxValue>601109</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>601120</MinValue>
+                <MaxValue>601149</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>601174</MinValue>
+                <MaxValue>601174</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>601177</MinValue>
+                <MaxValue>601179</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>601186</MinValue>
+                <MaxValue>601199</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>644000</MinValue>
+                <MaxValue>649999</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>650000</MinValue>
+                <MaxValue>659999</MaxValue>
+            </BinRange>
+        </Rule>
+    </Card>
+    <Card name="Diners" type="Credit" typeCode="1">
+        <Rule>
+            <BinRange>
+                <MinValue>3000</MinValue>
+                <MaxValue>3059</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>3095</MinValue>
+                <MaxValue>3095</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>3600</MinValue>
+                <MaxValue>3699</MaxValue>
+            </BinRange>
+            <BinRange>
+                <MinValue>3800</MinValue>
+                <MaxValue>3899</MaxValue>
+            </BinRange>
+        </Rule>
+        <Rule>
+            <Length>14</Length>
+        </Rule>
+    </Card>
+    <!-- House Cards are private label cards not branded
+         by major Credit Card providers (i.e. Visa, Mastercard) --> 
+    <Card name="HouseCard" type="Credit" typeCode="1">
+        <Rule>
+            <Mask>7511</Mask>
+            <Mask>2840</Mask>
+        </Rule>
+    </Card>
+    <Card name="JCB" type="Credit" typeCode="1">
+        <Rule>
+            <BinRange>
+                <MinValue>352800</MinValue>
+                <MaxValue>358999</MaxValue>
+            </BinRange>
+        </Rule>
+    </Card>
+    <Card name="GiftCard" type="GiftCard" typeCode="8">
+        <Rule>
+            <Mask>60038</Mask>
+        </Rule>
+        <Rule>
+            <Length>13</Length>
+            <Length>14</Length>
+            <Length>15</Length>
+            <Length>16</Length>
+            <Length>17</Length>
+            <Length>18</Length>
+            <Length>19</Length>
+        </Rule>
+    </Card>
+</CardRules>

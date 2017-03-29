@@ -1,0 +1,91 @@
+/* ===========================================================================
+* Copyright (c) 2010, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/externalorder/processordersend/UpdateTransactionShipmentSite.java /rgbustores_13.4x_generic_branch/1 2011/05/05 14:05:59 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    sgu       06/22/10 - added the logic to process multiple send package
+ *                         instead of just on per order
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    sgu       05/18/10 - set external send flag on shipping packages
+ *    acadar    05/17/10 - temporarily rename the package
+ *    acadar    05/17/10 - fix compilation error
+ *    acadar    05/17/10 - incorporated feedback from code review
+ *    acadar    05/14/10 - initial version for external order processing
+ *    acadar    05/14/10 - initial version
+ * ===========================================================================
+ */
+package oracle.retail.stores.pos.services.externalorder.processordersend;
+
+// java imports
+
+
+import java.util.List;
+
+import oracle.retail.stores.pos.services.common.CommonLetterIfc;
+import oracle.retail.stores.domain.financial.ShippingMethodIfc;
+import oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc;
+import oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc;
+import oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc;
+import oracle.retail.stores.domain.transaction.TransactionTotalsIfc;
+import oracle.retail.stores.foundation.tour.application.Letter;
+import oracle.retail.stores.foundation.tour.ifc.BusIfc;
+import oracle.retail.stores.foundation.tour.ifc.LetterIfc;
+import oracle.retail.stores.pos.services.PosSiteActionAdapter;
+
+
+/**
+ * Retrieves send method selected, adds to transaction totals, journals current
+ * send information
+ * @author acadar
+ */
+public class UpdateTransactionShipmentSite extends PosSiteActionAdapter
+{
+
+
+    /**
+     *  Serial version UID
+     */
+    private static final long serialVersionUID = -8862341318678888310L;
+
+
+    /**
+     * Retrieves selected shipping method and calculate totals.
+     *
+     * @param bus the bus arriving at this site
+     */
+    public void arrive(BusIfc bus)
+    {
+       ProcessOrderSendCargo cargo = (ProcessOrderSendCargo) bus.getCargo();
+       LetterIfc letter = new Letter(CommonLetterIfc.DONE);
+
+
+       ShippingMethodIfc selectedMethodOfShipping = cargo.getShippingMethod();
+       SaleReturnTransactionIfc transaction = cargo.getTransaction();
+
+       TransactionTotalsIfc totals = transaction.getTransactionTotals();
+
+       //Add send packages info
+       SendPackageLineItemIfc sendPackage = transaction.addSendPackageInfo(selectedMethodOfShipping, cargo.getShipToCustomer());
+       sendPackage.setExternalSendFlag(true);
+
+      //Assign Send label count on Sale Return Line Items
+      List<SaleReturnLineItemIfc> items = cargo.getSaleReturnSendLineItems();
+
+      for (SaleReturnLineItemIfc item : items)
+      {
+    	  item.setItemSendFlag(true);
+    	  item.setSendLabelCount(totals.getItemSendPackagesCount());
+      }
+
+       transaction.updateTransactionTotals();   // Must do this to force tax recalculation
+       totals.setBalanceDue(totals.getGrandTotal());
+       bus.mail(letter, BusIfc.CURRENT);
+
+    }
+
+
+}

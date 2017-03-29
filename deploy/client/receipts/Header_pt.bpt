@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Header_pt.bpt /main/13 2010/09/06 14:05:55 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    sgu       07/07/10 - add order number
+ *    nkgautam  06/22/10 - bill pay changes
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   01/22/10 - set fixedWidth=10 onto getFirstName elements
+ *    abondala  01/02/10 - Update Header date
+ *    mjwallac  10/26/09 - customer name on receipt instead of customer number
+ *    mjwallac  10/23/09 - customer name on receipt instead of customer number
+ *    cgreene   04/22/09 - remove reentryMode from parameter bean since
+ *                         transaction knows and call transaction method from
+ *                         ankle and header
+ *    cgreene   03/25/09 - hide sales assoc label if assoc is null
+ *    cgreene   03/19/09 - add type 26=Order
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - made Sales: element depend on presence of actual
+ *                         sales assoc id
+ *    cgreene   03/04/09 - fix blank lines in shipping slip and make messages
+ *                         camel case
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Header" copies="1">
+    <report name="HeaderReport" id="1" cutPaper="false">
+        <group id="908342820">
+            <line id="27182317">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8439983" />
+                <element text=" " id="511877" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="29350564" />
+            </line>
+            <line id="9624795">
+                <element text="Trans.:" id="635315678" />
+                <methodElement fixedWidth="10" id="396957609">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getFormattedTransactionSequenceNumber" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="Loja:" id="1220036792" justified="2" stretch="true" />
+                <methodElement id="9699476">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getFormattedStoreID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31571602">
+                <element text="Reg.:" id="1980528140" />
+                <methodElement fixedWidth="5" id="1609326572">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getFormattedWorkstationID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="Gvt.:" id="802697176" justified="2" stretch="true" />
+                <methodElement id="1213286481">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getTillID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27682895">
+                <element text="Caixa:" id="1260931880" />
+                <methodElement fixedWidth="10" id="557261111">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EmployeeIfc" name="getCashier" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="PersonNameIfc" name="getPersonName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                        </method>
+                    </method>
+                    </method>
+                </methodElement>
+                <element text="Vdas.:" id="1156990198" dependsOnPresenceOf="1848929844" justified="2" stretch="true" />
+                <methodElement printedWhenLengthZero="false" fixedWidth="10" id="1848929844">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EmployeeIfc" name="getSalesAssociate" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="PersonNameIfc" name="getPersonName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10509681" dependsOnPresenceOf="18779350">
+                <element text="Número Ordem:" id="10123093" dependsOnPresenceOf="18779350" />
+                <methodElement id="18779350">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getExternalOrderNumber" class="oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="671035" dependsOnPresenceOf="14908241">
+                <element text="IVA:" id="24250743" dependsOnPresenceOf="14908241" />
+                <methodElement printedWhenLengthZero="false" id="14908241">
+                    <method returns="String" name="getVATNumber" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="8470547" dependsOnPresenceOf="33130411">
+                <element text="Cliente:" id="7890675" dependsOnPresenceOf="33130411" />
+                <methodElement printedWhenLengthZero="false" id="33130411">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Não é um Recibo, Modo Trein. *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="4159037" dependsOnPresenceOf="10985037" />
+            <line id="3808966">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Reentrada Transação *" id="10985037" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isReentryMode" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31325034" dependsOnPresenceOf="18567660" />
+            <line id="12968500">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Transação Suspensa *" id="18567660" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isSuspended" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31667380" dependsOnPresenceOf="8470851" />
+            <line id="13540959">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Transação Cancelada *" id="8470851" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isCanceled" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12814788" dependsOnPresenceOf="16512611" />
+            <line id="14187016">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Não é Recibo Original *" id="16512611" justified="1" stretch="true">
+                    <method returns="boolean" name="isDuplicateReceipt" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="29665887" />
+            <line id="28991606">
+                <methodElement precededBySpace="false" formatter="1#VENDA|2#DEVOLUÇÃO|3#ANUL.POST|4#SEM VENDA|5#CÃMBIO|12#EMPR.CAIXA|13#RETIR.CX|16#DEPÓSITO|17#PGTO|18#PGTO.CONTA LOJA|19#RESERVA|20#RETIRADA RESERVA|21#PGTO RESERVA |22#ELIMIN.RESERVA|23#ORDEM|24#CONCLUSÃO ORDEM|25#CANCELAMENTO ORDEM|26#ORDEM|36#RESGATE|40#PGTO FOLHA" id="31970155" justified="1" stretch="true">
+                    <method returns="int" name="getTransactionType" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="14914801" />
+            <line id="3874616">
+                <methodElement precededBySpace="false" id="1551719549" printedAsBarcode="true" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25086455">
+                <element text="" id="561914238" fillChar="_" stretch="true" />
+            </line>
+            <line id="27671142" />
+        </group>
+    </report>
+</blueprint>
+
+

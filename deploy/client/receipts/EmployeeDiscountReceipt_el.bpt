@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/EmployeeDiscountReceipt_el.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:10 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   08/09/11 - added return ticket group
+ *    cgreene   08/01/11 - added number of items sold
+ *    cgreene   07/07/11 - moved ΕΞΟΙΚΟΝΟΜΗΣΑΤΕ text up according to Bryna feedback
+ *    cgreene   06/28/11 - Add setting for skipping ΕΞΟΙΚΟΝΟΜΗΣΑΤΕ lines on first
+ *                         copy.
+ *    cgreene   10/27/10 - update idePath
+ *    asinton   10/22/10 - Add credit promotion disclosure detail to
+ *                         EmployeeDiscountReceipt blueprint.
+ *    cgreene   10/21/10 - updating deprecated method
+ *    npoola    08/18/10 - linked the CustomerSendInfo.bpt
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   04/21/09 - switched printing to Store Copy first then Customer
+ *                         Copt
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    cgreene   03/20/09 - implement printing of Employee by making it a
+ *                         separate lookup reason code like damage discount
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/20/09 - added missing employee number. aligned columns
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/22/09 - Test Automation Changes for EmployeeDiscountReceipt
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   12/08/08 - add getReasonCode method to taxcontainer for bpts to
+ *                         query when there are no taxinfos
+ *    sgu       11/20/08 - replace isVATCodePrinting with isVATEnabled
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="EmployeeDiscountReceipt" copies="2">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="1" cutPaper="false">
+        <group id="17284355">
+            <line id="6509078">
+                <element text="Αριθμός υπαλλήλου:" id="3677357" />
+                <methodElement id="28960976">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getEmployeeDiscountID" class="oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15730391" />
+        </group>
+    </report>
+    <linkReport documentType="CustomerSendInfo" idePath="/pos/deploy/receipts/CustomerSendInfo.bpt" id="4524213" cutPaper="false" />
+    <linkReport documentType="Items" idePath="/pos/deploy/receipts/Items.bpt" id="16879915" cutPaper="false" />
+    <linkReport documentType="Totals" idePath="/pos/deploy/receipts/Totals.bpt" id="16879916" cutPaper="false" />
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879917" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879918" cutPaper="false">
+        <group id="26460711">
+            <line id="2476072" />
+            <line id="7860099">
+                <element text="Σύνολο προσφοράς" id="20988917" stretch="true" />
+                <methodElement id="22216747" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getCollectedTenderTotalAmount" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="31034300" />
+            </line>
+            <line id="886220" />
+            <line id="30102190">
+                <element text="Change Due" id="5990634" stretch="true" />
+                <methodElement id="31929620" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="21469956" />
+            </line>
+            <line id="24789647" dependsOnPresenceOf="21905549" printOnCopy="2" />
+            <line id="24617813" dependsOnPresenceOf="21905549" printOnCopy="2">
+                <element text="Αρ. ειδών που πωλήθηκαν:" id="10166575" stretch="true" />
+                <methodElement formatter="QUANTITY" printedWhenValueZero="false" id="21905549">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="BigDecimal" name="getQuantitySale" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="    " id="3319865" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="32018249" dependsOnPresenceOf="7789224" printOnCopy="2" />
+            <line id="27048919" dependsOnPresenceOf="7789224" printOnCopy="2">
+                <element text=" " id="3981317" dependsOnPresenceOf="7789224" stretch="true" />
+                <element text="ΕΞΟΙΚΟΝΟΜΗΣΑΤΕ" id="26614986" dependsOnPresenceOf="7789224" escapeSequence="\|4C" />
+                <methodElement formatter="CURRENCY" printedWhenValueZero="false" id="7789224" escapeSequence="\|4C">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAmountOffTotalForReceipt" class="oracle.retail.stores.domain.transaction.TransactionTotals" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="21998637" dependsOnPresenceOf="7789224" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <report name="SignatureReport" id="16879919" cutPaper="false">
+        <group id="26460712">
+            <line id="11709139" dependsOnPresenceOf="23079412" />
+            <line id="27337877" dependsOnPresenceOf="23079412">
+                <copyElement id="23079412">
+                    <copyText>Όν.</copyText>
+                    <copyText></copyText>
+                </copyElement>
+            </line>
+            <line id="6865516">
+                <element text="Υπαλλήλου.:" id="32657005" dependsOnPresenceOf="23079412" fillChar="_" stretch="true" />
+            </line>
+            <line id="18811771" dependsOnPresenceOf="23079412" />
+            <line id="28591825" dependsOnPresenceOf="23079412" />
+            <line id="9788629">
+                <element text="Αρ. τμήμ./καταστ.:" id="11480294" dependsOnPresenceOf="23079412" fillChar="_" stretch="true" />
+            </line>
+            <line id="17807452" dependsOnPresenceOf="23079412" />
+            <line id="114148" dependsOnPresenceOf="23079412" />
+            <line id="5896993">
+                <element text="Υπογρ." id="8028871" dependsOnPresenceOf="23079412" />
+            </line>
+            <line id="24537094">
+                <element text="Υπαλλήλου:" id="23976618" dependsOnPresenceOf="23079412" fillChar="_" stretch="true" />
+            </line>
+            <line id="10973446" dependsOnPresenceOf="23079412" />
+        </group>
+        <group id="21983044">
+            <line id="24974962" dependsOnPresenceOf="661726" />
+            <line id="26713016">
+                <element text="Ταυτ. δελτίου επιστροφής: " id="7374667" dependsOnPresenceOf="661726" />
+                <methodElement printedWhenLengthZero="false" id="661726">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="RebateItem" name="getReturnTicketID" class="oracle.retail.stores.domain.transaction.SaleReturnTransaction" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="CreditCardPromotionDisclosure" idePath="/pos/deploy/receipts/CreditCardPromotionDisclosure.bpt" id="8765000" cutPaper="false">
+        <dependsOn returns="boolean" name="getCreditCardPromotionDescriptionPart1" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="19445092" cutPaper="false">
+        <group id="27060228">
+            <line id="4484293" />
+            <line id="31776876">
+                <copyElement id="27548287" justified="center" stretch="true">
+                    <copyText>Αντίγραφο καταστήματος</copyText>
+                    <copyText>Αντίγραφο πελάτη</copyText>
+                    <copyText>Αντίγραφο καταστήματος</copyText>
+                    <copyText>Αντίγραφο πελάτη</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+    <linkReport documentType="ShippingSlip" idePath="/pos/deploy/receipts/ShippingSlip.bpt" id="20503437" cutPaper="false">
+        <dependsOn returns="boolean" name="hasSendPackages" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+</blueprint>
+
+
+

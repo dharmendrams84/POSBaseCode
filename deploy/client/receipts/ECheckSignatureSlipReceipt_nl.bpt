@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/ECheckSignatureSlipReceipt_nl.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:12 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rrkohli   08/19/11 - showing masked values of bank, bank account and
+ *                         check #
+ *    ohorne    08/19/11 - added Manual and Micr entry method
+ *    cgreene   08/15/11 - updated entry method for new enum
+ *    cgreene   10/27/10 - update idePath
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    asinton   05/18/09 - For Total amount call getTenderTransactionTotals
+ *                         instead of getTransactionTotals.
+ *    cgreene   05/06/09 - removed extra entry method
+ *    cgreene   04/20/09 - added Entry line
+ *    cgreene   04/01/09 - aligned check details and center-justified auth
+ *                         agreement
+ *    stallama  04/01/09 - The account number should be masked in the bank copy
+ *                         for e-checks.
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   02/11/09 - Removed data that should not be on ECheck Signature
+ *                         Slip.
+ *    ddbaker   01/22/09 - Test Automation Changes for
+ *                         ECheckSignatureSlipReceipt
+ *    cgreene   12/08/08 - add getReasonCode method to taxcontainer for bpts to
+ *                         query when there are no taxinfos
+ *    sgu       11/20/08 - replace isVATCodePrinting with isVATEnabled
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="ECheckSignatureSlipReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="13988917" />
+            <line id="17777129">
+                <element text="Tot." id="1184712349" stretch="true" />
+                <methodElement id="25860324" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTenderTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="21601140" />
+            </line>
+            <line id="31488646" />
+            <line id="11557581">
+                <element text="  E-cheque" id="29045723" />
+                <methodElement id="24232197" justified="right" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="30216446" />
+            </line>
+            <line id="9082805">
+                <element text="   Bank:" id="22750402" />
+                <methodElement id="25105761">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                         <method returns="EncipheredDataIfc" name="getABANumberEncipheredData" class="oracle.retail.stores.domain.tender.TenderCheckIfc">
+                            <method returns="String" name="getMaskedNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21828367">
+                <element text="   Bankrekeningnr.:" id="6994395" />
+                <methodElement id="26384966">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EncipheredDataIfc" name="getAccountNumberEncipheredData" class="oracle.retail.stores.domain.tender.TenderCheckIfc">
+                            <method returns="String" name="getMaskedNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9477994">
+                <element text="   Chequenr.:" id="27942641" />
+                <methodElement id="26149807">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EncipheredDataIfc" name="getCheckNumberEncipheredData" class="oracle.retail.stores.domain.tender.TenderCheckIfc">
+                            <method returns="String" name="getMaskedNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19974382">
+                <element text="   Aut:" id="16156270" />
+                <methodElement id="15609985">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="U" prefix="(" suffix=")" id="2014712">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationMethod" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24079311" dependsOnPresenceOf="11862635">
+                <element text="   Vastlegmethode:" id="28016009" />
+                <methodElement formatter="0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" printedWhenValueZero="true" id="11862635">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10882919" dependsOnPresenceOf="32955744">
+                <element text="   " id="22634352" />
+                <methodElement fixedWidth="3" precededBySpace="false" id="27090337">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderCheck">
+                            <method returns="String" name="getDescription" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" Ontv. bedrag:" id="29356682" dependsOnPresenceOf="32955744" />
+                <methodElement fixedWidth="15" id="32955744">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderCheck" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1496404" dependsOnPresenceOf="32955745">
+                <element text="   Wisselkoers:" id="32965332" dependsOnPresenceOf="32955745" />
+                <methodElement id="32955745">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderCheck">
+                            <method returns="java.math.BigDecimal" name="getBaseConversionRate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31715198" />
+            <line id="3614530">
+                <element text="Autorisatieovereenkomst: ik machtig" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="23139979">
+                <element text="de handelaar om de informatie van" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="15231445">
+                <element text="mijn cheque te gebruiken om een" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="356932">
+                <element text="elektronische overboeking te doen of" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="26107496">
+                <element text="of de papieren wissel te gebruiken om mijn rekening te debiteren" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="29068618">
+                <element text="voor het bedrag van de transactie. Ik" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="29441536">
+                <element text="erken dat de" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="23243192">
+                <element text="elektrische overboeking van de handelaar geen chequetransactie is" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="29686573">
+                <element text="en onderhevig is aan wetgeving inzake" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="27358294">
+                <element text="elektrische overboekingen. Als" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="13558157">
+                <element text="de overboeking of wissel wordt geretourneerd," id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="18401928">
+                <element text="mag de handelaar" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="9249928">
+                <element text="mij retourneringskosten of " id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="9249929">
+                <element text="administratiekosten in rekening brengen via mijn" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="9249930">
+                <element text="bankrekening via een elektronische overboeking of een wissel, zoals toegestaan" id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="22930782">
+                <element text="bij wet." id="27405635" justified="center" stretch="true" />
+            </line>
+            <line id="18115511" />
+            <line id="12116475">
+                <element text="Handtekening:" id="13648150" fillChar="_" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="16879915" cutPaper="false">
+        <group id="908342821">
+            <line id="14517057" />
+            <line id="5690692">
+                <element text="Kopie bank" id="2890093" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

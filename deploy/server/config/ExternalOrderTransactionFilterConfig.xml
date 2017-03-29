@@ -1,0 +1,33 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/ExternalOrderTransactionFilterConfig.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  06/08/10 - filter transactions for siebel
+ *    abondala  06/08/10 - external order filter criteria
+ *
+ * ===========================================================================
+ */
+-->
+
+<FILTER>
+    <INTEGRATIONTYPE name="ExternalOrderUpdate">
+       <TRANSACTION name="SALE"/>
+       <TRANSACTION name="RETURN"/>
+       <TRANSACTION name="EXCHANGE"/>
+
+       <TRANSACTION_METHOD name="hasExternalOrder"/>
+       <TRANSACTION_METHOD name="isTrainingMode" negate="true"/>
+       <TRANSACTION_METHOD name="isReentryMode" negate="true"/>
+       <TRANSACTION_METHOD name="isCanceled" negate="true"/>
+       <TRANSACTION_METHOD name="isSuspended" negate="true"/>
+
+       <STATUS name="COMPLETED"/>
+    </INTEGRATIONTYPE>
+</FILTER>

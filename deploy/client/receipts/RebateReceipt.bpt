@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/RebateReceipt.bpt /main/23 2010/09/10 15:13:35 npoola Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    npoola    09/10/10 - turned Stretch ON to avoid word wrap of the names
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    npoola    03/18/10 - Added the Training mode flag to print the Training
+ *                         mode receipt text
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   06/26/09 - implement QUANTITY formatting for printed number
+ *                         qhich prints as an int or a double
+ *    cgreene   04/09/09 - removed references to RebateItem
+ *    djenning  04/08/09 - getting rebate receipt to print only for rebated
+ *                         line items
+ *    cgreene   04/07/09 - use getLineItems method from parameter bean
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - rebate receipt formatting fixes
+ *    vikini    12/11/08 - Receipt builder missed the copies element, re-adding
+ *    vikini    12/11/08 - Editing the Rebate message Line, to automatically
+ *                         break after 42 chars
+ *    nkgautam  12/02/08 - ILRM CR Code Review Changes
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="RebateReceipt" copies="1">
+    <report name="RebateReceiptReport" id="1">
+        <group id="22912742">
+            <line id="32334501" dependsOnPresenceOf="14516890" />
+            <line id="32179480" dependsOnPresenceOf="14516890">
+                <element text="REBATE RECEIPT" id="1790926" justified="center" stretch="true" />
+            </line>
+            <line id="21445478" dependsOnPresenceOf="29490417" />
+            <line id="2015406" dependsOnPresenceOf="29490417">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Not a Receipt, Training Mode *" id="29490417" justified="center" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="10137987" dependsOnPresenceOf="29490417" />
+            <line id="31580653" dependsOnPresenceOf="14516890">
+                <methodElement precededBySpace="false" id="18931261" printedAsBarcode="true" justified="center" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4752921" dependsOnPresenceOf="14516890" />
+            <line id="29301928" dependsOnPresenceOf="14516890" />
+            <line id="10822310" dependsOnPresenceOf="14516890">
+                <methodElement precededBySpace="false" id="14630019" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="15301615" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getExtendedDiscountedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" formatter="T#T|N#N|E#E|R#R|O#O" id="7524737">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="String" name="getReceiptCode" class="oracle.retail.stores.domain.tax.TaxInformationContainer" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25559096" dependsOnPresenceOf="14516890">
+                <element text="  " id="23835806" dependsOnPresenceOf="2016180268" />
+                <methodElement precededBySpace="false" id="2016180268" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="5" formatter="QUANTITY" id="2049079842" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="BigDecimal" name="getItemQuantity" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="java.math.BigDecimal" name="abs" class="java.math.BigDecimal" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" @" id="147851472" />
+                <methodElement fixedWidth="9" id="888288498" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem" />
+                    </method>
+                </methodElement>
+                <element text="       " id="31580240" />
+            </line>
+            <line id="5499597" dependsOnPresenceOf="14516890" />
+            <line id="2929322" dependsOnPresenceOf="14516890">
+                <methodElement id="14516890">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemRebateMessage" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20403969" dependsOnPresenceOf="14516890" />
+            <line id="6251825" dependsOnPresenceOf="14516890">
+                <element text="First Name:" id="15496494" />
+                <methodElement id="28642812" stretch="true">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18134964" dependsOnPresenceOf="14516890">
+                <element text="" id="22449219" fillChar="_" stretch="true" />
+            </line>
+            <line id="30328035" dependsOnPresenceOf="14516890">
+                <element text="Last Name:" id="21633045" />
+                <methodElement id="7254627" stretch="true">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15204483" dependsOnPresenceOf="14516890">
+                <element text="" id="29589288" fillChar="_" stretch="true" />
+            </line>
+            <line id="8704355" dependsOnPresenceOf="14516890">
+                <element text="Address Line 1:" id="20581259" />
+                <methodElement id="9678912">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getLine1" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="30317111" dependsOnPresenceOf="14516890">
+                <element text="" id="9139963" fillChar="_" stretch="true" />
+            </line>
+            <line id="27741711" dependsOnPresenceOf="14516890">
+                <element text="Address Line 2:" id="27755804" />
+                <methodElement id="31508230">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getLine2" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20505795" dependsOnPresenceOf="14516890">
+                <element text="" id="13036600" fillChar="_" stretch="true" />
+            </line>
+            <line id="12182814" dependsOnPresenceOf="14516890">
+                <element text="City:" id="23274274" />
+                <methodElement id="11353551">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6018163" dependsOnPresenceOf="14516890">
+                <element text="" id="13036600" fillChar="_" stretch="true" />
+            </line>
+            <line id="8181961" dependsOnPresenceOf="14516890">
+                <element text="State:" id="30170388" />
+                <methodElement id="24534782">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22404489" dependsOnPresenceOf="14516890">
+                <element text="" id="11708664" fillChar="_" stretch="true" />
+            </line>
+            <line id="24361601" dependsOnPresenceOf="14516890">
+                <element text="Zip Code:" id="4711770" />
+                <methodElement id="5400669">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22477714" dependsOnPresenceOf="14516890">
+                <element text="" id="5410271" fillChar="_" stretch="true" />
+            </line>
+            <line id="6184162" dependsOnPresenceOf="14516890">
+                <element text="Daytime Phone:" id="15131111" />
+                <methodElement id="11649657">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="23034016" dependsOnPresenceOf="14516890">
+                <element text="" id="31180457" fillChar="_" stretch="true" />
+            </line>
+            <line id="17377111" dependsOnPresenceOf="14516890">
+                <element text="Email Address:" id="16802627" />
+                <methodElement id="24975468">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getEMailAddress" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3910612" dependsOnPresenceOf="14516890">
+                <element text="" id="20020215" fillChar="_" stretch="true" />
+            </line>
+            <line id="1940437" dependsOnPresenceOf="14516890" />
+            <line id="11488025" dependsOnPresenceOf="14516890">
+                <element text="I certify by my signature that the " id="23665505" />
+            </line>
+            <line id="29573372" dependsOnPresenceOf="14516890">
+                <element text="information I have included on this" id="3159136" />
+            </line>
+            <line id="5671061" dependsOnPresenceOf="14516890">
+                <element text="rebate form is accurate and that my" id="29992107" />
+            </line>
+            <line id="27457812" dependsOnPresenceOf="14516890">
+                <element text="submission materials are complete and" id="25748916" />
+            </line>
+            <line id="4714475" dependsOnPresenceOf="14516890">
+                <element text="in compliance with the rebate forms" id="19359048" />
+            </line>
+            <line id="17423680" dependsOnPresenceOf="14516890">
+                <element text="instructions." id="28044721" />
+            </line>
+            <line id="7292021" dependsOnPresenceOf="14516890" />
+            <line id="7198918" dependsOnPresenceOf="14516890">
+                <element text="Required Signature:" id="19128116" />
+            </line>
+            <line id="31754636" dependsOnPresenceOf="14516890" />
+            <line id="789267" dependsOnPresenceOf="14516890">
+                <element text="" id="19446411" fillChar="_" stretch="true" />
+            </line>
+            <line id="25222172" dependsOnPresenceOf="14516890" />
+            <line id="1412515" dependsOnPresenceOf="14516890">
+                <element text="Date: " id="28125346" />
+            </line>
+            <line id="18345651" dependsOnPresenceOf="14516890">
+                <element text="" id="20545342" fillChar="_" stretch="true" />
+            </line>
+            <line id="2162609" dependsOnPresenceOf="14516890" />
+            <line id="6366453" dependsOnPresenceOf="14516890" />
+        </group>
+    </report>
+</blueprint>
+

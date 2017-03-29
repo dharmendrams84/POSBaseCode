@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/CreditSignatureSlipReceipt_de.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:10 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    08/19/11 - added Manual and Micr entry method
+ *    cgreene   08/15/11 - updated entry method for new enum
+ *    cgreene   10/27/10 - update idePath
+ *    asinton   09/28/10 - More updates for credit card promotion disclosure.
+ *    npoola    09/10/10 - turned Stretch ON to avoid word wrap of the names
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    blarsen   05/15/09 - the must-imprint section was not printing properly
+ *                         (side-effect of previous fix)
+ *    blarsen   05/13/09 - fixed bug in logic for when to pring signature line.
+ *                         Changed blueprint to use
+ *                         isCreditSignatureLineRequired method.
+ *    djenning  04/21/09 - add redeem transaction into transactointype mapping
+ *    cgreene   04/21/09 - made IMPRINT card lines depend on isManuallyEntered.
+ *                         If it is desired to not print thiese lines at all,
+ *                         the customer can remove them from the bpt
+ *    cgreene   04/07/09 - rearrange credit and debit slips to be more like
+ *                         tender.bpt and add line for printing Entry:
+ *    djenning  03/24/09 - expand area to print card type
+ *    cgreene   03/16/09 - add sigcap image and hide sig line if not needed
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/21/09 - made receipt format more compatible with I18N and
+ *                         varying width printers by using stretch instead of
+ *                         fixedWidth
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    glwang    02/16/09 - set dependency between the credit imprint line and
+ *                         getManualCreditImprint()
+ *    glwang    02/04/09 - print card holder's name
+ *    ddbaker   01/30/09 - Corrections to Sale Receipt for check information
+ *                         and credit signature slip transaction total amount.
+ *    ddbaker   01/22/09 - Removed leading blank line to account for trailing
+ *                         blank line in receipt header for
+ *                         CreditSignatureSlipReceipt
+ *    ddbaker   01/22/09 - Test Automation Changes for
+ *                         CreditSignatureSlipReceipt
+ *    cgreene   01/09/09 - made several shipping based formatting changes
+ *    cgreene   01/07/09 - various tender line formatting fixes
+ *    cgreene   12/22/08 - add copies attribute to blueprint
+ *    cgreene   11/19/08 - Exchange Legal statement fix
+ *    cgreene   11/18/08 - moved isReturn method to SaleReturnTransactionIfc
+ *    cgreene   11/17/08 - added method to print Return Legal statement
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="CreditSignatureSlipReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="31601333">
+                <element text="Summe" id="5458031" stretch="true" />
+                <methodElement id="19671316" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24056908" />
+            <line id="27108604">
+                <element text="  Kreditk." id="841667" stretch="true" />
+                <methodElement id="9560356">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="22261875" />
+            </line>
+            <line id="13039268">
+                <element text="   Kar.:" id="31625187" />
+                <methodElement printedWhenLengthZero="false" id="17798819">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getCardType" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12231782">
+                <element text="   Konto:" id="8261823" />
+                <methodElement id="13207250">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25116828">
+                <element text="   Gen.:" id="31482478" />
+                <methodElement id="12372321">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="U" prefix="(" suffix=")" id="17582136">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationMethod" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="8479798" dependsOnPresenceOf="11862635">
+                <element text="   Erfassungsmethode:" id="28016009" />
+                <methodElement formatter="0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" printedWhenValueZero="true" id="11862635">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28402507" />
+            <line id="12894866">
+                <methodElement formatter="1#Verkauf|2#Retoure|5#Austausch|18#Hauskontozahlung|19#Warenrücklage|36#Rückerstattung" id="31782456">
+                    <method returns="int" name="getTransactionType" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <element text=" Haftungserklärung" id="29789630" />
+            </line>
+            <line id="24101323" />
+            <line id="22885921" />
+            <line id="24380358" dependsOnPresenceOf="32023397">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="32023397">
+                    <method returns="boolean" name="hasSignatureCaptureImage" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <imageElement fileName="sigcap.jpg" idePath="/pos/deploy/bin/sigcap.jpg" id="8186992" justified="center" />
+            </line>
+            <line id="11546333">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Unterschr." id="20087337" fillChar="_" stretch="true">
+                    <method returns="boolean" name="isCreditSignatureLineRequired" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="18051825">
+                <element text="  Kunde:" id="30186730" dependsOnPresenceOf="9386257" />
+                <methodElement id="9386257" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="PersonNameIfc" name="getBearerName" class="oracle.retail.stores.domain.tender.TenderCharge">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.utility.PersonName" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16818837" />
+            <line id="5555373" />
+            <line id="20738936">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="MUSS KARTE DRUCK." id="24671814">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isManuallyEntered" class="oracle.retail.stores.domain.tender.TenderCharge" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29422309" dependsOnPresenceOf="24671814" />
+            <line id="9090824" dependsOnPresenceOf="24671814" />
+            <line id="16165899" dependsOnPresenceOf="24671814" />
+            <line id="7244886" dependsOnPresenceOf="24671814" />
+            <line id="10040532" dependsOnPresenceOf="24671814" />
+            <line id="5998631" dependsOnPresenceOf="24671814" />
+            <line id="21479899" dependsOnPresenceOf="24671814" />
+            <line id="535863" dependsOnPresenceOf="24671814" />
+            <line id="13671123" dependsOnPresenceOf="24671814" />
+            <line id="23370564" dependsOnPresenceOf="24671814" />
+            <line id="902782" dependsOnPresenceOf="24671814" />
+            <line id="6460907" dependsOnPresenceOf="24671814" />
+            <line id="6330713" dependsOnPresenceOf="24671814" />
+            <line id="32755292" dependsOnPresenceOf="24671814" />
+        </group>
+    </report>
+    <linkReport documentType="CreditCardPromotionDisclosure" idePath="/pos/deploy/receipts/CreditCardPromotionDisclosure.bpt" id="8765000" cutPaper="false">
+        <dependsOn returns="boolean" name="getCreditCardPromotionDescriptionPart1" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="16879915" cutPaper="false">
+        <group id="908342821">
+            <line id="17652030" />
+            <line id="9501460">
+                <element text="Durchschl. Fil." id="21649028" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="8981996" />
+</blueprint>
+
+

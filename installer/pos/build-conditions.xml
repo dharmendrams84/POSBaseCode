@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/installer/pos/build-conditions.xml /rgbustores_13.4x_generic_branch/5 2011/09/29 11:06:31 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * 
+ * The init-conditions target should rely only on inputs from ant.install.properties.
+ * 
+ * The conditions defined here should be used by other install build targets to 
+ * simplify logic and improve readability.
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    mszekely  09/28/11 - BUG 13035134: Pincomm install issue in non ssl mode
+ *    ohorne    06/30/11 - enable MSR and Bar Code scanner fixes
+ *    abondala  06/20/11 - disable the jms option for data replication if not
+ *                         integrated with co
+ *    abondala  06/07/11 - XbranchMerge
+ *                         abondala_send_tx_to_co_through_webservice from main
+ *    abondala  06/02/11 - email notification if the central office server is
+ *                         not responding
+ *    abondala  04/29/11 - introduce webservice for sending transactions and
+ *                         ejournals to the centraloffice application
+ *    rsnayak   03/08/11 - pos lat integration for label batch
+ *    abondala  01/27/11 - Introduce commext for processing final result
+ *                         messages in rm-pos integration
+ *    djenning  12/17/10 - making some ssl regex replaces global and enabling a
+ *                         register keystore when jmsssl is used
+ *    abondala  12/03/10 - fix RM integration
+ *    blarsen   12/02/10 - EnterpriseDT was being uncommented for STANDALONE
+ *                         mode. Moved code responsible for this issue and
+ *                         other code for cleanup purposes from
+ *                         biuld-properties into build-conditions.
+ *    abondala  12/02/10 - updated
+ *    blarsen   11/30/10 - Removed dependency on init-properties. This target
+ *                         now relies only on properties contained in
+ *                         ant.install.properties. Some conditions moved from
+ *                         init-properties into this target (such as
+ *                         install.is-server/client and
+ *                         install.data-tier-results). Changed some rm-releated
+ *                         conditions to use appserver-type (it appears the old
+ *                         input.jms.method.rm is no longer supported).
+ *    ohorne    11/11/10 - Siebel install properties cleanup
+ *    blarsen   11/04/10 - Loosening install.is-jms-enabled conditions. The
+ *                         input.jms.passwords are no longer included in the
+ *                         ant.install.property file. This prevents some config
+ *                         values from being replaced (namely ClientConduit.xml
+ *                         clientIDs).
+ *    mszekely  10/07/10 - BUG 10157827: Changing jre vendor from SUN to ORACLE
+ *    abondala  09/30/10 - fix secure rmi issues.
+ *    jswan     09/16/10 - Changes made to support clear text RTLog output and
+ *                         export of masked Credit and Debit card numbers.
+ *    abondala  07/21/10 - fix RM - POS integration errors
+ *    mchellap  07/15/10 - Fix weblogic jms poslog export
+ *    mchellap  06/18/10 - Billpay installer changes
+ *    abondala  05/27/10 - Installer changes for Siebel integration
+ *    djenning  05/20/10 - weblogic integration
+ *    abondala  05/03/10 - XbranchMerge abondala_tech_78 from
+ *                         st_rgbustores_techissueseatel_generic_branch
+ *    abondala  04/14/10 - updated webservices
+ *    ohorne    03/16/10 - added condition property
+ *                         platform-enabled-with-printer-none
+ *    abondala  01/02/10 - Update Header date
+ *    nkgautam  12/24/09 - installer change for serialization
+ *    nkgautam  12/18/09 - changed property name of server serialisation
+ *                         install
+ *    vikini    12/16/09 - Installer changes for Inventory Inquiry and
+ *                         Serialization
+ *    vikini    12/10/09 - checkin after refresh to tip
+ *    acadar    12/02/09 - checked in Owen's changes for the Ipp installer
+ *    ohorne    12/02/09 - added installer support for IPP Printing
+ *    vikini    12/07/09 - installer changes for Inventory Updates
+ *    cgreene   11/10/09 - switch pos installed -encrypted keys to -property
+ *    mszekely  07/16/09 - XbranchMerge mszekely_bug-8650269 from
+ *                         rgbustores_13.1x_branch
+ *    asinton   04/30/09 - Removed unused condition for NO DEVICES selected.
+ *    mszekely  04/20/09 - BUG 8440800 classpaths for jpos and cpoi
+ *    mszekely  02/25/09 - BUG 8287431 support for 42 char width printers
+ *    mszekely  02/12/09 - BUG 8241193 - ItemBasket integration
+ *    mszekely  01/23/09 - BUG 7639984 Inventory Reservation support
+ *    mszekely  12/09/08 - 7544348 POS to RM integration
+ *    mszekely  12/04/08 - BUG 7524348 POS to RM support
+ *    mszekely  12/01/08 - BUG 7589815 - eReceipts
+ *    mszekely  11/12/08 - BUG 7555392 RSA for installers
+ *
+ * ===========================================================================
+ */
+-->
+<project name="install-pos-conditions" basedir=".">
+
+    <target name="init-conditions">
+
+        <!-- Initialize properties not already set to "false" -->
+        <property name="input.install.platform.POSsim.enabled" value="false"/>
+
+        <!-- Initialize any POS devices that were not selected to false -->
+        <property name="input.install.device.CashDrawer.enabled" value="false"/>
+        <property name="input.install.device.LineDisplay.enabled" value="false"/>
+        <property name="input.install.device.HardTotals.enabled" value="false"/>
+        <property name="input.install.device.MICR.enabled" value="false"/>
+        <property name="input.install.device.HypercomPackage.enabled" value="false"/>
+        <property name="input.install.device.IngenicoPackage.enabled" value="false"/>
+        <property name="input.install.device.printer.support" value="NONE"/>
+        
+
+
+        <!-- device related conditions -->
+        <condition property="install.is-client-IBM-platform-enabled">
+             <equals arg1="${input.install.device.platform}" arg2="IBM" />
+        </condition>
+
+        <condition property="install.is-client-IBMUS-platform-enabled">
+             <equals arg1="${input.install.device.platform}" arg2="IBMUS" />
+        </condition>
+
+        <condition property="install.is-client-HP-platform-enabled">
+             <equals arg1="${input.install.device.platform}" arg2="HP" />
+        </condition>
+
+        <condition property="install.is-client-HPUS-platform-enabled">
+             <equals arg1="${input.install.device.platform}" arg2="HPUS" />
+        </condition>
+
+        <condition property="install.is-client-simulated-platform-enabled">
+             <equals arg1="${input.install.device.platform}" arg2="SIM" />
+        </condition>
+
+
+        <!-- Determine whether this is a server or client install -->
+        <condition property="install.is-server-install">
+            <equals arg1="${input.install.type}" arg2="SERVER" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-client-install">
+            <equals arg1="${input.install.type}" arg2="CLIENT" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-appserver-WAS">
+            <equals arg1="${input.appserver.type}" arg2="WAS" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-appserver-WL">
+            <equals arg1="${input.appserver.type}" arg2="WL" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-appserver-OAS">
+            <equals arg1="${input.appserver.type}" arg2="OAS" casesensitive="false"/>
+        </condition>
+
+
+        <condition property="install.is-standalone-server-install">
+            <equals arg1="${input.appserver.type}" arg2="STANDALONE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-appserver-NOTWAS">
+            <or>
+                <equals arg1="${input.appserver.type}" arg2="OAS" casesensitive="false"/>
+                <equals arg1="${input.appserver.type}" arg2="STANDALONE" casesensitive="false"/>
+                <equals arg1="${input.appserver.type}" arg2="WL" casesensitive="false"/>
+            </or>
+        </condition>
+
+        <condition property="install.is-integrated-server-install">
+            <or>
+                <equals arg1="${input.appserver.type}" arg2="WAS" casesensitive="false"/>
+                <equals arg1="${input.appserver.type}" arg2="OAS" casesensitive="false"/>
+                <equals arg1="${input.appserver.type}" arg2="WL" casesensitive="false"/>
+            </or>
+        </condition>
+
+        <if>
+           <isset property="input.transaction.retrieval.location" />
+           <then>
+                   <!-- do nothing -->
+           </then>
+            <else>
+                   <!-- The transaction retrieval
+                        location must be set to LOCAL. This property should not yet be
+                        defined at this point since the page in antinstall-config.xml
+                        that sets it only displays if input.bo.co.integrate is true -->
+                    <property name="input.transaction.retrieval.location" value="LOCAL" />
+            </else>
+        </if>
+
+        <condition property="install.transaction-retrieval-location-is-not-local">
+            <not>
+                <equals arg1="${input.transaction.retrieval.location}" arg2="LOCAL" casesensitive="false"/>
+            </not>
+        </condition>
+
+        <condition property="install.is-transaction-retrieval-location-central-local-failover">
+            <equals arg1="${input.transaction.retrieval.location}" arg2="CENTRAL_LOCAL_FAILOVER" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-transaction-retrieval-location-central">
+            <equals arg1="${input.transaction.retrieval.location}" arg2="CENTRAL" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.are-transaction-retrieval-jars-required">
+            <and>
+                <equals arg1="${input.install.type}" arg2="SERVER"/>
+                <equals arg1="${input.appserver.type}" arg2="WAS"/>
+                <equals arg1="${input.enable.co.webservices}" arg2="false"/>
+                <not>
+                    <equals arg1="${input.transaction.retrieval.location}" arg2="LOCAL" casesensitive="false"/>
+                </not>
+            </and>
+        </condition>
+
+        <condition property="install.data-replicaton-through-webservice-enabled">
+            <equals arg1="${input.data.replication.option}" arg2="Webservice" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.are-journal-writes-to-jms-queue-enabled">
+            <equals arg1="${input.server.co.journal.options}" arg2="JMS" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.are-journal-writes-to-webservice-enabled">
+            <equals arg1="${input.server.co.journal.options}" arg2="WEBSERVICE" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.is-poslog-file-export-enabled">
+            <equals arg1="${input.logging.export}" arg2="FILE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-poslog-jms-queue-export-enabled">
+            <equals arg1="${input.logging.export}" arg2="JMS_QUEUE" casesensitive="false"/>
+        </condition>
+
+  
+        <!-- data tier no longer supported by the installer so dummy up the properties -->
+        <property name="install.app.data-tier-results" value="false"/>
+
+        <condition property="install.is-remote-data-tier-enabled">
+            <isfalse value="${install.app.data-tier-results}"/>
+        </condition>
+
+        <condition property="install.is-client-queued-journal-manager-enabled">
+            <or>
+                <equals arg1="${input.client.co.journal.options}" arg2="JMS" casesensitive="false"/>
+                <equals arg1="${input.client.co.journal.options}" arg2="WEBSERVICE" casesensitive="false"/>
+                <equals arg1="${input.client.journal.ejournal.option}" arg2="DATABASE" casesensitive="false"/>
+            </or>
+        </condition>
+
+        <condition property="install.is-client-default-journal-tech-disabled">
+            <equals arg1="${input.client.journal.ejournal.option}" arg2="DATABASE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-client-db-journal-enabled">
+            <equals arg1="${input.client.journal.ejournal.option}" arg2="DATABASE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-client-jms-journal-enabled">
+            <equals arg1="${input.client.co.journal.options}" arg2="JMS" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.is-client-webservice-journal-enabled">
+            <equals arg1="${input.client.co.journal.options}" arg2="WEBSERVICE" casesensitive="false"/>
+        </condition>        
+
+        <condition property="install.is-possim-enabled">
+            <istrue value="input.install.platform.POSsim.enabled"/>
+        </condition>
+
+        <condition property="install.is-barcode-scanner-enabled">
+            <istrue value="${input.install.device.Barcode-Scanner.enabled}"/>
+        </condition>
+
+        <condition property="install.is-cash-drawer-enabled">
+            <istrue value="${input.install.device.Cash-Drawer.enabled}"/>
+        </condition>
+
+        <condition property="install.is-pin-pad-enabled">
+            <or>
+                <istrue value="${input.install.device.Hypercom-Package.enabled}"/>
+                <istrue value="${input.install.device.Ingenico-Package.enabled}"/>
+            </or>
+        </condition>
+
+        <condition property="install.is-line-display-enabled">
+            <istrue value="${input.install.device.Line-Display.enabled}"/>
+        </condition>
+
+        <condition property="install.are-hard-totals-enabled">
+            <istrue value="${input.install.device.Hard-Totals.enabled}"/>
+        </condition>
+
+        <condition property="install.is-device-platform-enabled-with-printer-none">
+            <and>
+                <equals arg1="${input.install.device.printer.support}" arg2="NONE" casesensitive="false"/>
+                <not>
+                    <equals arg1="${input.install.device.platform}" arg2="SIM" casesensitive="false"/>
+                </not>
+            </and>
+        </condition>
+
+        <condition property="install.is-printer-enabled">
+            <or>
+                <equals arg1="${input.install.device.printer.support}" arg2="FRANKING" casesensitive="false"/>
+                <equals arg1="${input.install.device.printer.support}" arg2="NO_FRANKING" casesensitive="false"/>
+                <equals arg1="${input.install.device.printer.support}" arg2="IPP" casesensitive="false"/>
+            </or>
+        </condition>
+
+        <condition property="install.is-printer-franking-enabled">
+            <equals arg1="${input.install.device.printer.support}" arg2="FRANKING" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-printer-ipp-enabled">
+            <equals arg1="${input.install.device.printer.support}" arg2="IPP" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-micr-enabled">
+            <istrue value="${input.install.device.MICR.enabled}"/>
+        </condition>
+
+        <condition property="install.is-msr-enabled">
+            <istrue value="${input.install.device.MSR.enabled}"/>
+        </condition>
+
+        <condition property="install.is-jre-vendor-sun">
+            <equals arg1="${input.jre.vendor}" arg2="ORACLE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-jre-vendor-ibm">
+            <equals arg1="${input.jre.vendor}" arg2="IBM" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-user-interface-type-image-based">
+            <equals arg1="${input.ui.type}" arg2="IMAGE" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-tender-authorization-simulated">
+            <equals arg1="${input.tender.authorization.type}" arg2="SIMULATED" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-tender-authorization-isd">
+            <equals arg1="${input.tender.authorization.type}" arg2="ISD" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.is-tender-authorization-servebase">
+            <equals arg1="${input.tender.authorization.type}" arg2="SERVEBASE" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.is-pos-data-replication-export-jms-enabled">
+            <equals arg1="${input.data.replication.option}" arg2="JMS" casesensitive="false"/>
+        </condition>
+
+        <condition property="install.is-pos-data-replication-export-webservice-enabled">
+            <equals arg1="${input.data.replication.option}" arg2="Webservice" casesensitive="false"/>
+        </condition>
+        
+        <condition property="install.is-rmi-timeout-enabled">
+            <istrue value="${input.rmi.timeout.enabled}"/>
+        </condition>
+
+        <condition property="install.is-vat-enabled">
+            <istrue value="${input.vat.enabled}"/>
+        </condition>
+
+        <condition property="install.is-scratchpad-db-enabled">
+            <and>
+                <equals arg1="${input.install.type}" arg2="SERVER"/>
+                <contains string="${input.transaction.retrieval.location}" substring="central" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-rtlog-exported">
+            <and>
+                <equals arg1="${input.install.type}" arg2="SERVER" casesensitive="false"/>
+                <equals arg1="${input.rtlog.export}" arg2="EXPORT_RTLOG" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <!-- CR 29,693 ORSIM integration -->
+        <condition property="install.is-sim-server-install">
+            <and>
+                  <equals arg1="${install.is-server-install}" arg2="true" />
+                <equals arg1="${input.enable.orsim.integration}" arg2="true" />
+             </and>
+        </condition>
+
+        <condition property="install.is-sim-client-install">
+            <and>
+                <equals arg1="${install.is-client-install}" arg2="true"/>
+                <equals arg1="${input.enable.orsim.integration}" arg2="true"/>
+            </and>
+        </condition>
+
+         <condition property="install.is-inventory-inquiry-client-install">
+                    <and>
+                        <equals arg1="${install.is-client-install}" arg2="true"/>
+                        <equals arg1="${input.enable.orsim.integration}" arg2="true"/>
+                        <equals arg1="${input.inventory.inquiry}" arg2="true"/>
+                    </and>
+         </condition>
+
+        <condition property="install.is-inventory-inquiry-install">
+            <and>
+                <equals arg1="${install.is-server-install}" arg2="true" />
+                <equals arg1="${input.inventory.inquiry}" arg2="true" />
+            </and>
+        </condition>
+
+        <condition property="install.is-inventory-update-install">
+             <and>
+                 <equals arg1="${install.is-server-install}" arg2="true" />
+                 <equals arg1="${input.inventory.update}" arg2="true" />
+             </and>
+        </condition>
+
+        <condition property="install.is-inventory-reservation-install">
+            <and>
+                <equals arg1="${install.is-server-install}" arg2="true" />
+                <equals arg1="${input.inventory.reservation}" arg2="true" />
+            </and>
+        </condition>
+
+        <condition property="install.is-item-basket-install">
+            <and>
+                <equals arg1="${input.item.basket}" arg2="true" />
+            </and>
+        </condition>
+
+        <condition property="install.is-client-item-basket-install">
+            <and>
+                <equals arg1="${install.is-client-install}" arg2="true" />
+                <equals arg1="${input.item.basket}" arg2="true" />
+            </and>
+        </condition>
+
+        <condition property="install.is-server-item-basket-install">
+            <and>
+                <equals arg1="${install.is-server-install}" arg2="true" />
+                <equals arg1="${input.item.basket}" arg2="true" />
+            </and>
+        </condition>
+
+        <condition property="install.is-server-serialization-install">
+            <and>
+                <equals arg1="${input.serialization}" arg2="true" />
+           </and>
+        </condition>
+
+        <condition property="install.is-jms-enabled" >
+            <or>
+                <isset property="input.jms.client-id" />
+                <isset property="input.jms.username" />
+                <isset property="input.jms.password" />
+                <isset property="input.jms.password-property" />
+            </or>
+        </condition>
+
+      <condition property="install.is-rsa-encryption-enabled">
+          <equals arg1="${input.keystore.provider}" arg2="RSA" />
+      </condition>
+
+      <condition property="install.is-ereceipt-install">
+          <equals arg1="${input.enable.ereceipt}" arg2="true" />
+      </condition>
+
+      <condition property="install.is-rm-install">
+          <equals arg1="${input.enable.rm}" arg2="true" />
+      </condition>
+
+      <condition property="install.is-rm-oas-install">
+          <and>
+              <equals arg1="${input.enable.rm}" arg2="true" />
+              <equals arg1="${input.appserver.type}" arg2="OAS" />
+          </and>
+      </condition>
+        
+      <condition property="install.is-rm-wl-install">
+          <and>
+              <equals arg1="${input.enable.rm}" arg2="true" />
+              <equals arg1="${input.message.rm}" arg2="JMS" />
+              <equals arg1="${input.appserver.type}" arg2="WL" />
+          </and>
+      </condition>        
+
+      <condition property="install.is-rm-mq-install">
+          <and>
+              <equals arg1="${input.enable.rm}" arg2="true" />
+              <equals arg1="${input.appserver.type}" arg2="WAS" />
+              <equals arg1="${input.message.rm}" arg2="JMS" />
+          </and>
+      </condition>
+
+      <condition property="install.is-co-webservices-install">
+          <and>
+              <equals arg1="${install.is-server-install}" arg2="true" />
+              <equals arg1="${input.enable.co.webservices}" arg2="true" />
+          </and>
+      </condition>
+
+      <condition property="install.is-siebel-webservices-install">
+           <equals arg1="${input.enable.siebel.integration}" arg2="true" />
+      </condition>
+
+      <condition property="install.is-billpay-install">
+          <equals arg1="${input.enable.billpay}" arg2="true" />
+      </condition>
+      
+      <condition property="install.is-lat-webservices-install">
+          <equals arg1="${input.enable.lat.integration}" arg2="true" />
+      </condition>
+      
+      <condition property="install.client.truststore">
+        <or>
+          <equals arg1="${input.client.secure.rmi}" arg2="true" />
+          <equals arg1="${input.client.wl.secure.bo}" arg2="true" />
+        </or>
+      </condition>
+
+      <condition property="install.server.keystore">
+        <or>
+          <equals arg1="${input.server.secure.rmi}" arg2="true" />
+          <equals arg1="${input.jms.ssl.level}" arg2="US" />
+          <equals arg1="${input.jms.ssl.level}" arg2="EXPORT" />
+        </or>
+      </condition>        
+
+      <condition property="install.client.keystore">
+        <or>
+          <equals arg1="${input.jms.ssl.level}" arg2="US" />
+          <equals arg1="${input.jms.ssl.level}" arg2="EXPORT" />
+        </or>
+      </condition>        
+        
+      <condition property="install.server.truststore">
+         <or>
+          <equals arg1="${input.possiebel.protocol}" arg2="https" />
+          <equals arg1="${input.rmpos.protocol}" arg2="https" />
+          <equals arg1="${input.posco.protocol}" arg2="https" />
+          <equals arg1="${input.jms.ssl.level}" arg2="US" />
+          <equals arg1="${input.jms.ssl.level}" arg2="EXPORT" />
+          <equals arg1="${needs.jdbc.keystore}" arg2="true" />
+          <equals arg1="${input.server.wl.secure.bo}" arg2="true" />
+        </or>
+      </condition>
+      
+        <condition property="install.is-ssl-enabled-pincomm-install">
+            <and>
+                <equals arg1="${input.tender.authorization.pincomm.sslEnabled}" arg2="true" />
+            </and>		  
+        </condition> 
+
+    </target>
+
+</project>

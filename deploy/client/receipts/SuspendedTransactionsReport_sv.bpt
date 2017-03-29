@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/SuspendedTransactionsReport_sv.bpt /main/2 2010/09/06 14:06:04 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/25/09 - make 3 columns in report stretch=true
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    atirkey   02/19/09 - modified header
+ *    mahising  02/18/09 - fixed reasone code issue
+ *    ddbaker   01/26/09 - Test Automation Changes for
+ *                         SuspendedTransactionsReport
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="SuspendedTransactionsReport" copies="1">
+    <report name="SummaryReportReport" id="1">
+        <group id="1">
+            <line id="18687346">
+                <element text="Rapport över inställda transaktioner" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="8755816" />
+            <line id="22831804">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text="  " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="5660886">
+                <element text="Varuhus:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Kassa:" id="26203554" justified="2" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="15696851">
+                <element text="Kassör-ID:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Ingen rapport – utbildningsläge *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="8970080">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="2654895" />
+            <line id="32048085">
+                <methodElement precededBySpace="false" valuePrintedWhenFalse="Det finns inga inställda transaktioner" valuePrintedWhenTrue="" id="32292100">
+                    <method returns="boolean" name="hasSuspendedTransactions" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport" />
+                </methodElement>
+            </line>
+        </group>
+        <group id="2">
+            <line id="6164937">
+                <element text="Transaktion " id="7159380" />
+                <methodElement id="21604517">
+                    <method returns="TransactionSummaryIfc[]" name="getTransactionSummaries" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport">
+                        <method returns="TransactionIDIfc" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionSummaryIfc">
+                            <method returns="String" name="getTransactionIDString" class="oracle.retail.stores.domain.transaction.TransactionIDIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32520704">
+                <element text="Kassör" id="7159380" stretch="true" />
+                <element text="Kassa" id="24967462" justified="1" stretch="true" />
+                <element text="Totalt " id="17119810" justified="2" stretch="true" />
+            </line>
+            <line id="15199745">
+                <methodElement precededBySpace="false" id="16120543" stretch="true">
+                    <method returns="TransactionSummaryIfc[]" name="getTransactionSummaries" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport">
+                        <method returns="String" name="getCashierID" class="oracle.retail.stores.domain.transaction.TransactionSummaryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="24619784" justified="1" stretch="true">
+                    <method returns="TransactionSummaryIfc[]" name="getTransactionSummaries" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport">
+                        <method returns="String" name="getTillID" class="oracle.retail.stores.domain.transaction.TransactionSummaryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="18209559" justified="2" stretch="true">
+                    <method returns="TransactionSummaryIfc[]" name="getTransactionSummaries" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport">
+                        <method returns="CurrencyIfc" name="getTransactionTotal" class="oracle.retail.stores.domain.transaction.TransactionSummaryIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="23500986">
+                <element text="Orsakskod:" id="7159380" dependsOnPresenceOf="27495052" />
+                <methodElement printedWhenLengthZero="false" id="27495052">
+                    <method returns="TransactionSummaryIfc[]" name="getTransactionSummaries" class="oracle.retail.stores.pos.reports.SuspendedTransactionsReport">
+                        <method returns="LocalizedCodeIfc" name="getSuspendReason" class="oracle.retail.stores.domain.transaction.TransactionSummaryIfc">
+                            <method returns="String" name="getText" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="485912" />
+        </group>
+        <group id="9987904">
+            <line id="14050342">
+                <element text=" SLUT PÅ RAPPORTEN " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Ingen rapport – utbildningsläge *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

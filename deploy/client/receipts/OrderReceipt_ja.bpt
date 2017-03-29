@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/OrderReceipt_ja.bpt /main/13 2010/09/06 14:05:59 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   06/26/09 - implement QUANTITY formatting for printed number
+ *                         qhich prints as an int or a double
+ *    cgreene   03/31/09 - added method isRefundDue() to to OrderTransactionIfc
+ *                         and hasCollectedTnderLineItems to
+ *                         TenderTransactionIfc for use in printing order
+ *                         receipts
+ *    cgreene   03/20/09 - set Damaged Discount as the reason code text to
+ *                         display on receipts when printing
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/09/09 - remove extra order number under barcode because
+ *                         barcode actually has barcode printed along with it
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fix stretch and alignment so that mock padding does
+ *                         not affect currency alignment
+ *    npoola    03/04/09 - changed OrderNumber to be printed BarCode along with
+ *                         the number
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    cgreene   02/20/09 - cut paper at end of main report body
+ *    npoola    02/17/09 - PDO receipt changes
+ *    ddbaker   01/23/09 - Test Automation Changes for OrderReceipt
+ *    cgreene   12/22/08 - add copies attribute to blueprint
+ *    cgreene   12/12/08 - limit space of item desc to 25 chars
+ *    cgreene   12/11/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="OrderReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <report name="Report" id="16879914">
+        <group id="908342820">
+            <line id="31384576">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8439983" />
+                <element text=" " id="511877" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="29350564" />
+            </line>
+            <line id="1537969">
+                <element text="キャッシャ:" id="1260931880" />
+                <methodElement id="33394905">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="EmployeeIfc" name="getSalesAssociate" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="PersonNameIfc" name="getName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.utility.PersonName" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7211189" />
+            <line id="9199557" />
+            <line id="20526817">
+                <methodElement precededBySpace="false" id="4763499" printedAsBarcode="true" justified="1" stretch="true">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21101238">
+                <element text="" id="561914238" fillChar="_" stretch="true" />
+            </line>
+            <line id="4508606" />
+            <line id="30008954">
+                <element text="発注番号:" id="13399538" />
+                <methodElement id="4716212">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3823508">
+                <element text="  顧客:" id="30020564" />
+                <methodElement id="11340099">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16768502">
+                <element text="  " id="27619845" dependsOnPresenceOf="18845678" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="18845678">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29919449">
+                <element text="  ステータス:" id="24802908" />
+                <methodElement formatter="0#新規|1#印刷済み|2#一部|3#受注済み|4#キャンセル済み|5#完了|6#取消済み" id="23003831">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="int" name="getOrderStatus" class="oracle.retail.stores.domain.order.OrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27644772">
+                <element text="" id="561914238" fillChar="_" stretch="true" />
+            </line>
+            <line id="23255297" />
+        </group>
+        <group id="2019194970">
+            <line id="10822310">
+                <methodElement precededBySpace="false" id="14630019" stretch="true">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                         <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                        </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="15301615" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getExtendedDiscountedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" formatter="T#T|N#N|E#E|R#R|O#O" id="7524737">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="String" name="getReceiptCode" class="oracle.retail.stores.domain.tax.TaxInformationContainer" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25559096">
+                <element text="  " id="23835806" />
+                <methodElement fixedWidth="15" precededBySpace="false" id="2016180268" stretch="true">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="5" formatter="数量" id="21626707" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="BigDecimal" name="getItemQuantity" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="java.math.BigDecimal" name="abs" class="java.math.BigDecimal" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" @" id="147851472" />
+                <methodElement fixedWidth="9" id="888288498" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="10121231" />
+            </line>
+            <line id="7896086" dependsOnPresenceOf="1513642552">
+                <element text="  取り引き条件の値引き額" id="1270500282" dependsOnPresenceOf="1513642552" stretch="true" />
+                <methodElement fixedWidth="11" printedWhenLengthZero="false" printedWhenValueZero="false" id="1513642552" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getItemDiscountAmount" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="491536" dependsOnPresenceOf="1513642552" />
+            </line>
+            <line id="21667260" dependsOnPresenceOf="8120088">
+                <element text=" " id="6434374" dependsOnPresenceOf="26980615" />
+                <methodElement fixedWidth="5" printedWhenLengthZero="false" id="26980615">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="TaxInformationIfc[]" name="getTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="=" id="24966031" dependsOnPresenceOf="6109958" />
+                <methodElement fixedWidth="7" precededBySpace="false" printedWhenLengthZero="false" id="6109958">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="TaxInformationIfc[]" name="getTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="CurrencyIfc" name="getTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="1" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="@" id="8120088">
+                    <method returns="boolean" name="isPrintItemTax" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <methodElement fixedWidth="6" formatter="0.0000" printedWhenLengthZero="false" id="18680147" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="TaxInformationIfc[]" name="getTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="BigDecimal" name="getTaxPercentage" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="%" id="4623075" dependsOnPresenceOf="28973522" />
+                <methodElement fixedWidth="7" printedWhenLengthZero="false" id="28973522" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="TaxInformationIfc[]" name="getTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="23690087">
+                <element text="  適用済み保証金:" id="31323709" />
+                <methodElement id="5842108">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="CurrencyIfc" name="getDepositAmount" class="oracle.retail.stores.domain.lineitem.OrderItemStatus" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2409635">
+                <element text="  ステータス:" id="13266818" />
+                <methodElement formatter="0#新規|1#保留|2#受注済み|3#キャンセル済み|4#ピックアップ済み|5#ピックアップ|6#キャンセル|7#取消済み|8#配送" id="19597109">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="EYSStatusIfc" name="getStatus" class="oracle.retail.stores.domain.lineitem.OrderItemStatus">
+                                    <method returns="int" name="getStatus" class="oracle.retail.stores.domain.utility.EYSStatusIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="Date.SHORT" id="1778596">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderLineItemIfc[]" name="getOrderLineItems" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="EYSStatusIfc" name="getStatus" class="oracle.retail.stores.domain.lineitem.OrderItemStatus">
+                                    <method returns="EYSDate" name="getLastStatusChange" class="oracle.retail.stores.domain.utility.EYSStatusIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22945909" />
+        </group>
+        <group id="16225726">
+            <line id="1352077">
+                <element text="値引き合計" id="3380859" dependsOnPresenceOf="20911807" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="20911807" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getSaleDiscountTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="28698671" />
+            </line>
+            <line id="20910958" dependsOnPresenceOf="20911807" />
+            <line id="19509473">
+                <element text="小計" id="16464374" stretch="true" />
+                <methodElement id="32857437" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getPreTaxSubtotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="25058902" />
+            </line>
+            <line id="534354" dependsOnPresenceOf="30287223" />
+            <line id="1812813">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="  税" valuePrintedWhenTrue="" id="30287223" stretch="true">
+                    <method returns="boolean" name="isVATEnabled" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <methodElement id="25630003" dependsOnPresenceOf="30287223" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getTaxTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="29285757" dependsOnPresenceOf="30287223" />
+            </line>
+            <line id="534353" />
+            <line id="21846985">
+                <element text="合計" id="1184712349" stretch="true" />
+                <methodElement id="25860324" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="2188603" />
+            </line>
+            <line id="29683960" />
+            <line id="11024915">
+                <element text="最低保証金額" id="13352195" stretch="true" />
+                <methodElement id="2803863" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getStatus" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getMinimumDepositAmount" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="20101720" />
+            </line>
+            <line id="8180602" />
+            <line id="18885993">
+                <element text="支払済保証金" id="33004721" stretch="true" />
+                <methodElement id="14085511" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getStatus" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getDepositAmount" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="8765702" />
+            </line>
+            <line id="3975755" />
+            <line id="13640204">
+                <element text="不足額" id="20274640" stretch="true" />
+                <methodElement id="22192115" justified="2">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getStatus" class="oracle.retail.stores.domain.order.OrderIfc">
+                            <method returns="CurrencyIfc" name="getBalanceDue" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="4530791" />
+            </line>
+            <line id="30645378" />
+            <line id="7031149" />
+            <line id="27366488">
+                <element text="発注番号" id="29937172" justified="1" stretch="true" />
+            </line>
+            <line id="17975110" />
+            <line id="17131806">
+                <methodElement precededBySpace="false" id="6633278" printedAsBarcode="true" justified="1" stretch="true">
+                    <method returns="OrderIfc" name="getOrder" class="oracle.retail.stores.pos.receipt.OrderReceiptParameterBeanIfc">
+                        <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17047809" />
+            <line id="5521175" />
+            <line id="30784646" />
+        </group>
+    </report>
+</blueprint>
+
+

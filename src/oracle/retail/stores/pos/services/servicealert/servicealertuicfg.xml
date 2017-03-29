@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/servicealert/servicealertuicfg.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:29 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/17/09 - Added ADE Header
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     $Log:
+      4    360Commerce 1.3         12/19/2007 6:05:38 AM  VIVEKANAND KINI
+           Changes done to comment the Email button.
+      3    360Commerce 1.2         3/31/2005 4:29:56 PM   Robert Pearse
+      2    360Commerce 1.1         3/10/2005 10:25:12 AM  Robert Pearse
+      1    360Commerce 1.0         2/11/2005 12:14:10 PM  Robert Pearse
+     $
+     Revision 1.2  2004/02/12 16:51:58  mcs
+     Forcing head revision
+
+     Revision 1.1.1.1  2004/02/11 01:04:20  cschellenger
+     updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE UICFG SYSTEM "classpath://oracle/retail/stores/pos/config/defaults/posui.dtd">
+
+<UICFG>
+
+    <BEAN
+        specName="ServiceSelectSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="ListBean">
+        <BEANPROPERTY propName="renderer"
+                      propValue="oracle.retail.stores.pos.ui.beans.ServiceSelectRenderer"/>
+        <BEANPROPERTY propName="labelTags" propValue="TypeLabel,DateLabel,TimeLabel"/>
+        <BEANPROPERTY propName="labelWeights" propValue="22,39,39"/>
+        <BEANPROPERTY propName="focused" propValue="false"/>
+    </BEAN>
+
+    <BEAN
+            specName="ServiceAlertButtonSpec"
+            configuratorPackage="oracle.retail.stores.pos.ui"
+            configuratorClassName="POSBeanConfigurator"
+            beanPackage="oracle.retail.stores.pos.ui.beans"
+            beanClassName="NavigationButtonBean">
+
+            <BUTTON
+                actionName="Refresh"
+                enabled="true"
+                keyName="F2"
+                labelTag="Refresh"/>
+
+            <BUTTON
+                actionName="Orders"
+                enabled="true"
+                keyName="F3"
+                labelTag="Orders"/>
+
+            <BUTTON
+                actionName="WebStore"
+                enabled="true"
+                keyName="F4"
+                labelTag="WebStore"/>
+
+			<!--
+				Made Changes to remove Email button on the Service Alert Screen, So that the application
+				user is not able to view/ edit any emails being sent from the application
+				Changes Made as per FR51 for PABP
+			-->
+
+            <!-- <BUTTON
+                actionName="EmailFind"
+                enabled="true"
+                keyName="F5"
+                labelTag="E-Mail"/> -->
+
+    </BEAN>
+
+    <BEAN
+            specName="NoWebStoreServiceAlertButtonSpec"
+            configuratorPackage="oracle.retail.stores.pos.ui"
+            configuratorClassName="POSBeanConfigurator"
+            beanPackage="oracle.retail.stores.pos.ui.beans"
+            beanClassName="NavigationButtonBean">
+
+            <BUTTON
+                actionName="Refresh"
+                enabled="true"
+                keyName="F2"
+                labelTag="Refresh"/>
+
+            <BUTTON
+                actionName="Orders"
+                enabled="true"
+                keyName="F3"
+                labelTag="Orders"/>
+
+           <!--
+				Made Changes to remove Email button on the Service Alert Screen, So that the application
+				user is not able to view/ edit any emails being sent from the application
+				Changes Made as per FR51 for PABP
+			-->
+            <!-- <BUTTON
+                actionName="EmailFind"
+                enabled="true"
+                keyName="F4"
+                labelTag="E-Mail"/> -->
+
+    </BEAN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="servicealertText"
+        specName="SERVICE_ALERT_LIST">
+
+        <ASSIGNMENT
+            areaName="WorkPanel"
+            beanSpecName="ServiceSelectSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="ServiceAlertScreenName"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="ServiceAlertPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="ServiceAlertButtonSpec">
+        </ASSIGNMENT>
+
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[false],Undo[true],Clear[false],Next[true],Keys[true]"/>
+        </ASSIGNMENT>
+
+
+    </OVERLAYSCREEN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="servicealertText"
+        specName="SERVICE_ALERT_LIST_NO_WEB_STORE">
+
+        <ASSIGNMENT
+            areaName="WorkPanel"
+            beanSpecName="ServiceSelectSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="ServiceAlertScreenName"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="ServiceAlertPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="NoWebStoreServiceAlertButtonSpec">
+        </ASSIGNMENT>
+
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[false],Undo[true],Clear[false],Next[true],Keys[true]"/>
+        </ASSIGNMENT>
+
+
+    </OVERLAYSCREEN>
+
+
+</UICFG>

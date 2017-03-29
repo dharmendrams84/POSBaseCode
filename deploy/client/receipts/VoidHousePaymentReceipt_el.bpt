@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/VoidHousePaymentReceipt_el.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:10 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    08/19/11 - added Manual and Micr entry method
+ *    cgreene   08/15/11 - updated entry method for new enum
+ *    cgreene   10/27/10 - update idePath
+ *    cgreene   05/28/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   03/04/10 - added functionality for parameter
+ *                         AutoPrintCustomerCopy for voids
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   06/08/09 - corrected spacing before tender
+ *    cgreene   05/26/09 - add lines for printing card details
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    cgreene   03/10/09 - add Store Copy element to bottom of all Void
+ *                         receipts
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    blarsen   02/21/09 - fixed a few lignment issues, mainly to compensate
+ *                         for the tax indicator
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - VoidHousePaymentReceipt
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="VoidHousePaymentReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="26460711">
+            <line id="21467514">
+                <element text="Συναλλαγή ακυρώθηκε:" id="28314360" stretch="true" />
+                <methodElement id="1100232">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="3327388" />
+            </line>
+            <line id="27255889" />
+            <line id="4634890" />
+            <line id="18769836">
+                <element text="Πληρωμή σε λογ. καταστ." id="15767179" stretch="true" />
+                <methodElement id="27940535">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="CurrencyIfc" name="getPaymentAmount" class="oracle.retail.stores.domain.transaction.PaymentTransactionIfc">
+                                <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" N " id="3589155" />
+            </line>
+            <line id="19419092">
+                <element text="  Αρ. λογ.:" id="16450634" />
+                <methodElement id="20637968">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="PaymentIfc" name="getPayment" class="oracle.retail.stores.domain.transaction.PaymentTransactionIfc">
+                                <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.financial.PaymentIfc">
+                                    <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26275602" />
+            <line id="4167406">
+                <element text="Υποσύνολο" id="9800455" stretch="true" />
+                <methodElement id="16580732">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getSubtotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="25461099" />
+            </line>
+            <line id="13506221">
+                <element text=" " id="20006202" />
+                <element text="   " id="10909385" />
+            </line>
+            <line id="3325285">
+                <element text="Σύνολο" id="9855602" stretch="true" />
+                <methodElement id="32691889">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="33437939" />
+            </line>
+            <line id="19948346" />
+        </group>
+        <group id="10161691">
+            <line id="2457371">
+                <element text=" " id="29048873" />
+                <methodElement formatter="-1#Άγνωστο|0#Μετρητά|1#Πιστωτ.|2#Κατατεθειμένη επιταγή|3#Ταξιδιωτική επιταγή|4#Δωροεπιταγή|5#Ταχυδρ. τραπεζική επιταγή|6#Χρεωστ.|7#Κουπόνι|8#Δωροκάρτα|9#Πιστωτ. καταστήματος|10#Δωροεπιτ. κάλυψης οφειλής|11#Εντολή αγοράς|12#Ταχυδρομική επιταγή|13#Ηλεκτρονική επιταγή" id="12633492">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="int" name="getTypeCode" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text=" " id="22048607" stretch="true" />
+                <methodElement id="30743156">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="13479927" />
+            </line>
+            <line id="9325323">
+                <element text="   Κάρτα:" id="31625187" dependsOnPresenceOf="25604215" />
+                <methodElement fixedWidth="15" printedWhenLengthZero="false" id="25604215">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getCardType" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="775811">
+                <element text="   Λογ/σμός:" id="15077275" dependsOnPresenceOf="13606396" />
+                <methodElement fixedWidth="7" printedWhenLengthZero="false" id="13606396" justified="right">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14932704">
+                <element text="   Εξουσ.:" id="6734485" dependsOnPresenceOf="12689524" />
+                <methodElement printedWhenLengthZero="false" id="12689524">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="U" prefix="(" suffix=")" printedWhenLengthZero="false" id="21084664" dependsOnPresenceOf="12689524">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuthorizationMethod" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12135651" dependsOnPresenceOf="11862635">
+                <element text="   Μέθ. καταγραφής:" id="28016009" />
+                <methodElement formatter="0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" printedWhenValueZero="true" id="11862635">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="5338285">
+            <line id="12366398" />
+            <line id="5912867">
+                <element text="Αντιστρ. συνόλ. προσφοράς" id="26214267" stretch="true" />
+                <methodElement id="12404975">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getCollectedTenderTotalAmount" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="16122745" />
+            </line>
+            <line id="22897006" />
+            <line id="27766975">
+                <element text=" " id="21249250" />
+                <element text=" " id="14468055" />
+            </line>
+            <line id="4519815" />
+            <line id="30866355">
+                <element text="Υπογραφή υπαλλήλου:" id="16746080" fillChar="_" stretch="true" />
+            </line>
+            <line id="19321823" />
+            <line id="2102960" />
+            <line id="11642082" />
+            <line id="12582949">
+                <element text="Υπογραφή Υπευθ.:" id="3586619" fillChar="_" stretch="true" />
+            </line>
+            <line id="9255558" />
+            <line id="21604244" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="23377644" cutPaper="false">
+        <group id="6">
+            <line id="736613" />
+            <line id="31034430">
+                <copyElement id="9960643" justified="center" stretch="true">
+                    <copyText>Αντίγρ. καταστ.</copyText>
+                    <copyText>Αντίγρ. πελάτη</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TillPickupReceipt_it.bpt /main/14 2010/09/06 14:06:06 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/19/09 - added better support for printing checks in
+ *                         different count types
+ *    cgreene   03/18/09 - rearracnge to fix width of first column to 18 chars
+ *                         so denominations do not get truncated
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    cgreene   03/13/09 - added choice formats for Checks tenders and others
+ *    cgreene   03/11/09 - applied NUMBER formatter to counts so that they
+ *                         print in parentheses when negative
+ *    cgreene   03/11/09 - fix summary, details and none tillloan receipt to
+ *                         print correct in all three formats
+ *    cgreene   03/10/09 - fixed denominations by calling
+ *                         getDemonination.getLocalizedDisplayName
+ *    cgreene   03/07/09 - fixed tender name in first group
+ *    cgreene   03/06/09 - fix some formatting of Denomination header line
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/06/09 - updated text of Canceled Receipt to match
+ *                         header/ankle
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    glwang    02/26/09 - get count type from TillAdjustmentTransaction
+ *                         instead of FinancialCount
+ *    glwang    02/26/09 - enhance till pick to support detail count
+ *    cgreene   02/21/09 - add iscanceled boolean elements
+ *    cgreene   02/20/09 - set cutPaper to false on header
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for TillPickupReceipt
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="TillPickupReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="15162467" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914">
+        <group id="908342820">
+            <line id="22310332" dependsOnPresenceOf="21037844">
+                <methodElement precededBySpace="false" formatter="-1#Sconosc.|0#Contante|1#Cred.|2#Ass.|3#Tr. cheque|4#Buono reg.|5#Invio ass. per posta|6#Debito|7#Coupon|8#Tess. om.|9#Buono merce|10#Buono reg. c. comm.|11#OdA|12#Ord. pag.|13#Ass. elet." printedWhenLengthZero="false" id="13047370">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TenderDescriptorIfc" name="getTender" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="int" name="getTenderType" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="6" prefix="(" suffix=")" printedWhenLengthZero="false" id="4755734">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="21037844">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="boolean" name="isCountTypeNone" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="29197083">
+            <line id="28241477" dependsOnPresenceOf="10967850">
+                <methodElement precededBySpace="false" formatter="-1#Sconosc.|0#Contante|1#Cred.|2#Ass.|3#Tr. cheque|4#Buono reg.|5#Invio ass. per posta|6#Debito|7#Coupon|8#Tess. om.|9#Buono merce|10#Buono reg. c. comm.|11#OdA|12#Ord. pag.|13#Ass. elet." printedWhenLengthZero="false" id="13047370">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TenderDescriptorIfc" name="getTender" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="int" name="getTenderType" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="6" prefix="(" suffix=")" printedWhenLengthZero="false" id="4755734">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="10967850" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="boolean" name="isCountTypeSummary" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+                <methodElement id="5235745">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12116550" dependsOnPresenceOf="18935620" />
+            <line id="15370620" dependsOnPresenceOf="10967850">
+                <element text="Da n. registr." id="32003953" dependsOnPresenceOf="18935620" />
+                <methodElement printedWhenLengthZero="false" id="18935620">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getFromRegister" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17935649" dependsOnPresenceOf="10967850">
+                <element text="A n. registr." id="8488087" dependsOnPresenceOf="30722419" />
+                <methodElement printedWhenLengthZero="false" id="30722419">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getToRegister" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="23152257">
+            <line id="22806127" dependsOnPresenceOf="17050449">
+                <methodElement fixedWidth="18" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Denominaz." id="17050449">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="boolean" name="isCountTypeDetail" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="Cont." id="24958953" justified="2" stretch="true" />
+                <element text="Impor." id="183689" justified="2" stretch="true" />
+            </line>
+            <line id="3248193" dependsOnPresenceOf="17050449" />
+            <line id="11729828" dependsOnPresenceOf="17050449">
+                <methodElement fixedWidth="18" precededBySpace="false" printedWhenLengthZero="false" id="7454304">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="FinancialCountTenderItemIfc[]" name="getDetailTenders" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem">
+                                <method returns="TenderDescriptorIfc" name="getTenderDescriptor" class="oracle.retail.stores.domain.financial.FinancialCountTenderItem">
+                                    <method returns="DenominationIfc" name="getDenomination" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc">
+                                        <method returns="String" name="getDenominationDisplayName" class="oracle.retail.stores.commerceservices.common.currency.DenominationIfc" param="Locale" />
+                                    </method>
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="18" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Assegno" id="1966323">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="boolean" name="isTenderTypeCheck" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="5" formatter="#0;(0#)" id="28428022" justified="2" stretch="true">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="FinancialCountTenderItemIfc[]" name="getDetailTenders" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem">
+                                <method returns="int" name="getNumberItemsTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItem" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="5498306" justified="2" stretch="true">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="FinancialCountTenderItemIfc[]" name="getDetailTenders" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem">
+                                <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItem" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="23152258">
+            <line id="22806128" dependsOnPresenceOf="17050450">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="17050450">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="boolean" name="isCountTypeDetail" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16382052" dependsOnPresenceOf="17050450">
+                <element text="Totali" id="2192274" />
+                <methodElement fixedWidth="12" prefix="(" suffix=")" printedWhenLengthZero="false" id="4625083">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="FinancialCountTenderItemIfc[]" name="getDetailTenders" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem">
+                                <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItem">
+                                    <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                        <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                                    </method>
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="#0;(0#)" id="12292553" justified="2" stretch="true">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="int" name="getNumberItemTotals" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="24278825" justified="2" stretch="true">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="FinancialCountTenderItemIfc" name="getSummaryTender" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem">
+                                <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItem" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32721119" dependsOnPresenceOf="17050450" />
+            <line id="10683578" dependsOnPresenceOf="17050450">
+                <methodElement fixedWidth="18" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Previsto" id="10305452">
+                    <method returns="FinancialCountIfc" name="getFinancialCount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TillAdjustmentReportItem[]" name="getAllDetailTenderItems" class="oracle.retail.stores.domain.financial.FinancialCount">
+                            <method returns="boolean" name="isTenderTypeCheck" class="oracle.retail.stores.domain.financial.TillAdjustmentReportItem" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="#0;(0#)" printedWhenLengthZero="false" id="29498125" dependsOnPresenceOf="1966323" justified="2" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="int" name="getExpectedCount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="21092372" dependsOnPresenceOf="1966323" justified="2" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getExpectedAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31264333" dependsOnPresenceOf="17050450" />
+            <line id="19891446" dependsOnPresenceOf="17050450">
+                <element text="Da n. registr." id="32003953" dependsOnPresenceOf="18935620" />
+                <methodElement printedWhenLengthZero="false" id="18935620">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getFromRegister" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15026854" dependsOnPresenceOf="17050450">
+                <element text="A n. registr." id="8488087" dependsOnPresenceOf="30722419" />
+                <methodElement printedWhenLengthZero="false" id="30722419">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getToRegister" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="18196034">
+            <line id="3262917" />
+            <line id="2371810" />
+            <line id="30726719" />
+            <line id="5658473">
+                <element text="Firma:" id="8700456" fillChar="_" stretch="true" />
+            </line>
+            <line id="6081769" dependsOnPresenceOf="523950" />
+            <line id="5144158">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Transaz. annullata *" id="523950" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isCanceled" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18254564" />
+            <line id="32448823">
+                <copyElement id="21995453" justified="1" stretch="true">
+                    <copyText>Copia neg.</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

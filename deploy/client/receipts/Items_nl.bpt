@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Items_nl.bpt /rgbustores_13.4x_generic_branch/1 2011/10/12 06:16:08 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rsnayak   08/29/11 - forward port 12917533 fix for promotion description
+ *    cgreene   12/01/10 - implement saving applied promotion names into
+ *                         tr_ltm_prm table
+ *    abhayg    10/06/10 - FIX FOR EJOURNAL SHOWS WRONG POS DISCOUNT VALUE
+ *    npoola    09/01/10 - print serial number and size only when they are non
+ *                         zero
+ *    npoola    08/30/10 - Added the Item Size to the receipt
+ *    npoola    08/24/10 - change made to print itemsize when the length is not
+ *                         zero
+ *    rrkohli   08/10/10 - fix to display item size on receipt
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   06/26/09 - implement QUANTITY formatting for printed number
+ *                         qhich prints as an int or a double
+ *    cgreene   06/03/09 - switch to method ReturnItem.hasOriginalTransactionID
+ *    cgreene   05/05/09 - fix duplicate FINAL SALE
+ *    cgreene   04/23/09 - made discount lines repeat together
+ *    cgreene   04/22/09 - set getReceiptTaxPercentage to print even when zero 
+ *                         and use getOrderTaxInformations
+ *    blarsen   04/20/09 - The <item #> <quantity> @ <price> line should not be
+ *                         printed for gift card reloads. Making special method
+ *                         to return a null selling price for this condition.
+ *    blarsen   04/20/09 - Adding a colon after gift card number (to comply
+ *                         with requirements).
+ *    cgreene   04/15/09 - hide tax percent if it is zero percent per defect
+ *                         3402
+ *    cgreene   04/05/09 - make bottom line disappear if part of price
+ *                         adjustment
+ *    cgreene   04/04/09 - moved return item info below tax lines per mockups
+ *    djenning  04/03/09 - handle kit components (gift cards/gift certs cannot
+ *                         be components)
+ *    cgreene   03/31/09 - fixed missing promotion name on receipt by
+ *                         refactoring appliedPromotion to ItemPrice object and
+ *                         setPromotionName from PriceChange.setCloneAttributes
+ *    cgreene   03/30/09 - implement lines for Price Adjustments
+ *    djenning  03/28/09 - merged
+ *    djenning  03/28/09 - Enter a single line comment: creating
+ *                         isSalesAssociateModifiedAtLineItem(), which is
+ *                         similar to getSalesAssociateModified(), and using it
+ *                         at receipt to determine whether to print the
+ *                         SalesAssociate at the line item. Jack warned against
+ *                         modifying the existing method as it is used for
+ *                         something else.
+ *    cgreene   03/27/09 - change Pickedup to Picked Up
+ *    cgreene   03/27/09 - implemented method getDescriptionCode for printing
+ *                         discount types
+ *    cgreene   03/26/09 - adjusted stretch on tax rate line so that rule name
+ *                         always gets 5 chars
+ *    cgreene   03/26/09 - implemented price override mraker in Items.bpt by
+ *                         adding method to ItemPrice
+ *    cgreene   03/25/09 - changed # to Number and GC Available Balance to
+ *                         Balance Available
+ *    cgreene   03/20/09 - keep kit components off receipts by implementing new
+ *                         method getLineItemsExceptExclusions
+ *    cgreene   03/20/09 - Added FINAL SALE if discount is a damage discount
+ *    cgreene   03/20/09 - fix classname of discount reason text
+ *    cgreene   03/19/09 - get promotion name from promo on line item
+ *    djenning  03/13/09 - merged
+ *    djenning  03/13/09 - adding modified sales associate
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/10/09 - added lines for gift cert number and value
+ *    cgreene   03/06/09 - fixed tax of and override lines to print also when
+ *                         tax is switched off
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - hide item elements and tax elements that might have
+ *                         shown even if there were no items printed, e.g. a
+ *                         cancel
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *
+ * ===========================================================================
+ *
+ -->
+<blueprint id="Items" copies="1">
+    <report name="ItemsReport" id="1">
+        <group id="2019194970">
+            <line id="10822310" dependsOnPresenceOf="15301615">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="26745574">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="14630019" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="15301615" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getExtendedDiscountedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" formatter="T#T|N#N|E#E|R#R|O#O" id="7524737">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="String" name="getReceiptCode" class="oracle.retail.stores.domain.tax.TaxInformationContainer" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25559096" dependsOnPresenceOf="888288498">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="2001147" dependsOnPresenceOf="2016180268">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="23835806" dependsOnPresenceOf="2016180268" />
+                <methodElement precededBySpace="false" id="2016180268" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="5" formatter="QUANTITY" printedWhenLengthZero="false" id="2049079842" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="BigDecimal" name="getItemQuantity" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="java.math.BigDecimal" name="abs" class="java.math.BigDecimal" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" @" id="147851472" dependsOnPresenceOf="2049079842" />
+                <methodElement fixedWidth="11" printedWhenLengthZero="false" id="888288498" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getPrintedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="7" precededBySpace="false" id="14467450" dependsOnPresenceOf="888288498">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getPriceOverrideMarker" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25087774">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="19153275" dependsOnPresenceOf="26586944">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Aankoopprijs" id="1426482" dependsOnPresenceOf="26586944" />
+                <methodElement printedWhenLengthZero="false" id="26586944">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc" name="getPriceAdjustReturnItem" class="oracle.retail.stores.domain.lineitem.PriceAdjustmentLineItemIfc">
+                            <method returns="CurrencyIfc" name="getSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24018705">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="15839284" dependsOnPresenceOf="15370540">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Huidige prijs" id="31014640" dependsOnPresenceOf="15370540" />
+                <methodElement printedWhenLengthZero="false" id="15370540">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc" name="getPriceAdjustSaleItem" class="oracle.retail.stores.domain.lineitem.PriceAdjustmentLineItemIfc">
+                            <method returns="CurrencyIfc" name="getSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6551921" dependsOnPresenceOf="2016185509">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="25326496">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Size:" id="3508164" />
+                <methodElement printedWhenLengthZero="false" id="2016185509" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemSizeCode" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="13233083" dependsOnPresenceOf="7448286">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="25326496">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Serienummer:" id="3508164" dependsOnPresenceOf="7448286" />
+                <methodElement printedWhenLengthZero="false" id="7448286">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemSerial" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18689851">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="25337343" dependsOnPresenceOf="11617369">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="11617369" justified="center">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemReceiptMessage" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7797400">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Uitgifte" id="16328928">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isGiftCardIssue" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Opn. laden" id="18699280">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isGiftCardReload" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20498046">
+                <element text="  Nr. cadeaubon:" id="8806948" dependsOnPresenceOf="23900372" />
+                <methodElement printedWhenLengthZero="false" id="23900372">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="GiftCardIfc" name="getGiftCard" class="oracle.retail.stores.domain.stock.GiftCardPLUItemIfc">
+                                <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.utility.GiftCardIfc">
+                                    <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardData" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18694649">
+                <element text="  Beschikbaar saldo:" id="18829409" dependsOnPresenceOf="15241738" />
+                <methodElement printedWhenLengthZero="false" id="15241738">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="GiftCardIfc" name="getGiftCard" class="oracle.retail.stores.domain.stock.GiftCardPLUItemIfc">
+                                <method returns="CurrencyIfc" name="getCurrentBalanceForReceipt" class="oracle.retail.stores.domain.utility.GiftCardIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10052669">
+                <element text="  Bonnummer:" id="23917950" dependsOnPresenceOf="10565536" />
+                <methodElement printedWhenLengthZero="false" id="10565536">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getNumber" class="oracle.retail.stores.domain.stock.GiftCertificateItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6727670" dependsOnPresenceOf="10565536">
+                <element text="  Bonwaarde:" id="28906404" dependsOnPresenceOf="23936776" />
+                <methodElement printedWhenLengthZero="false" id="23936776" dependsOnPresenceOf="10565536">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="CurrencyIfc" name="getPrice" class="oracle.retail.stores.domain.stock.PLUItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9127434843">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="2558277" dependsOnPresenceOf="2116181269">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Cad.reg." id="1237854395" dependsOnPresenceOf="2116181269" />
+                <methodElement fixedWidth="15" printedWhenLengthZero="false" id="2116181269">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="RegistryIDIfc" name="getRegistry" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getID" class="oracle.retail.stores.domain.registry.RegistryIDIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18254172">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="23535642" dependsOnPresenceOf="31894699">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="18962813" dependsOnPresenceOf="31894699" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Cadeaubon" id="31894699">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isGiftReceiptItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3397798" dependsOnPresenceOf="19898978">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="29123163" dependsOnPresenceOf="19898978">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="22362982" dependsOnPresenceOf="19898978" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="19898978">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="PromotionLineItemIfc" name="getAppliedPromotion" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc">
+                                <method returns="String" name="getPromotionName" class="oracle.retail.stores.domain.discount.PromotionLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7896086" dependsOnPresenceOf="9941610" repeatNextLineAlso="true">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="10302022" dependsOnPresenceOf="9941610">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="1270500282" dependsOnPresenceOf="9941610" />
+                <methodElement precededBySpace="false" formatter="0#Trans.korting|101#Trans.afwaardering|110#IArtikelkorting|111#Art.waardering|200#Bedrag trans.korting|201#Bedrag trans.afwd.|210#Bedrag art.korting|211#Bedrag art.afwd|1000#Korting klant|2000#Overeenk.korting|2200#Bedrag overeenk.korting.|3000#Winkelcoulance|3200#Bedrag winkelcoulance.|4000#Artikelkorting|5100#Trans.korting|5101#Trans.afwaardering|5110#Artikelkorting|5111#Artikelafwaardering|5200#Bedrag trans.korting|5201#Bedrag trans.afwd.|5210#Bedrag art.korting|5211#Bedrag art.afwd.." printedWhenLengthZero="false" id="22816757" dependsOnPresenceOf="9941610">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="ItemDiscountStrategyIfc[]" name="getItemDiscounts" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc">
+                                <method returns="int" name="getDescriptionCode" class="oracle.retail.stores.domain.discount.DiscountRuleIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="#0%" printedWhenLengthZero="false" printedWhenValueZero="false" id="24661429" dependsOnPresenceOf="9941610">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="ItemDiscountStrategyIfc[]" name="getItemDiscounts" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc">
+                                <method returns="BigDecimal" name="getDiscountRate" class="oracle.retail.stores.domain.discount.DiscountRuleIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="23643124" dependsOnPresenceOf="9941610" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="9941610" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="ItemDiscountStrategyIfc[]" name="getItemDiscounts" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc">
+                                <method returns="CurrencyIfc" name="getDiscountAmount" class="oracle.retail.stores.domain.discount.DiscountRuleIfc">
+                                    <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="8644663" />
+            </line>
+            <line id="32322378" dependsOnPresenceOf="9941610">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="18407519" dependsOnPresenceOf="9941610">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="12791828" dependsOnPresenceOf="9941610" />
+                <methodElement fixedWidth="30" precededBySpace="false" printedWhenLengthZero="false" id="13289674" dependsOnPresenceOf="9941610">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="ItemDiscountStrategyIfc[]" name="getItemDiscounts" class="oracle.retail.stores.domain.lineitem.ItemPriceIfc">
+                                <method returns="LocalizedCodeIfc" name="getReason" class="oracle.retail.stores.domain.discount.DiscountRuleIfc">
+                                    <method returns="String" name="getText" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" param="Locale" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21162208">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="10656604" dependsOnPresenceOf="11052462">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  DEF. VERK." id="11052462">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="hasDamageDiscount" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6284983">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="12771870" dependsOnPresenceOf="4074398">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Adres" id="6559387" dependsOnPresenceOf="4074398" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="4074398">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="int" name="getSendLabelCount" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="216001" dependsOnPresenceOf="13227115">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="22474674" dependsOnPresenceOf="13227115">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="  Bel.overschr:" valuePrintedWhenTrue="  Art.bel.: uit" id="28319921">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemTaxIfc" name="getItemTax" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="boolean" name="isTaxOff" class="oracle.retail.stores.domain.lineitem.ItemTaxIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="#0.00%" printedWhenLengthZero="false" printedWhenValueZero="false" id="3742458">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemTaxIfc" name="getItemTax" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="double" name="getOverrideRate" class="oracle.retail.stores.domain.lineitem.ItemTaxIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="25667547" justified="right" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ItemTaxIfc" name="getItemTax" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="CurrencyIfc" name="getCalculatedOverrideAmount" class="oracle.retail.stores.domain.lineitem.ItemTaxIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="24951907" />
+            </line>
+            <line id="15239745">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="32526156" dependsOnPresenceOf="13227115">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Bel.reden:" id="24231931" dependsOnPresenceOf="13227115" />
+                <methodElement printedWhenLengthZero="false" id="13227115">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AbstractTransactionLineItemIfc[]" name="getLineItemsExceptExclusions" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                            <method returns="ItemTaxIfc" name="getItemTax" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                                <method returns="LocalizedCodeIfc" name="getReason" class="oracle.retail.stores.domain.lineitem.ItemTaxIfc">
+                                    <method returns="String" name="getText" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" param="Locale" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21667260" dependsOnPresenceOf="8120088">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="8356352" dependsOnPresenceOf="28973522">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="8120088" dependsOnPresenceOf="28973522">
+                    <method returns="boolean" name="isPrintItemTax" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <methodElement fixedWidth="5" precededBySpace="false" printedWhenLengthZero="false" id="26980615">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="=" id="24966031" dependsOnPresenceOf="6109958" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="6109958" dependsOnPresenceOf="18680147">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                <method returns="CurrencyIfc" name="getTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="@" id="26276970" dependsOnPresenceOf="18680147" />
+                <methodElement fixedWidth="6" formatter="0.0000" printedWhenLengthZero="false" id="18680147" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                <method returns="BigDecimal" name="getReceiptTaxPercentage" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="%" id="4623075" dependsOnPresenceOf="18680147" />
+                <methodElement printedWhenLengthZero="false" id="28973522" justified="right" stretch="true">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="10280467" dependsOnPresenceOf="28973522" />
+            </line>
+            <line id="32200192">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="8704171" dependsOnPresenceOf="29907270">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Tar voorr.aanvul." id="28115056" dependsOnPresenceOf="29907270" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="29907270" justified="right">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReturnItemIfc" name="getReturnItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="CurrencyIfc" name="getRestockingFee" class="oracle.retail.stores.domain.lineitem.ReturnItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32200191" dependsOnPresenceOf="29907269">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="25111532" dependsOnPresenceOf="29907269">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  " id="28115056" dependsOnPresenceOf="29907269" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Orig. ontv.bewijs:" id="29907269">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isReturnLineItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" valuePrintedWhenFalse="Geen" valuePrintedWhenTrue="" id="32165586">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReturnItemIfc" name="getReturnItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="boolean" name="hasOriginalTransactionID" class="oracle.retail.stores.domain.lineitem.ReturnItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" printedWhenLengthZero="false" id="20311473">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReturnItemIfc" name="getReturnItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="TransactionIDIfc" name="getOriginalTransactionID" class="oracle.retail.stores.domain.lineitem.ReturnItemIfc">
+                                <method returns="String" name="getTransactionIDString" class="oracle.retail.stores.domain.transaction.TransactionIDIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="8" formatter="Date.SHORT" printedWhenLengthZero="false" id="21337088">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReturnItemIfc" name="getReturnItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="EYSDate" name="getOriginalTransactionBusinessDate" class="oracle.retail.stores.domain.lineitem.ReturnItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24957546" dependsOnPresenceOf="24641329">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="26270851" dependsOnPresenceOf="24641329">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Wrkn. verkoop " id="24641329">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isSalesAssociateModifiedAtLineItem" class="oracle.retail.stores.domain.lineitem.AbstractTransactionLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="20893365">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EmployeeIfc" name="getSalesAssociate" class="oracle.retail.stores.domain.lineitem.AbstractTransactionLineItemIfc">
+                            <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.employee.EmployeeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9385846">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="7144501" dependsOnPresenceOf="32519434">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Borgsom toegep.:" id="31323709" dependsOnPresenceOf="32519434" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="32519434">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="CurrencyIfc" name="getDepositAmount" class="oracle.retail.stores.domain.lineitem.OrderItemStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1621940" dependsOnPresenceOf="25614181">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="30425638" dependsOnPresenceOf="25614181">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="  Status:" id="13266818" />
+                <methodElement formatter="0#Nieuw|1#In behandeling|2#Vervuld|3#Geannuleerd|4#Afgehaald|5#Afhalen|6#Annuleren|7#Ongeldig|8#Levering" printedWhenLengthZero="false" id="7840510">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="EYSStatusIfc" name="getStatus" class="oracle.retail.stores.domain.lineitem.OrderItemStatusIfc">
+                                <method returns="int" name="getStatus" class="oracle.retail.stores.domain.utility.EYSStatusIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement formatter="Date.SHORT" printedWhenLengthZero="false" id="25614181">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderItemStatusIfc" name="getOrderItemStatus" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="EYSStatusIfc" name="getStatus" class="oracle.retail.stores.domain.lineitem.OrderItemStatusIfc">
+                                <method returns="EYSDate" name="getLastStatusChange" class="oracle.retail.stores.domain.utility.EYSStatusIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="8240894">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse=" " valuePrintedWhenTrue="" id="233057">
+                    <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isPartOfPriceAdjustment" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

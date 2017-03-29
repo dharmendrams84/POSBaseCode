@@ -1,0 +1,494 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/manager/PaymentManager.xml /rgbustores_13.4x_generic_branch/48 2012/02/10 17:03:48 blarsen Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    blarsen   02/10/12 - Changed routing for PinComm Credit/Debit reversals.
+ *                         These are no loner fire-and-forget. Credit sometimes
+ *                         required interaction with the customer to provide
+ *                         PinComm with token.
+ *    cgreene   11/07/11 - added refundsRequireSignature configuration
+ *    asinton   11/02/11 - reverting back to synchronous call referral flow
+ *    ohorne    10/07/11 - Added client-side Call Referral queues and moved
+ *                         call referral w/o token handling to tour code.
+ *    asinton   09/21/11 - Fixed route for CustomerInteraction in training
+ *                         mode.
+ *    mchellap  09/15/11 - Added StatusInquiry for simulated Authorization
+ *    asinton   09/12/11 - when in transaction reentry mode use
+ *                         SimulatedGiftCardConnector for AuthorizeCard.
+ *    cgreene   08/03/11 - refactored commext to be able to support directory
+ *                         queues
+ *    asinton   07/21/11 - added call referral for checks
+ *    sgu       07/13/11 - add api to get card token
+ *    ohorne    07/14/11 - added more handling for reversals
+ *    sgu       07/06/11 - use reentry auth connector
+ *    sgu       07/01/11 - add reentry mode
+ *    ohorne    07/11/11 - added Servebase reversal flow
+ *    ohorne    07/07/11 - added PinComm reversal flow
+ *    asinton   07/07/11 - Fixed authorization for call referral in training
+ *                         mode.
+ *    blarsen   06/30/11 - Added StatusInquiry routes to return the auth svc's
+ *                         current status.
+ *    jswan     06/22/11 - Added configuration for Signature Capture.
+ *    sgu       06/16/11 - use default action rule
+ *    blarsen   06/14/11 - Removing IsSwipeAhead. This is being handled by the
+ *                         CustomerInteraction request.
+ *    sgu       06/13/11 - set up training mode for house account
+ *    ohorne    06/14/11 - removed AuthorizeHouseAccount route
+ *    cgreene   06/13/11 - chain a ServebaseConnector in front of the socket
+ *                         connector
+ *    cgreene   06/10/11 - add sim auths for gift cards and house account when
+ *                         in training mode
+ *    ohorne    06/03/11 - added AuthorizeHouseAccount route
+ *    icole     06/10/11 - Change CustomerInteraction for PinComm
+ *    blarsen   06/09/11 - Added IsSwipeAhead request. Renamed several routers
+ *                         to not include 'Authorize' prefix (removed from
+ *                         PaymentManger code.)
+ *    sgu       05/20/11 - refactor instant credit inquiry flow
+ *    cgreene   05/20/11 - implemented enums for reponse code and giftcard
+ *                         status code
+ *    ohorne    05/19/11 - training mode support for check/echeck
+ *    ohorne    05/13/11 - installer support for PINComm and Servebase
+ *    blarsen   05/12/11 - Added route for Credit/Debit/GiftCard Authorization
+ *    sgu       05/12/11 - refactor instant credit formatters
+ *    sgu       05/10/11 - convert instant credit inquiry by SSN to use new
+ *                         payment manager
+ *    sgu       05/05/11 - change commext rounting on client side
+ *    ohorne    05/09/11 - added eCheck route
+ *    sgu       05/05/11 - change commext routing on client side
+ *    sgu       04/26/11 - merge with owen's code
+ *    sgu       04/25/11 - check in all
+ *    cgreene   04/13/11 - commented out Sardine connector for now
+ *    sgu       04/12/11 - configure payment manager/technician
+ *    cgreene   03/09/11 - apf refactoring and tweaks
+ *    cgreene   03/01/11 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE MSGDISP SYSTEM "classpath://oracle/retail/stores/platform/client/message/config/msgdisp.dtd">
+
+<MSGDISP monitorinterval="300">
+    <COMMENT>
+        PaymentManager connector configuration XML for production.
+    </COMMENT>
+
+    <!-- Message filters are listed below. Routes without a filter specified
+        accept all messages. Filters must implement
+        oracle.retail.stores.commext.message.filter.FilterIfc -->
+    <FILTERS>
+        <!-- filter for requests in Training Mode -->
+        <FILTER name="TrainingModeFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodName" propvalue="isTrainingMode"/>
+            <PROPERTY propname="methodResult" propvalue="true"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for requests in TransReentry Mode -->
+        <FILTER name="TransReentryModeFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodName" propvalue="isTransReentryMode"/>
+            <PROPERTY propname="methodResult" propvalue="true"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for Gift Card auth -->
+        <FILTER name="GiftCardFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodNames" propvalue="getRequestTenderType"/>
+            <PROPERTY propname="methodResults" propvalue="GIFT_CARD"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for Gift Card auth in Training Mode -->
+        <FILTER name="TrainingModeGiftCardFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodNames" propvalue="getRequestTenderType,isTrainingMode"/>
+            <PROPERTY propname="methodResults" propvalue="GIFT_CARD,true"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for Gift Card auth in TransReentry Mode -->
+        <FILTER name="TransReentryModeGiftCardFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodNames" propvalue="getRequestTenderType,isTransReentryMode"/>
+            <PROPERTY propname="methodResults" propvalue="GIFT_CARD,true"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for Gift Card inquiry in TransReentry Mode -->
+        <FILTER name="TransReentryModeGiftCardInquiryFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodNames" propvalue="getRequestTenderType,getRequestSubType,isTransReentryMode"/>
+            <PROPERTY propname="methodResults" propvalue="GIFT_CARD,Inquiry,true"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+        <!-- filter for call referral messages that do have a token -->
+        <FILTER name="CallReferralWithTokenFilter"
+            javaclass="oracle.retail.stores.commext.message.filter.MethodResultFilter">
+            <PROPERTY propname="methodNames" propvalue="isCallReferralWithoutToken"/>
+            <PROPERTY propname="methodResults" propvalue="false"/>
+            <PROPERTY propname="accept" propvalue="true" proptype="BOOLEAN"/>
+        </FILTER>
+
+    </FILTERS>
+
+    <!--  Message formatters are listed below. Formatters must implement
+         oracle.retail.stores.commext.message.formatter.FormatterIfc -->
+    <FORMATTERS>
+        <FORMATTER name="PassThruFormatter"
+            javaclass="oracle.retail.stores.commext.message.formatter.PassThroughFormatter" />
+
+        <FORMATTER name="ConnectorValetFormatter"
+            javaclass="oracle.retail.stores.commext.message.formatter.ConnectorValetFormatter" />
+
+        <!-- BEGIN formatters for Servebase integration
+        <FORMATTER name="ServebaseFormatter"
+            javaclass="oracle.retail.stores.domain.manager.payment.servebase.ServebaseFormatter">
+            <PROPERTY propname="jaxbContextPath" propvalue="oracle.retail.stores.domain.manager.payment.servebase"/>
+            <PROPERTY propname="formattedOutput" propvalue="false" proptype="BOOLEAN"/>
+            <PROPERTY propname="merchantId" propvalue="$SERVEBASE_MERCHANTID"/>
+            <PROPERTY propname="customerCode" propvalue="$SERVEBASE_CUSTOMERCODE"/>
+            <PROPERTY propname="site" propvalue="$SERVEBASE_SITE"/>
+            <PROPERTY propname="userName" propvalue="$SERVEBASE_USERNAME"/>
+            <PROPERTY propname="password" propvalue="servebasePceftUser"/>
+            <PROPERTY propname="refundsRequireSignature" propvalue="true" proptype="BOOLEAN"/>
+        </FORMATTER>
+        END formatters for Servebase integration -->
+
+    </FORMATTERS>
+
+    <!-- Connectors to external systems are listed below. Connector classes must
+        implement oracle.retail.stores.commext.connector.ConnectorIfc -->
+    <CONNECTORS>
+
+        <CONNECTOR name="NoopConnector"
+            javaclass="oracle.retail.stores.commext.connector.NoopConnector"/>
+
+        <!-- BEGIN connectors for Training Mode and Simulated Authentication -->
+        <CONNECTOR name="SimulatedAuthConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SimulatedAuthConnector" />
+
+        <CONNECTOR name="SimulatedGiftCardAuthConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SimulatedGiftCardAuthConnector" />
+
+        <CONNECTOR name="SimulatedInstantCreditConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SimulatedInstantCreditConnector" />
+
+        <CONNECTOR name="SimulatedCPOIConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SimulatedCPOIConnector" />
+
+        <CONNECTOR name="SimulatedSignatureCaptureConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SimulatedSignatureCaptureConnector" />
+
+        <!-- END connectors for Training Mode and Simulated Authentication -->
+
+        <!-- This connector requires simjpos.jar to be in the classpath. -->
+        <!-- CONNECTOR name="SardineCPOIConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SardineCPOIConnector">
+            <PROPERTY propname="guiLogicalName" propvalue="cpoiGUI" />
+            <PROPERTY propname="msrLogicalName" propvalue="cpoiMSR" />
+            <PROPERTY propname="pinPadLogicalName" propvalue="cpoiPINPad" />
+            <PROPERTY propname="debitPINTimeout" propvalue="30000" proptype="INTEGER" />
+            <PROPERTY propname="msrTimeout" propvalue="30000" proptype="INTEGER" />
+            <PROPERTY propname="guiTimeout" propvalue="30000" proptype="INTEGER" />
+        </CONNECTOR>
+
+        <CONNECTOR name="SardineSignatureCaptureConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.simulated.SardineSignatureCaptureConnector">
+            <PROPERTY propname="guiLogicalName" propvalue="cpoiGUI" />
+            <PROPERTY propname="sigCapLogicalName" propvalue="cpoiSignatureCapture" />
+            <PROPERTY propname="sigCapTimeout" propvalue="25000" proptype="INTEGER" />
+            <PROPERTY propname="guiTimeout" propvalue="30000" proptype="INTEGER" />
+        </CONNECTOR>
+        END Sardine Connectors-->
+
+        <!-- BEGIN connectors for PINComm integration
+        <CONNECTOR name="PaymentTechnicianConnector"
+            javaclass="oracle.retail.stores.commext.connector.technician.TechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="PaymentTechnician" />
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="ReversalConnector" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="PaymentTechnicianConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="ReversalQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <CHAINED_CONNECTOR name="AuthorizeCallReferralConnector" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="PaymentTechnicianConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="AuthorizeCallReferralQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+        
+        <CHAINED_CONNECTOR name="AuthorizeCheckCallReferralConnector" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="PaymentTechnicianConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="AuthorizeCheckCallReferralQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <CONNECTOR name="PinCommReentryAuthConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.pincomm.ReentryAuthConnector" />
+        END connectors for PINComm integration -->
+
+        <!-- BEGIN connectors for Servebase integration
+        <CONNECTOR name="ServebaseSocketConnector" javaclass="oracle.retail.stores.commext.connector.socket.SocketConnector">
+            <PROPERTY propname="hostName" propvalue="$SERVEBASE_HOSTNAME" />
+            <PROPERTY propname="port" propvalue="$SERVEBASE_PORT" proptype="INTEGER" />
+            <PROPERTY propname="expectResponse" propvalue="true" proptype="BOOLEAN" />
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="ServebaseConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.servebase.ServebaseConnector"
+            connector="ServebaseSocketConnector" />
+
+        <CHAINED_CONNECTOR name="ReversalConnector" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="ServebaseConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="ReversalQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        END connectors for Servebase integration -->
+    </CONNECTORS>
+
+    <!-- Rules to determine actions to be performed after a route is run are
+        listed below. Rule classes must implement
+        oracle.retail.stores.commext.message.rule.SubsequentActionRuleIfc -->
+    <RULES>
+        <RULE name="RetryRule"
+            javaclass="oracle.retail.stores.commext.message.rule.RetryActionRule">
+            <PROPERTY propname="retries" propvalue="1" proptype="INTEGER" />
+            <PROPERTY propname="continue" propvalue="false" proptype="BOOLEAN" />
+        </RULE>
+        <RULE name="StopOnErrorRule"
+            javaclass="oracle.retail.stores.commext.message.rule.StopOnErrorActionRule" />
+        <RULE name="DefaultActionRule"
+            javaclass="oracle.retail.stores.commext.message.rule.DefaultActionRule" />
+    </RULES>
+
+    <!-- The actual routes that the message dispatcher can send messages to are
+        listed below. -->
+
+    <!-- BEGIN message routing for PINComm integration
+    <MSGROUTERS>
+        <DEFAULTROUTER rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </DEFAULTROUTER>
+
+        <MSGROUTER type="AuthorizeCheck" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PinCommReentryAuthConnector" formatter="PassThruFormatter"
+                          filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeECheck" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PinCommReentryAuthConnector" formatter="PassThruFormatter"
+                          filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="GiftCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+         	<MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter"
+                          filter="TransReentryModeGiftCardInquiryFilter" />
+            <MSGCONNECTOR connector="PinCommReentryAuthConnector" formatter="PassThruFormatter"
+                          filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditApplication" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditApplicationInquiry" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditInquiry" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeGiftCardFilter" />
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter"
+                          filter="TransReentryModeGiftCardFilter" />
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="CardTokenInquiry" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="GetSignature" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SimulatedSignatureCaptureConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeCallReferral" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeGiftCardFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="AuthorizeCallReferralConnector" formatter="ConnectorValetFormatter" filter="CallReferralWithTokenFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeCheckCallReferral" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="AuthorizeCheckCallReferralConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="StatusInquiry" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseECheck" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="ReversalConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseGiftCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="ReversalConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeCardRefundWithToken" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="CustomerInteraction" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedCPOIConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="PaymentTechnicianConnector" formatter="ConnectorValetFormatter" />
+        </MSGROUTER>
+
+    </MSGROUTERS>
+    END message routing for PINComm integration -->
+
+    <!-- BEGIN message routing for Servebase integration
+    <MSGROUTERS>
+        <DEFAULTROUTER rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeGiftCardFilter" />
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter"
+                          filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="ServebaseConnector" formatter="ServebaseFormatter" />
+        </DEFAULTROUTER>
+
+        <MSGROUTER type="CustomerInteraction" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedCPOIConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="ReversalConnector" formatter="ServebaseFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseGiftCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TrainingModeFilter" />
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" filter="TransReentryModeFilter" />
+            <MSGCONNECTOR connector="ReversalConnector" formatter="ServebaseFormatter" />
+        </MSGROUTER>
+
+    </MSGROUTERS>
+    END message routing for Servebase integration -->
+
+
+    <!-- BEGIN message routing for Simulated Authentication
+    <MSGROUTERS>
+        <DEFAULTROUTER rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter"
+                          filter="GiftCardFilter" />
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter" />
+        </DEFAULTROUTER>
+
+        <MSGROUTER type="AuthorizeCheck" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeECheck" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="GiftCard" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedGiftCardAuthConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditApplication" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditApplicationInquiry" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="InstantCreditInquiry" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedInstantCreditConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="CustomerInteraction" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SimulatedCPOIConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="GetSignature" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SimulatedSignatureCaptureConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+        
+        <MSGROUTER type="ReverseECheck" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseGiftCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="ReverseCard" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="NoopConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+        <MSGROUTER type="AuthorizeCardRefundWithToken" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+        
+        <MSGROUTER type="StatusInquiry" rule="RetryRule">
+            <MSGCONNECTOR connector="SimulatedAuthConnector" formatter="PassThruFormatter" />
+        </MSGROUTER>
+
+    </MSGROUTERS>
+    END message routing for Simulated Authentication -->
+
+</MSGDISP>

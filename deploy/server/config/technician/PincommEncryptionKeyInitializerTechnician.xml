@@ -1,0 +1,99 @@
+<!--
+/*===========================================================================
+* Copyright (c) 2011, Oracle and/or its affiliates. All rights reserved. 
+* ===========================================================================
+* $Header: rgbustores/applications/pos/deploy/server/config/technician/PincommEncryptionKeyInitializerTechnician.xml /rgbustores_13.4x_generic_branch/7 2011/10/18 11:46:46 sgu Exp $
+* ===========================================================================
+* NOTES
+* <other useful comments, qualifications, etc.>
+*
+* MODIFIED    (MM/DD/YY)
+* sgu         10/18/11 - supply default expiration date for house card
+* ohorne      06/17/11 - Spring loaded ISDTK properties
+* ohorne      06/16/11 - removed autoEncrypt and hkmKeyfile from
+*                        PinCommConnector config
+* sgu         06/09/11 - add install changes to enable/disable encryption
+*                        utility for pincomm
+* sgu         06/07/11 - add pincommm encryption for house account payment
+* sgu         06/07/11 - add new technician xml
+* sgu         06/07/11 - Creation
+* ===========================================================================
+*/
+-->
+
+<!DOCTYPE MSGDISP SYSTEM "classpath://oracle/retail/stores/platform/client/message/config/msgdisp.dtd">
+
+<MSGDISP monitorinterval="300">
+    <COMMENT>
+        ConnectorTechnician configuration XML for PincommEncryptionKeyInitializerTechnician.
+    </COMMENT>
+
+    <!-- Message filters are listed below. Routes without a filter specified
+        accept all messages. Filters must implement
+        oracle.retail.stores.commext.message.filter.FilterIfc -->
+    <FILTERS>
+    </FILTERS>
+
+    <!--  Message formatters are listed below. Formatters must implement
+         oracle.retail.stores.commext.message.formatter.FormatterIfc -->
+    <FORMATTERS>
+    	<FORMATTER name="PassThruFormatter"
+            javaclass="oracle.retail.stores.commext.message.formatter.PassThroughFormatter" />
+
+        <!-- BEGIN formatters for PINComm integration
+        <FORMATTER name="KeyManagementFormatter"
+            javaclass="oracle.retail.stores.domain.manager.payment.pincomm.KeyManagementFormatter" >
+            <PROPERTY propname="location" propvalue="$PINCOMM_STORE_NUMBER"/>
+            <PROPERTY propname="timeOutInSeconds" propvalue="30"/>
+            <PROPERTY propname="defaultExpirationDate" propvalue="9912"/>
+        </FORMATTER>
+        END formatters for PINComm integration -->
+
+    </FORMATTERS>
+
+    <!-- Connectors to external systems are listed below. Connector classes must
+        implement oracle.retail.stores.commext.message.connector.ConnectorIfc -->
+    <CONNECTORS>
+    	<CONNECTOR name="PassThruConnector"
+            javaclass="oracle.retail.stores.commext.connector.PassThruConnector"/>
+
+        <!-- BEGIN connectors for PINComm integration
+        <CONNECTOR name="PinCommConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.pincomm.PinCommConnector"/>
+
+        <CHAINED_CONNECTOR name="PincommKeyManagementConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="PinCommConnector">
+            <PROPERTY propname="formatterName"                 propvalue="KeyManagementFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="KeyManagmentQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+            <PROPERTY propname="loggerCategory"                propvalue="KeyManagment"/>
+        </CHAINED_CONNECTOR>
+        END connectors for PINComm integration -->
+
+    </CONNECTORS>
+
+    <!-- Rules to determine actions to be performed after a route is run are
+        listed below. Rule classes must implement
+        oracle.retail.stores.commext.message.rule.SubsequentActionRuleIfc -->
+    <RULES>
+        <RULE name="DefaultActionRule"
+            javaclass="oracle.retail.stores.commext.message.rule.DefaultActionRule"/>
+    </RULES>
+
+    <!-- The actual routes that the message dispatcher can send messages to are
+        listed below. -->
+    <MSGROUTERS>
+        <DEFAULTROUTER rule="DefaultActionRule">
+            <MSGCONNECTOR connector="PassThruConnector" formatter="PassThruFormatter" />
+        </DEFAULTROUTER>
+
+        <!-- BEGIN message routing for PINComm integration
+        <MSGROUTER type="KeyManagement" rule="DefaultActionRule">
+            <MSGCONNECTOR connector="PincommKeyManagementConnector" formatter="KeyManagementFormatter" />
+        </MSGROUTER>
+        END message routing for PINComm integration -->
+
+    </MSGROUTERS>
+
+</MSGDISP>
+

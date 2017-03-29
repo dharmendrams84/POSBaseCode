@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/DepartmentSalesReport_ru.bpt /main/14 2010/09/06 14:05:53 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abhayg    08/02/10 - REPORTS PRINTED IN TRAINING MODE SHOULD DISPLAY
+ *                         TRAINING MODE
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/22/09 - Test Automation Changes for DepartmentSalesReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="DepartmentSalesReport" copies="1">
+    <report name="SummaryReportReport" id="1">
+        <group id="1">
+            <line id="8175078">
+                <element text="Отчет о продажах отдела" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="26704795" />
+            <line id="3408129">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text=" " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="3022623">
+                <element text="Маг.:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Касса:" id="26203554" justified="2" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="33385450">
+                <element text="Код ксср:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Не отчет, режим обуч *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="16711231">
+                <element text="" id="9553970" fillChar="_" stretch="true" />
+            </line>
+            <line id="1262055" />
+            <line id="15079989">
+                <element text="Начальн. дата:" id="19926628" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="12398237">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="12759798">
+                <element text="Конеч. дата:" id="6345769" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="25284883">
+                    <method returns="EYSDate" name="getEndDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="27263487">
+                <element text="" id="28173420" fillChar="_" stretch="true" />
+            </line>
+            <line id="11785471" />
+            <line id="31664352">
+                <element text="Отд." id="7676992" stretch="true" />
+                <element text="Сумма" id="30790792" />
+            </line>
+            <line id="9486447" />
+        </group>
+        <group id="28136454">
+            <line id="19297865">
+                <methodElement fixedWidth="20" precededBySpace="false" id="24565656">
+                    <method returns="DepartmentActivityIfc[]" name="getDepartmentActivities" class="oracle.retail.stores.pos.reports.DepartmentSalesReport">
+                        <method returns="DepartmentIfc" name="getDepartment" class="oracle.retail.stores.domain.financial.DepartmentActivityIfc">
+                            <method returns="String" name="getDescription" class="oracle.retail.stores.domain.store.DepartmentIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="1278265" stretch="true" />
+                <methodElement id="23582314" justified="2">
+                    <method returns="DepartmentActivityIfc[]" name="getDepartmentActivities" class="oracle.retail.stores.pos.reports.DepartmentSalesReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.DepartmentActivityIfc">
+                            <method returns="CurrencyIfc" name="getAmountNetItemSalesMinusRestockingFees" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="14463035">
+                <element text="" id="26131502" fillChar="_" stretch="true" />
+            </line>
+            <line id="11930515" />
+            <line id="28441588">
+                <element text="Итого" id="20997" />
+                <methodElement fixedWidth="5" prefix="(" suffix=")" id="13566738">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.DepartmentSalesReport">
+                        <method returns="CurrencyTypeIfc" name="getType" class="com._360commerce.commerceservices.common.currency.CurrencyIfc">
+                            <method returns="String" name="getCurrencyCode" class="com._360commerce.commerceservices.common.currency.CurrencyTypeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="9402385" stretch="true" />
+                <methodElement id="28759595" justified="2">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.DepartmentSalesReport" />
+                </methodElement>
+            </line>
+            <line id="1345122">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="25337455" />
+            <line id="7318012">
+                <element text=" КОНЕЦ ОТЧЕТА " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Не отчет, режим обуч *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/NameVerificationSlip_el.bpt /main/2 2010/09/06 14:05:58 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ *
+ * ===========================================================================
+ *
+ -->
+<blueprint id="NameVerificationSlip" copies="1">
+    <report name="NameVerificationSlipReport" id="1">
+        <group id="2">
+            <line id="3">
+                <element text="Επαλήθευση ονοματεπων. κατόχου κάρτας." id="4" />
+            </line>
+            <line id="8867904" />
+            <line id="23661189">
+                <element text="Όνομα:" id="25528892" />
+                <methodElement id="17666124">
+                    <method returns="String" name="getFirstName" class="oracle.retail.stores.pos.receipt.NameVerificationSlip" />
+                </methodElement>
+            </line>
+            <line id="6300141">
+                <element text="Επώνυμο:" id="23213386" />
+                <methodElement id="8055896">
+                    <method returns="String" name="getLastName" class="oracle.retail.stores.pos.receipt.NameVerificationSlip" />
+                </methodElement>
+            </line>
+            <line id="1783274" />
+            <line id="24202073" />
+            <line id="28175459" />
+        </group>
+    </report>
+</blueprint>
+
+

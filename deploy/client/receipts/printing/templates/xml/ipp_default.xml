@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/printing/templates/xml/ipp_default.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * Default template for FO-XSL styled report/receipt documents generated 
+ * for eReceipt and/or IPP printing.
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/07/09 - changes to files location
+ *    acadar    12/07/09 - fop template
+ *
+ * ===========================================================================
+ */
+-->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\deploy\receipts\xml\ipp.xsd">
+  <!-- receipt blueprint generated output-->
+  <receipt/>
+</document>

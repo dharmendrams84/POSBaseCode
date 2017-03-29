@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/ExchangeReceipt.bpt /main/10 2010/10/27 12:11:05 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   10/27/10 - update idePath
+ *    mchellap  09/21/10 - BUG#10130455 Changed the link from
+ *                         EmployeeDiscountRecipt to SaleReceipt
+ *    npoola    08/30/10 - changed the link from SaleReceipt to
+ *                         EmployeeDiscountReceipt.
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    miparek   02/04/09 - Added cutPaper attribute to fix d#1660
+ *    cgreene   11/24/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="ExchangeReceipt" copies="1">
+    <linkReport documentType="SaleReceipt" idePath="/pos/deploy/client/receipts/SaleReceipt.bpt" id="4806368" cutPaper="false" />
+</blueprint>
+

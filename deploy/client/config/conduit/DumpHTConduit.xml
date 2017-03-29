@@ -1,0 +1,110 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/conduit/DumpHTConduit.xml /main/15 2011/03/01 17:01:56 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   05/05/10 - remove deprecated log manager and technician
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+    $Log:
+     4    360Commerce 1.3         6/25/2007 1:59:29 PM   Anda D. Cadar   added
+          DataManager/DataTechnician for reading the currency types from the
+          database
+     3    360Commerce 1.2         6/25/2007 1:57:47 PM   Anda D. Cadar   added
+          DataManager/DataTechnician for reading the currency info from the
+          database
+     2    360Commerce 1.1         4/25/2007 11:37:10 AM  Rohit Sachdeva  26435:
+           Adding functionality to use locale map loader for locale map
+          settings. Conduit script is not used for default locale any longer.
+     1    360Commerce 1.0         12/13/2005 4:46:54 PM  Barry A. Pape
+    $
+    Revision 1.3  2004/08/18 15:18:53  jdeleau
+    @scr 6830 Remove Logger elements in XML, that were causing errors in the error log.
+    These statements are no longer relevant, as log4J is used instead.
+
+    Revision 1.2  2004/02/12 16:46:37  mcs
+    Forcing head revision
+
+    Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+    updating to pvcs 360store-current
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DISPATCHER SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/dispatch.dtd">
+<DISPATCHER name="DUMPHTCONDUIT">
+    <APPLICATION name="APPLICATION"
+                 class="TierTechnician"
+                 package="oracle.retail.stores.foundation.manager.tier"
+                 startservice="classpath://oracle/retail/stores/pos/services/buildfftour/dumphttour.xml">
+        <PROPERTY propname="managerData"
+                  propvalue="name=DeviceManager,managerpropname=className,managerpropvalue=oracle.retail.stores.foundation.manager.device.DeviceManager"/>
+    </APPLICATION>
+
+    <TECHNICIAN name="BUSINESSTIER"
+                class="TierTechnician"
+                package="oracle.retail.stores.foundation.manager.tier"
+                export="Y">
+    </TECHNICIAN>
+
+    <MANAGER name="ThreadManager"
+             class="ThreadManager"
+             package="oracle.retail.stores.foundation.manager.thread">
+        <PROPERTY propname="threadPool" propvalue="StaticCache"/>
+        <PROPERTY propname="threadPoolProperty" propvalue="maxSize=4"/>
+    </MANAGER>
+
+    <TECHNICIAN name="DeviceTechnician"
+                class="DeviceTechnician"
+                package="oracle.retail.stores.foundation.manager.device"
+                export="Y">
+        <COMMENT>
+            The Technician that provides access to the devices.
+        </COMMENT>
+        <PROPERTY propname="deviceScript"
+                  propvalue="classpath://config/technician/PosDeviceTechnician.xml"/>
+    </TECHNICIAN>
+
+    <MANAGER name="DLFormatManager"
+             class="ValidationManager"
+             package="oracle.retail.stores.domain.manager.validation"
+             export="N">
+       <PROPERTY propname="techName" propvalue="DLFormatTechnician"/>
+   </MANAGER>
+
+   <TECHNICIAN name="DLFormatTechnician" class="ValidationTechnician"
+                package="oracle.retail.stores.domain.manager.validation"
+                export="Y">
+        <PROPERTY
+            propname="configScript"
+            propvalue="classpath://config/validation/dlvalidationscript.xml"/>
+   </TECHNICIAN>
+
+
+
+   <MANAGER name="DataManager" class="DataManager"
+				package="oracle.retail.stores.foundation.manager.data">
+		   <PROPERTY propname="configScript"
+					 propvalue="classpath://config/manager/PosDataManager.xml" />
+   </MANAGER>
+
+   <TECHNICIAN name="LocalDT" class="DataTechnician"
+				   package="oracle.retail.stores.foundation.manager.data"
+				   export="Y">
+		   <PROPERTY
+			   propname="dataScript"
+			   propvalue="classpath://config/technician/PosLDBDataTechnician.xml"
+		   />
+    </TECHNICIAN>
+
+
+</DISPATCHER>

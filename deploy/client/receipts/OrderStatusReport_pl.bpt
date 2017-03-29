@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/OrderStatusReport_pl.bpt /main/2 2010/09/06 14:06:00 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   04/16/09 - reformatted columns with 14 chars for first column
+ *    blarsen   03/18/09 - fixed some stretch-related formatting issues. added
+ *                         mask to getStatus call since it now returns a
+ *                         non-translated value
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/23/09 - Test Automation Changes for OrderStatusReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="OrderStatusReport" copies="1">
+    <report name="OrderStatusReport" id="1">
+        <group id="1">
+            <line id="20280994">
+                <methodElement precededBySpace="false" formatter="Nowy#Nowy|Wydrukowano#Wydrukowano|Częściowe#Częściowe|Zrealizowano#Zrealizowano|Anulowano#Anulowano|Zakończono#Zakończono|Unieważniono#Unieważniono" id="22870270" justified="2" stretch="true">
+                    <method returns="String" name="getStatus" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+                <element text=" Raport zamówień" id="1" stretch="true" />
+            </line>
+            <line id="16747636" />
+            <line id="22949069">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text="  " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="30373009">
+                <element text="Sklep:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="15595312">
+                <element text="Id. kasjera:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* To nie jest raport, tryb szkoleniowy *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="24840600">
+                <element text="" id="4994869" fillChar="_" stretch="true" />
+            </line>
+            <line id="9060840" />
+            <line id="11733267">
+                <element text="Data rozpoczęcia:" id="21059933" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="30238139">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="1635615">
+                <element text="Data zamknięcia:" id="689609" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="9034788">
+                    <method returns="EYSDate" name="getEndDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="8703610">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="14753666" />
+            <line id="17815542">
+                <element text="Zamówienie         " id="3535439" />
+                <element text="Data" id="13124846" justified="2" stretch="true" />
+                <element text="Kwota " id="7676992" justified="2" stretch="true" />
+            </line>
+            <line id="19623049" />
+        </group>
+        <group id="2">
+            <line id="23602584">
+                <methodElement fixedWidth="14" precededBySpace="false" id="22106160">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="Date.SHORT" id="25238876" justified="2" stretch="true">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="EYSDate" name="getRecordingTransactionBusinessDate" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="1382340" justified="2" stretch="true">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="CurrencyIfc" name="getOrderTotal" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="23257749" />
+            <line id="17423963">
+                <element text="Sumy" id="23638636" />
+                <methodElement fixedWidth="7" prefix="(" suffix=")" id="14237249">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                            <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="1339144" justified="2" stretch="true">
+                    <method returns="int" name="getTotalCount" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+                <methodElement id="889659" justified="2" stretch="true">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+            </line>
+            <line id="15020576" />
+            <line id="20843194">
+                <element text=" KONIEC RAPORTU " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* To nie jest raport, tryb szkoleniowy *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

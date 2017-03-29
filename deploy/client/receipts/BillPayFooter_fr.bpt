@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    nkgautam  07/27/10 - bill pay enhancement changes
+ *    nkgautam  07/08/10 - added missing ids for some of elements
+ *    nkgautam  06/22/10 - bill pay changes
+ *    nkgautam  06/21/10 - a new bill pay footer bpt creation
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="BillPayFooter" copies="1">
+    <report name="BillPayFooter" id="1" cutPaper="false">
+        <group id="1">
+             <line id="16865315">
+                <element text="" id="23518907" fillChar="_" stretch="true" />
+            </line>
+            <line id="17876505">
+                <element text="Avertissement : " id="1070095" justified="1" stretch="true" />
+            </line>
+            <line id="30238442">
+                <element text="Notez que les paiements effectués peuvent prendre jusqu’à " id="26064747" justified="1" stretch="true" />
+            </line>
+            <line id="30238443">
+                <element text=" 3 jours pour apparaître sur votre compte. " id="26064747" justified="1" stretch="true" />
+            </line>
+            <line id="21825252" />
+        </group>
+    </report>
+</blueprint>

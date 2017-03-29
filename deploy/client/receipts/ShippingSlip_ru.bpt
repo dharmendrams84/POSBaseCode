@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/ShippingSlip_ru.bpt /main/14 2010/09/06 14:06:02 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    vapartha  02/01/10 - changed the getExtendedSellingPrice method to
+ *                         getSellingPrice for getting price of one unit.
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   06/26/09 - implement QUANTITY formatting for printed number
+ *                         qhich prints as an int or a double
+ *    cgreene   05/19/09 - add elements to add indent if items are
+ *                         KitComponents
+ *    cgreene   03/30/09 - print special instructions line as two lines and
+ *                         spell out whole label. hide label when there are not
+ *                         special instructions
+ *    cgreene   03/19/09 - set shipping slip link to not cut paper because
+ *                         first report of slip will cut
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fix blank lines in shipping slip and make messages
+ *                         camel case
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    mahising  02/27/09 - Fixed special instruction lable issue
+ *    blarsen   02/21/09 - adding stretches to make format more tolerant of
+ *                         I18N - also change tax indicator to 2 char max
+ *    ddbaker   01/26/09 - Test Automation Changes for SaleReceipt
+ *    cgreene   01/13/09 - multiple send and gift receipt changes. deleted
+ *                         SendGiftReceipt
+ *    cgreene   01/09/09 - made several shipping based formatting changes
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="ShippingSlip" copies="1">
+    <report name="ShippingSlipReport" id="1">
+        <group id="2">
+            <line id="3">
+                <element text="Бланк погруз." id="4" justified="center" stretch="true" />
+            </line>
+            <line id="24059635" />
+            <line id="29775387">
+                <element text="* Не квитанция *" id="14336363" justified="center" stretch="true" />
+            </line>
+            <line id="15482999" />
+            <line id="7530218">
+                <element text="Информ. о выручке:" id="23333383" />
+            </line>
+            <line id="24298008">
+                <element text="  " id="27708485" dependsOnPresenceOf="20030745" />
+                <methodElement precededBySpace="false" id="20030745">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12764831">
+                <element text="  " id="25036718" dependsOnPresenceOf="25702485" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="25702485">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getLine1" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5572174">
+                <element text="  " id="26601792" dependsOnPresenceOf="17206285" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="17206285">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getLine2" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15616865">
+                <element text="  " id="6042534" dependsOnPresenceOf="33163321" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="33163321">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getLine3" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6614808">
+                <element text="  " id="1027578" />
+                <methodElement precededBySpace="false" suffix="," printedWhenLengthZero="false" id="20084763">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" printedWhenLengthZero="false" id="2106534">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="29729529">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7808061">
+                <element text="  " id="27472067" dependsOnPresenceOf="12723504" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="12723504">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="getCountry" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12785233">
+                <element text="  " id="1328683" dependsOnPresenceOf="21245136" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="25948291">
+                    <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                            <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28904533" />
+            <line id="24158138">
+                <element text="Дост." id="23333383" />
+                <methodElement suffix=":" id="3020309">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="int" name="getSendLabelCount" class="oracle.retail.stores.pos.receipt.SendPackInfo" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32573543">
+                <element text="  " id="1402002" dependsOnPresenceOf="28259400" />
+                <methodElement precededBySpace="false" id="28259400">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25486884">
+                <element text="  " id="2188553" dependsOnPresenceOf="19284737" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="19284737">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getLine1" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6405463">
+                <element text="  " id="13884264" dependsOnPresenceOf="7704925" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="7704925">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getLine2" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32544631">
+                <element text="  " id="28790912" dependsOnPresenceOf="28304860" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="28304860">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getLine3" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1224226">
+                <element text="  " id="6701939" />
+                <methodElement precededBySpace="false" suffix="," printedWhenLengthZero="false" id="23946187">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" printedWhenLengthZero="false" id="16654400">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="934167">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28448859">
+                <element text="  " id="30967751" dependsOnPresenceOf="23732632" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="23732632">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="getCountry" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12478265">
+                <element text="  " id="8313601" dependsOnPresenceOf="21245136" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="21245136">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22920054" dependsOnPresenceOf="30905231" />
+            <line id="32462413">
+                <element text="Особые инструкции:" id="28593326" dependsOnPresenceOf="30905231" />
+            </line>
+            <line id="19639651">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="30905231" justified="center">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="ShippingMethodIfc" name="getShippingMethod" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="String" name="getShippingInstructions" class="oracle.retail.stores.domain.financial.ShippingMethodIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="10300744">
+            <line id="17297941" />
+            <line id="12596886">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="2259560">
+                   <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="28486483" stretch="true">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                         <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                        </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="22395019" justified="right">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CurrencyIfc" name="getExtendedDiscountedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" formatter="T#T|N#N|E#E|R#R|O#O" id="15095901">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.TaxLineItemInformationIfc">
+                                <method returns="String" name="getReceiptCode" class="oracle.retail.stores.domain.tax.TaxInformationContainer" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6589854">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="13233795">
+                   <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="  " id="12255130" />
+                <methodElement fixedWidth="15" precededBySpace="false" id="24133638">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="6" id="11045660" justified="right">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="BigDecimal" name="getItemQuantity" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" @" id="26949847" />
+                <methodElement fixedWidth="9" id="9577364">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SaleReturnLineItemIfc[]" name="getItemsInPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="CurrencyIfc" name="getSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="5507104">
+            <line id="16446321" />
+            <line id="26044193">
+                <element text="Расх. по погр." id="26900169" stretch="true" />
+                <methodElement id="22307148" justified="right">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="ShippingMethodIfc" name="getShippingMethod" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="CurrencyIfc" name="getCalculatedShippingCharge" class="oracle.retail.stores.domain.financial.ShippingMethodIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="2" formatter="T#T|N#N|E#E|R#R|O#O" id="21195930">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.lineitem.TaxLineItemInformationIfc">
+                                <method returns="String" name="getReceiptCode" class="oracle.retail.stores.domain.tax.TaxInformationContainer" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20461796">
+                <element text="  " id="19159181" />
+                <methodElement precededBySpace="false" id="20700663">
+                    <method returns="SendPackInfo" name="getNextSendPackageInfo" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="SendPackageLineItemIfc" name="getSendPackage" class="oracle.retail.stores.pos.receipt.SendPackInfo">
+                            <method returns="ShippingMethodIfc" name="getShippingMethod" class="oracle.retail.stores.domain.lineitem.SendPackageLineItemIfc">
+                                <method returns="String" name="getShippingType" class="oracle.retail.stores.domain.financial.ShippingMethodIfc" param="Locale" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20804623" />
+            <line id="14789009">
+                <element text="* Не квитанция *" id="21197342" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="ShippingSlip" idePath="/pos/deploy/receipts/ShippingSlip.bpt" id="16001737" cutPaper="false">
+        <dependsOn returns="boolean" name="hasSendPackages" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+</blueprint>
+
+

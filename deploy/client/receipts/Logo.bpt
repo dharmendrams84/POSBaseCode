@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Logo.bpt /main/6 2010/10/27 12:11:05 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   10/27/10 - update idePath
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/26/09 - move idePath of image to deploy bin
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    glwang    02/09/09 - changes per code review
+ *    glwang    02/09/09 - modify the properties of isTrainingMode line.
+ *    glwang    02/09/09 - Add training mode flag
+ *    glwang    01/30/09 - add header, change the ids
+ *    ddbaker   01/22/09 - Added trailing blank line to underscore line in
+ *                         Header
+ *    ddbaker   01/21/09 - Update receipt header and footer with underscore
+ *                         separators
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Logo" copies="1">
+    <report name="LogoReport" id="1" cutPaper="false">
+        <group id="1">
+            <line id="2804823">
+                <imageElement fileName="ReceiptLogo.jpg" idePath="/pos/deploy/bin/ReceiptLogo.jpg" id="27819165" justified="1" />
+            </line>
+            <line id="17876505">
+                <element text="ORACLE" id="1070095" justified="1" stretch="true" />
+            </line>
+            <line id="30238442">
+                <element text="500 Oracle Parkway" id="26064747" justified="1" stretch="true" />
+            </line>
+            <line id="2080726">
+                <element text="Redwood Shores, California 94066" id="4523363" justified="1" stretch="true" />
+            </line>
+            <line id="7052420">
+                <element text="(650)506-0024" id="23321144" justified="1" stretch="true" />
+            </line>
+            <line id="16865315">
+                <element text="" id="23518907" fillChar="_" stretch="true" />
+            </line>
+            <line id="21825252" />
+        </group>
+    </report>
+</blueprint>
+

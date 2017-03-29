@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/GiftCardInquirySlip_it.bpt /rgbustores_13.4x_generic_branch/1 2011/10/12 06:16:08 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   08/08/11 - add Training Mode tag
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/25/09 - changed # to Number and GC Available Balance to
+ *                         Balance Available
+ *    cgreene   03/13/09 - fix stretching of balance line
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/06/09 - added line feed after title
+ *    ddbaker   01/15/09 - Adding GiftCardInquirySlip receipt blueprint.
+ *    ddbaker   01/15/09 - Adding GiftCardInquirySlip receipt blueprint.
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="GiftCardInquirySlip" copies="1">
+    <report name="GiftCardInquirySlipReport" id="1">
+        <group id="2">
+            <line id="3" />
+            <line id="14431674">
+                <element text="           Interrogazione TO           " id="27284437" />
+            </line>
+            <line id="9791644" dependsOnPresenceOf="29490417" />
+            <line id="20755659">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Not a Receipt, Training Mode *" id="29490417" justified="center" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="30718928" />
+            <line id="17440045">
+                <element text="N. tessera omag:" id="20610747" />
+                <methodElement id="23685316">
+                    <method returns="GiftCardIfc" name="getGiftCard" class="oracle.retail.stores.pos.receipt.GiftCardInquirySlip">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.utility.GiftCardIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11476663">
+                <element text="Saldo disponibile:" id="7041177" />
+                <methodElement id="12695543" justified="right" stretch="true">
+                    <method returns="GiftCardIfc" name="getGiftCard" class="oracle.retail.stores.pos.receipt.GiftCardInquirySlip">
+                        <method returns="CurrencyIfc" name="getCurrentBalanceForReceipt" class="oracle.retail.stores.domain.utility.GiftCardIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

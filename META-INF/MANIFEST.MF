@@ -1,0 +1,9 @@
+Manifest-version: 1.0
+
+Name: oracle/retail/stores/
+Specification-Title:  Root Package
+Specification-Version: co-jupiter
+Specification-Vendor: Oracle USA
+Implementation-Title: oracle.retail.stores.PACKAGE
+Implementation-Version: ${project.buildNumber}
+Implementation-Vendor: Oracle USA

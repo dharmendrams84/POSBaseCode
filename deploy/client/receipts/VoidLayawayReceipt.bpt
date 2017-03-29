@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/VoidLayawayReceipt.bpt /main/38 2010/10/27 12:11:06 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   10/27/10 - update idePath
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   03/04/10 - added functionality for parameter
+ *                         AutoPrintCustomerCopy for voids
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   12/18/09 - set customer disc and qty lines to depends on so
+ *                         that layaway payment voids to not show extra
+ *                         characters
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   06/26/09 - implement QUANTITY formatting for printed number
+ *                         qhich prints as an int or a double
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    cgreene   03/20/09 - set Damaged Discount as the reason code text to
+ *                         display on receipts when printing
+ *    cgreene   03/10/09 - add Store Copy element to bottom of all Void
+ *                         receipts
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for VoidLayawayReceipt
+ *    cgreene   12/22/08 - add copies attribute to blueprint
+ *    cgreene   12/16/08 - remove unneeded empty space elements
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="VoidLayawayReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/client/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/client/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="14898956">
+                <element text="Transaction Voided:" id="28314360" />
+                <methodElement id="1100232">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="10161691">
+            <line id="10014334" dependsOnPresenceOf="5070416">
+                <methodElement id="5070416">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                                    <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="17918030" dependsOnPresenceOf="31760503" stretch="true" />
+                <methodElement fixedWidth="10" id="31760503" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="CurrencyIfc" name="getExtendedDiscountedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                                    <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="0#T|1#E|2#R|3#R|4#O|5#T|6#N|7#T" id="27100772">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="int" name="getTaxMode" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1882017" dependsOnPresenceOf="23346657">
+                <element text="  " id="21542611" dependsOnPresenceOf="23346657" />
+                <methodElement id="23346657">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="18868461" stretch="true" />
+                <methodElement formatter="QUANTITY" id="29014382">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="BigDecimal" name="getItemQuantity" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" @" id="24390890" dependsOnPresenceOf="12089055" />
+                <methodElement id="12089055">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="CurrencyIfc" name="getExtendedSellingPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="8411903" dependsOnPresenceOf="12089055" />
+            </line>
+            <line id="22791880">
+                <element text="   Deal Discount Amt." id="12291679" dependsOnPresenceOf="27782235" />
+                <methodElement fixedWidth="9" printedWhenValueZero="false" id="27782235" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="CurrencyIfc" name="getItemDiscountAmount" class="oracle.retail.stores.domain.lineitem.DiscountableLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5734515">
+                <element text="   Customer Discount" id="31732162" dependsOnPresenceOf="30779382" />
+                <methodElement fixedWidth="10" id="30779382" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="AbstractTransactionLineItemIfc[]" name="getLineItems" class="oracle.retail.stores.domain.transaction.RetailTransactionIfc">
+                                <method returns="CurrencyIfc" name="getItemTransactionDiscountAmount" class="oracle.retail.stores.domain.lineitem.DiscountableLineItemIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26373776" />
+        </group>
+        <group id="5338285">
+            <line id="7192009">
+                <element text="Total Discount" id="31271794" stretch="true" />
+                <methodElement id="25780878" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                                <method returns="CurrencyIfc" name="getDiscountTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="8033135" />
+            </line>
+            <line id="13037557" dependsOnPresenceOf="25780878" />
+            <line id="11794872">
+                <element text="Subtotal" id="9800455" stretch="true" />
+                <methodElement id="16865287">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                                <method returns="CurrencyIfc" name="getPreTaxSubtotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                    <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="33050498" />
+            </line>
+            <line id="30390274">
+                <element text="  Tax" id="20006202" stretch="true" />
+                <methodElement id="9354045">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getTaxTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="32309580" />
+            </line>
+            <line id="3786945" />
+            <line id="27994965">
+                <element text="Total" id="9855602" stretch="true" />
+                <methodElement id="32691889">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="28451454" />
+            </line>
+            <line id="11143287" />
+            <line id="17948370" />
+            <line id="3916302">
+                <element text="Total Tender Reversed" id="26214267" stretch="true" />
+                <methodElement id="12646561">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getCollectedTenderTotalAmount" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="26611336" />
+            </line>
+            <line id="21057622" />
+            <line id="16862753">
+                <element text="Change Due" id="21249250" stretch="true" />
+                <methodElement id="12404975">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="8454989" />
+            </line>
+            <line id="11572887" />
+            <line id="24032956" />
+            <line id="27198423" />
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/client/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <report name="SignatureReport" id="16879915" cutPaper="false">
+        <group id="5338299">
+            <line id="11869225">
+                <element text="Employee Signature:" id="25077542" fillChar="_" stretch="true" />
+            </line>
+            <line id="4977982" />
+            <line id="13756354" />
+            <line id="13011608" />
+            <line id="11867140">
+                <element text="Manager Signature:" id="26746943" fillChar="_" stretch="true" />
+            </line>
+            <line id="3491657" />
+            <line id="11235685" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/client/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="24442871" cutPaper="false">
+        <group id="6">
+            <line id="736613" />
+            <line id="31034430">
+                <copyElement id="9960643" justified="center" stretch="true">
+                    <copyText>Store Copy</copyText>
+                    <copyText>Customer Copy</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/client/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+

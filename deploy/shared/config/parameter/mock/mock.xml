@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/shared/config/parameter/mock/mock.xml /rgbustores_13.4x_generic_branch/3 2011/10/27 14:41:59 tksharma Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    tksharma  10/27/11 - removed parameter EDepositedDecline
+ *    acadar    10/14/11 - removed parameter
+ *    acadar    07/22/10 - externalize strings
+ *    sgu       07/01/10 - fix encoding for mock.xml
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    mchellap  02/09/10 - Bug39350883: Changed the maximum value to 950 for
+ *                         Email parameters
+ *    abondala  01/02/10 - Update Header date
+ *    arathore  02/20/09 - Corrected the type for eReceiptSubject and
+ *                         eReceiptText parameter.
+ *    deghosh   02/18/09 - Removed the parameters
+ *                         'EmailReplyURL','EmailFromAddress' and
+ *                         'EmailMaximumMatches'
+ *    miparek   01/12/09 - added eReceiptSubject and Text parameter in printing
+ *                         group
+ *    ranojha   11/24/08 - Fixed UTF-8 encoding for mock.xml file
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE SOURCE PUBLIC "SOURCE" "classpath://oracle/retail/stores/foundation/tour/dtd/paramsourcescript.dtd">
+<SOURCE name="mock">
+    <GROUP name="Email"
+           hidden="N">
+      <PARAMETER name="AutomaticEmailFilledOrder"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been filled and is ready for pickup at the store 簡単£."/>
+         <VALUE value="哦ãç Oracle 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailCanceledOrder"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been canceled 簡単£."/>
+         <VALUE value="哦ãç Oracle 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPartialOrder"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been partially filled 簡単£."/>
+         <VALUE value="哦ãç Feel free to pick up the items that are ready 簡単£."/>
+         <VALUE value="哦ãç Oracle 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPickedUpOrder"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Thank you for picking up your recent order 簡単£."/>
+         <VALUE value="哦ãç Oracle 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailFilledOrderHeader"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been filled and is ready for pickup at the store 簡単£."/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailFilledOrderFooter"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Please do not respond to this e-mail 簡単£."/>
+         <VALUE value="哦ãç For all inquiries regarding your order contact Oracle Customer Service at 1-800-GO-ORACLE 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPartialOrderHeader"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been partially filled 簡単£."/>
+         <VALUE value="哦ãç Feel free to pick up the items that are ready 簡単£."/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPartialOrderFooter"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Please do not respond to this e-mail 簡単£."/>
+         <VALUE value="哦ãç For all inquiries regarding your order contact Oracle Customer Service at 1-800-GO-ORACLE 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPickedUpOrderHeader"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Thank you for picking up your recent order 簡単£."/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailPickedUpOrderFooter"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Please do not respond to this e-mail 簡単£."/>
+         <VALUE value="哦ãç For all inquiries regarding your order contact Oracle Customer Service at 1-800-GO-ORACLE 簡単£"/>
+      </PARAMETER>
+
+      <PARAMETER name="AutomaticEmailCanceledOrderHeader"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Your order has been canceled 簡単£."/>
+      </PARAMETER>
+      <PARAMETER name="AutomaticEmailCanceledOrderFooter"
+         type="MULTILINE_STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+             package="oracle.retail.stores.foundation.manager.parameter">
+             <PROPERTY propname="minimum"  propvalue="1" />
+             <PROPERTY propname="maximum"  propvalue="950" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Please do not respond to this e-mail 簡単£."/>
+         <VALUE value="哦ãç For all inquiries regarding your order contact Oracle Customer Service at 1-800-GO-ORACLE 簡単£"/>
+      </PARAMETER>
+    </GROUP>
+    <GROUP name="Printing"
+           hidden="N">
+      <PARAMETER name="ECheckFrankApproval" type="MULTILINE_STRING" final="N" hidden="N">
+            <VALIDATOR class="StringLengthValidator"
+                   package="oracle.retail.stores.foundation.manager.parameter">
+              <PROPERTY propname="minimum"  propvalue="1" />
+              <PROPERTY propname="maximum"  propvalue="840" />
+            </VALIDATOR>
+            <VALUE value="哦ãç VOID: This check has been 簡単£"/>
+            <VALUE value="哦ãç processed as an electronic funds 簡単£"/>
+            <VALUE value="哦ãç transfer 簡単£. "/>
+            <VALUE value="哦ãç Authorization Agreement: I 簡単£"/>
+            <VALUE value="哦ãç authorize the merchant to use the 簡単£"/>
+            <VALUE value="哦ãç information from my check to 簡単£"/>
+            <VALUE value="哦ãç initiate an Electronic Fund 簡単£"/>
+            <VALUE value="哦ãç Transfer (EFT) or the paper draft 簡単£"/>
+            <VALUE value="哦ãç to debit my bank account for the 簡単£"/>
+            <VALUE value="哦ãç amount of the transaction. I 簡単£"/>
+            <VALUE value="哦ãç acknowledge and agree that the 簡単£"/>
+            <VALUE value="哦ãç merchant-initiated EFT is not a 簡単£"/>
+            <VALUE value="哦ãç check transaction and is governed 簡単£"/>
+            <VALUE value="哦ãç by applicable EFT law. In the 簡単£"/>
+            <VALUE value="哦ãç event that the EFT or draft is 簡単£"/>
+            <VALUE value="哦ãç returned unpaid, I understand and 簡単£"/>
+            <VALUE value="哦ãç agree that the merchant may 簡単£"/>
+            <VALUE value="哦ãç charge a return fee or other 簡単£"/>
+            <VALUE value="哦ãç administrative fee to my bank 簡単£"/>
+            <VALUE value="哦ãç account via EFT or draft as 簡単£"/>
+            <VALUE value="哦ãç permitted by state or federal 簡単£"/>
+            <VALUE value="哦ãç law 簡単£. "/>
+      </PARAMETER>
+      <PARAMETER name="TenderStoreBankName"
+         type="STRING"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+                   package="oracle.retail.stores.foundation.manager.parameter">
+              <PROPERTY propname="minimum"  propvalue="5" />
+              <PROPERTY propname="maximum"  propvalue="15" />
+         </VALIDATOR>
+         <VALUE value="哦ãç Made Up Bank 簡単£"/>
+      </PARAMETER>
+      <PARAMETER name="eReceiptSubject" type="MULTILINE_STRING" final="N" hidden="N">
+          <VALUE value="哦ãç Your Receipt from Oracle 簡単£" />
+      </PARAMETER>
+      <PARAMETER name="eReceiptText" type="MULTILINE_STRING" final="N" hidden="N">
+          <VALUE value="哦ãç Thank you for shopping at Oracle. 簡単£" />
+      </PARAMETER>
+    </GROUP>
+     <GROUP name="ExternalOrder"
+           hidden="N">
+      <PARAMETER name="LegalExtOrderSigCap"
+         type="STRING"
+         default="Oracle"
+         final="N"
+         hidden="N">
+         <VALIDATOR class="StringLengthValidator"
+              package="oracle.retail.stores.foundation.manager.parameter">
+              <PROPERTY propname="minimum"  propvalue="1" />
+              <PROPERTY propname="maximum"  propvalue="250" />
+         </VALIDATOR>
+         <VALUE value="哦ãç By signing I agree to contract number. 簡単£"/>
+       </PARAMETER>
+    </GROUP>
+</SOURCE>

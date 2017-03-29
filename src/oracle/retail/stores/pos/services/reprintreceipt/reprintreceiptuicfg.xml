@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/reprintreceipt/reprintreceiptuicfg.xml /rgbustores_13.4x_generic_branch/2 2011/05/23 11:58:25 rrkohli Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rrkohli   05/19/11 - names changed
+ *    rrkohli   05/05/11 - pos ui quickwin
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/17/09 - Added ADE Header
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     $Log:
+      4    I18N_P2    1.2.1.0     2/6/2008 2:14:02 PM    Sandy Gu        Set
+           promps to optional take multi byte characters.
+      3    360Commerce 1.2         3/31/2005 4:29:40 PM   Robert Pearse
+      2    360Commerce 1.1         3/10/2005 10:24:43 AM  Robert Pearse
+      1    360Commerce 1.0         2/11/2005 12:13:43 PM  Robert Pearse
+     $
+     Revision 1.8  2004/06/29 19:48:04  cdb
+     @scr 5862 Updated to allow transaction id lengths that include business date.
+
+     Revision 1.7  2004/05/19 19:15:59  awilliam
+     @scr 2560
+
+     Revision 1.6  2004/05/14 17:58:34  aachinfiev
+     @scr 2559 - Fixed incorrect field lenths restrictions for transaction search.
+
+     Revision 1.5  2004/04/22 21:26:38  dcobb
+     @scr 4452 Feature Enhancement: Printing
+     Only completed sale, return or exchange transactions are displayed in REPRINT_SELECT.
+
+     Revision 1.4  2004/04/22 17:39:00  dcobb
+     @scr 4452 Feature Enhancement: Printing
+     Added REPRINT_SELECT screen and flow to Reprint Receipt use case..
+
+     Revision 1.3  2004/03/16 18:42:35  cdb
+     @scr 0 Removed tabs from all java source code.
+
+     Revision 1.2  2004/02/12 16:51:42  mcs
+     Forcing head revision
+
+     Revision 1.1.1.1  2004/02/11 01:04:20  cschellenger
+     updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE UICFG SYSTEM "classpath://oracle/retail/stores/pos/config/defaults/posui.dtd">
+
+<UICFG>
+
+    <BEAN
+        specName="ReprintOptionsButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="LastTransaction"
+            enabled="true"
+            keyName="F2"
+            labelTag="LastTransaction"/>
+
+        <BUTTON
+            actionName="TransactionNumber"
+            enabled="true"
+            keyName="F3"
+            labelTag="TransactionNumber"/>
+
+    </BEAN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="reprintreceiptText"
+        specName="REPRINT_RECEIPT_OPTIONS">
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates"
+                propValue="Help[true],Cancel[false],Undo[true],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="ReprintOptionsScreenName"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="ReprintOptionsPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="ReprintOptionsButtonSpec">
+        </ASSIGNMENT>
+
+    </OVERLAYSCREEN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="ResponseEntryScreenSpec"
+        resourceBundleFilename="reprintreceiptText"
+        specName="REPRINT_RECEIPT_TRANSACTION_SEARCH">
+
+        <ASSIGNMENT
+            areaName="StatusPanel" 
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="TransactionSearchScreenName"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="TransactionSearchPrompt"/>
+            <BEANPROPERTY
+                propName="responseField" propValue="oracle.retail.stores.pos.ui.beans.AlphaNumericTextField"/>
+            <BEANPROPERTY propName="minLength" propValue="12"/>
+            <BEANPROPERTY propName="maxLength" propValue="20"/>
+            <BEANPROPERTY propName="doubleByteCharsAllowed" propValue="false"/>
+        </ASSIGNMENT>
+
+        <DEVICECONNECTION
+                deviceSessionName="ScannerSession"
+                targetBeanSpecName="PromptAndResponsePanelSpec"
+                listenerPackage="java.beans"
+                listenerInterfaceName="PropertyChangeListener"
+                adapterPackage="oracle.retail.stores.foundation.manager.gui"
+                adapterClassName="InputDataAdapter"
+                adapterParameter="setScannerData"
+                activateMode="MODE_SINGLESCAN"/>
+
+    </OVERLAYSCREEN>
+    
+<BEAN
+        specName="ReprintSelectButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="GiftReceipt"
+            enabled="true"
+            keyName="F2"
+            labelTag="GiftReceipt"/>
+
+        <!-- PrintOriginal button displays only when EnableReprintOriginalReceipt parameter is 'Y' --> 
+        <BUTTON
+            actionName="PrintOriginal"
+            enabled="true"
+            keyName="F3"
+            labelTag="PrintOriginal"/>
+</BEAN>
+
+<BEAN
+        specName="ReprintSelectSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="ReprintSelectItemsBean">
+        <BEANPROPERTY propName="focused"         propValue="false"/>
+        <BEANPROPERTY propName="renderer"        propValue="oracle.retail.stores.pos.ui.beans.ReturnLineItemRenderer"/>
+
+        <BEANPROPERTY propName="labelTags"
+                      propValue="ItemLabel,QuantityLabel,PriceLabel,DiscountLabel,ExtendedPriceLabel"/>
+        <BEANPROPERTY propName="labelWeights"
+                      propValue="21,16,21,21,21"/>
+
+        <BEANPROPERTY propName="selectionMode"   propValue="multi"/>
+</BEAN>
+
+<OVERLAYSCREEN
+        defaultScreenSpecName="POSStackedStatusScreenSpec"
+        resourceBundleFilename="reprintreceiptText"
+        specName="REPRINT_SELECT">
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[true],Undo[true],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StackedStatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="ReprintSelectScreenName"/>
+        </ASSIGNMENT>
+        
+        <ASSIGNMENT
+            areaName="TotalStatusPanel"
+            beanSpecName="StackedTotalPanelSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="ReprintSelectPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="ReprintSelectButtonSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="WorkPanel"
+            beanSpecName="ReprintSelectSpec">
+        </ASSIGNMENT>
+        
+</OVERLAYSCREEN>
+
+</UICFG>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/GiftReceipt_es.bpt /main/15 2010/09/06 14:05:54 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   11/03/09 - Use short item description on receipts, pole
+ *                         display, and CPOI
+ *    cgreene   05/19/09 - add elements to add indent if items are
+ *                         KitComponents
+ *    nkgautam  04/21/09 - Fix for gift receipt printing all the items on gift
+ *                         receipt instead of items marked for gift receipt
+ *    cgreene   04/07/09 - use getLineItems method from parameter bean
+ *    cgreene   03/14/09 - fix stretching of item desc line so it doesn't bleed
+ *                         to next line
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    miparek   03/02/09 - Fixing D#2629, removed registry ID dependency from
+ *                         elements
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    mahising  02/19/09 - Fixed Bug Id:2248
+ *    atirkey   02/19/09 - trans re entry
+ *    atirkey   02/19/09 - removing null prints
+ *    miparek   02/15/09 - added cutPaper as false for SaleReport to fix d#1635
+ *    ddbaker   01/22/09 - Test Automation Changes for GiftReceipt
+ *    cgreene   01/13/09 - multiple send and gift receipt changes. deleted
+ *                         SendGiftReceipt
+ *    atirkey   01/02/09 - Added gift registry no.
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="GiftReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <report name="Congrats" id="13658805" cutPaper="false">
+        <group id="17672995">
+            <line id="22840286">
+                <element text="¡Enhorabuena" id="2147330" justified="center" stretch="true" />
+            </line>
+            <line id="17897571">
+                <element text="            por su regalo!            " id="259264372" justified="center" stretch="true" />
+            </line>
+            <line id="6197140" />
+        </group>
+    </report>
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="26281433" cutPaper="false" />
+    <report name="GiftReport" id="1" cutPaper="false">
+        <group id="908342820">
+            <line id="4224557">
+                <element text="*Recibo reg.*" id="28439639" justified="center" stretch="true" />
+            </line>
+            <line id="28887407" />
+            <line id="11463270" />
+        </group>
+        <group id="2019194970">
+            <line id="701508">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="27806108">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="2103213404" stretch="true">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                         <method returns="PLUItemIfc" name="getPLUItem" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getShortDescription" class="oracle.retail.stores.domain.stock.ItemIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="12905924">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+<method returns="ItemPriceIfc" name="getItemPrice" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem">
+                            <method returns="String" name="getLineItemPriceCode" class="oracle.retail.stores.domain.lineitem.ItemPrice" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="21204177" />
+            </line>
+            <line id="12644844">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="16971634">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="15" id="2016180268">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemID" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9127434843">
+                <methodElement fixedWidth="2" precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  " id="29541676">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isKitComponent" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="Vale regalo" id="1237854395" dependsOnPresenceOf="2116181269" />
+                <methodElement fixedWidth="15" printedWhenLengthZero="false" id="2116181269">
+                    <method returns="SaleReturnLineItemIfc[]" name="getSaleReturnLineItems" class="oracle.retail.stores.pos.receipt.GiftReceiptParameterBeanIfc">
+                        <method returns="RegistryIDIfc" name="getRegistry" class="oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc">
+                            <method returns="String" name="getID" class="oracle.retail.stores.domain.registry.RegistryIDIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="271585328">
+            <line id="3403998" />
+            <line id="3286531">
+                <element text="             ¡Enhorabuena            " id="2782048" justified="center" stretch="true" />
+            </line>
+            <line id="11228395">
+                <element text="por su regalo!" id="2782048" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="2" cutPaper="false">
+        <group id="908342820">
+            <line id="5514537" />
+            <line id="5483268">
+                <element text="Copia cliente" id="498099" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

@@ -1,0 +1,122 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/sale/scansheet/scansheet.xml /rgbustores_13.4x_generic_branch/1 2012/02/27 18:16:36 asinton Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   02/27/12 - refactored the flow so that items added from scan
+ *                         sheet doesn't allow for a hang or mismatched letter.
+ *    jkoppolu  03/02/11 - New scan sheet tour xml
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE SERVICE SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/tourguide.dtd">
+<SERVICE
+        name="ScanSheet"
+        package="oracle.retail.stores.pos.services.sale.scansheet"
+        tourcam="OFF">
+    <CARGO class="ScanSheetCargo"
+            package="oracle.retail.stores.pos.services.sale.scansheet"/>
+    <SERVICECODE >
+        <LETTER name="Continue"/>
+        <LETTER name="Next"/>
+        <LETTER name="Undo"/>
+        <LETTER name="FirstPage" />
+        <LETTER name="NextPage" />
+        <LETTER name="PreviousPage" />
+        <LETTER name="LastPage" />
+        <LETTER name="CategorySelected" />
+        <LETTER name="AddItem" />
+        <SITEACTION class="GetScanSheetSite"/>
+        <SITEACTION class="GetSelectedScanSheetCategorySite"/>
+        <SITEACTION class="GetSelectedScanSheetItemSite"/>
+        <LANEACTION class="ScanSheetItemEnteredAisle"/>
+    </SERVICECODE>
+    <MAP >
+        <REGION region="SERVICE" startsite="GetScanSheet">
+            <SITE
+                    name="GetScanSheet"
+                    siteaction="GetScanSheetSite">
+                <AISLE
+                    name="ScanSheetItemEntered"
+                    letter="AddItem"
+                    laneaction="ScanSheetItemEnteredAisle">
+                    <COMMENT >
+                        This aisle is traveled when scan sheet item has been entered
+                    </COMMENT>
+                </AISLE>
+                <ROAD
+                        name="ScanSheetItemSelected"
+                        letter="Next"
+                        destination="GetSelectedScanSheetItem"
+                        tape="ADVANCE"
+                        record="OFF"
+                        index="OFF">
+                </ROAD>
+                <ROAD
+                        name="Undo"
+                        letter="Undo"
+                        destination="Final"
+                        tape="ADVANCE"
+                        record="OFF"
+                        index="OFF">
+                </ROAD>
+
+                <ROAD name="displayFirstPage"
+                        letter="FirstPage"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="displayLastPage"
+                        letter="LastPage"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="displayNextPage"
+                        letter="NextPage"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="displayPreviousPage"
+                        letter="PreviousPage"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="displayCategory"
+                        letter="CategorySelected"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                 <ROAD name="ReturntoParentCategory"
+                        letter="Return"
+                        destination="GetScanSheet"
+                        tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+            </SITE>
+
+            <SITE name="GetSelectedScanSheetItem" siteaction="GetSelectedScanSheetItemSite">
+                <ROAD name="SelectedScanSheetItemRetrieved"
+                    letter="Next"
+                    destination="Final"
+                    tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+            </SITE>
+
+            <SITE name="GetSelectedScanSheetCategory" siteaction="GetSelectedScanSheetCategorySite">
+                <ROAD name="SelectedScanSheetCategoryRetrieved"
+                    letter="Continue"
+                    destination="Final"
+                    tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+            </SITE>
+
+            <SYSTEMSITE  name="Final" action="RETURN"/>
+        </REGION>
+    </MAP>
+</SERVICE>

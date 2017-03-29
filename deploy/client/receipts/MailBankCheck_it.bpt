@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /* ===========================================================================
+* Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/MailBankCheck_it.bpt /main/2 2010/09/28 01:28:15 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * This document prints the Mail Bank Check mailto statement.
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   03/10/10 - add new MailBankCheck blueprint and add to
+ *                         specialordercomplete
+ *    cgreene   03/10/10 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="MailBankCheck" copies="1">
+    <report name="MailBankCheckReport" id="2">
+        <group id="4042519">
+            <line id="15434760" dependsOnPresenceOf="31129390" />
+            <line id="28816306" dependsOnPresenceOf="31129390">
+                <element text="Rimborso spedito via posta a:" id="32613370" />
+            </line>
+            <line id="15417671">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="31129390">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="PersonNameIfc" name="getPayeeName" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7253271">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="23338811">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getLine1" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1123525">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="21407302">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getLine2" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="87439">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="12105276">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="," id="27177732" dependsOnPresenceOf="29588758" />
+                <methodElement printedWhenLengthZero="false" id="29588758">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="30545379">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10854588" dependsOnPresenceOf="31129390">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="2451496">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderLineItemIfc[]" name="getCollectedTenderLineItems" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.tender.TenderMailBankCheckIfc">
+                                <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17532407" dependsOnPresenceOf="31129390" />
+            <line id="30982602">
+                <element text="Il rimborso dovrebbe arrivare entro 14" id="24429956" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="8607294">
+                <element text="giorni lavorativi. Se non lo riceve" id="22591463" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="29415059">
+                <element text="entro 14 giorni lavorativi," id="29946843" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="1334428">
+                <element text="chiami 1-xxx-xxx-xxxx. Se invierà" id="26862648" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="22455101">
+                <element text="un'interrogazione al centro per l'invio dei rimborsi tramite posta," id="16217941" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="19883592">
+                <element text="potremo richiedere informazioni aggiuntive" id="26862648" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+            <line id="7795426">
+                <element text="riguardanti il suo reso." id="26862648" dependsOnPresenceOf="31129390" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>

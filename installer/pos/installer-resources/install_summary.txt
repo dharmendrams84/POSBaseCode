@@ -1,0 +1,8 @@
+This file is a placeholder. 
+
+The content will be generated at runtime by the installer based on the user's choice
+of install profile. 
+
+We need to have a file here because antinstaller will fail if this file is not present 
+on startup.
+

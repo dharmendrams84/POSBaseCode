@@ -1,0 +1,25 @@
+<?xml version='1.0' ?>
+<!--
+/* =============================================================================
+* Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * =============================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    nkgautam  02/03/10 - fixed transactions update BAT failure error
+ *    nkgautam  01/28/10 - A new status mapping xml for Serial Validation
+ *
+ * =============================================================================
+-->
+<SERIALVALIDATIONSTATUSMAPPER>
+
+    <COMMENT> This xml maps SIM Status to the relevant POS Status</COMMENT>
+
+    <STATUS name="Sellable">IN_STOCK,MISSING,CUSTOMER_FULFILLED,CUSTOMER_RESERVED,IN_RECEIVING,ITEM_NOT_RANGED,INVALID_REQUESTING_LOCATION,INVALID_REQUESTING_STORE,INVALID_ITEM_ID</STATUS>
+
+    <STATUS name="NotSellable">SOLD,SHIPPED_TO_STORE,SHIPPED_TO_WAREHOUSE,SHIPPED_TO_VENDOR,REMOVE_FROM_INVENTORY,UNAVAILABLE,SHIPPED_TO_FINISHER</STATUS>
+
+    <STATUS name="NotAvailable">UIN_DOES_NOT_EXIST</STATUS>
+
+</SERIALVALIDATIONSTATUSMAPPER>

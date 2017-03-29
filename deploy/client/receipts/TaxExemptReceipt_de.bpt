@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>                                                                                   
+<!--                                                                                                                     
+/* ===========================================================================                                           
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================                                           
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TaxExemptReceipt_de.bpt /main/1 2010/09/06 14:06:10 rajeekri Exp $    
+ * ===========================================================================                                           
+ * NOTES                                                                                                                 
+ * <other useful comments, qualifications, etc.>                                                                         
+ *                                                                                                                       
+ * MODIFIED    (MM/DD/YY)                                                                                                
+ *    rajeekri  09/06/10 - New translated file
+ *    acadar    01/22/10 - cleanup and set cutpaper to false                                                             
+ *    npoola    01/22/10 - fixed to print Layway receipt instead of Tax Exempt                                           
+ *                         for Layaway transactions                                                                      
+ *    abondala  01/02/10 - Update Header date                                                                            
+ *    npoola    12/21/09 - Linked the LayawayReceipt to the TaxExemptReceipt                                             
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they                                              
+ *                         become defaults. deleted all blueprints that have no                                          
+ *                         translated text                                                                               
+ *    cgreene   11/25/08 - initial version                                                                               
+ *                                                                                                                       
+ * ===========================================================================                                           
+ */                                                                                                                      
+-->                                                                                                                      
+<blueprint id="TaxExemptReceipt" copies="1">                                                                             
+    <linkReport documentType="SaleReceipt" idePath="/pos/deploy/receipts/SaleReceipt_de.bpt" id="4806368" cutPaper="false"/>
+</blueprint>                                                                                                             

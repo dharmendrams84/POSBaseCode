@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/technician/PosParameterTechnician.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    $Log:
+     2    360Commerce 1.1         10/4/2007 3:08:22 PM   Charles D. Baker CR
+          29106 - Making mock parameter data available to POS
+     1    360Commerce 1.0         12/13/2005 4:46:59 PM  Barry A. Pape
+    $
+    Revision 1.2  2004/02/12 16:46:42  mcs
+    Forcing head revision
+
+    Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+    updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE PARAMTECHNICIAN SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/paramscript.dtd">
+<PARAMTECHNICIAN
+           package="oracle.retail.stores.foundation.manager.parameter">
+    <SELECTOR name="defaultParameters">
+        <SOURCE categoryname="application" alternativename="application"/>
+    <!-- Parametertech MockParameterTechnician BEGIN
+        <SOURCE categoryname="mock" alternativename="mock"/>
+    Parametertech MockParameterTechnician END -->
+        <SOURCE categoryname="corporate" alternativename="corporate"/>
+            <SOURCE categoryname="store" alternativename="store"/>
+            <SOURCE categoryname="service" alternativename="NO_OP"/>
+            <SOURCE categoryname="uidata" alternativename="NO_OP"/>
+            <SOURCE categoryname="register" alternativename="workstation" />
+        <SOURCE categoryname="userrole" alternativename="operator" />
+    </SELECTOR>
+
+<!-- An example of how to add another store:
+    <SELECTOR name="store668Parameters">
+        <SOURCE categoryname="application" alternativename="application"/>
+        <SOURCE categoryname="corporate" alternativename="corporate"/>
+          <SOURCE categoryname="store" alternativename="store668"/>
+          <SOURCE categoryname="register" alternativename="workstation" />
+        <SOURCE categoryname="userrole" alternativename="operator" />
+    </SELECTOR>
+-->
+    <VALIDATOR class="SelectorValidator"
+               package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="category" propvalue="application"/>
+    <!-- Parametertech MockParameterTechnician BEGIN
+            <PROPERTY propname="category" propvalue="mock"/>
+    Parametertech MockParameterTechnician END -->
+            <PROPERTY propname="category" propvalue="corporate"/>
+                    <PROPERTY propname="category" propvalue="store"/>
+            <PROPERTY propname="category" propvalue="service"/>
+            <PROPERTY propname="category" propvalue="uidata"/>
+                    <PROPERTY propname="category" propvalue="register"/>
+            <PROPERTY propname="category" propvalue="userrole"/>
+    </VALIDATOR>
+    <CATALOG name="QuarryCatalog"
+             class="Catalog"
+             package="oracle.retail.stores.foundation.manager.parameter">
+
+        <LOADER category="application"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+
+        <LOADER category="mock"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+
+        <LOADER category="corporate"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+
+        <LOADER category="store"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+
+        <LOADER category="register"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+
+<!--
+        <LOADER category="service"
+                class="ScriptLoader"
+                package="oracle.retail.stores.foundation.manager.parameter"/>
+        <LOADER category="uidata"
+                class="DBLoader"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="dataAction" propvalue="retrieveSettings" />
+        </LOADER>
+        <LOADER category="userrole"
+                class="LDAPLoader"
+                package="oracle.retail.stores.foundation.manager.parameter">
+        </LOADER>
+-->
+
+        <LOADER category="userrole"
+                class="SourceLoaderXML"
+                package="oracle.retail.stores.foundation.manager.parameter">
+            <PROPERTY propname="searchPath" propvalue="config/parameter"/>
+        </LOADER>
+    </CATALOG>
+</PARAMTECHNICIAN>

@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/main/mainuicfg.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:29 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   12/07/09 - added keys[true]
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE UICFG SYSTEM "classpath://oracle/retail/stores/pos/config/defaults/posui.dtd">
+
+<UICFG>
+    <BEAN
+        specName="OnlineOfficeSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="OnlineOfficeBean">
+    </BEAN>
+
+    <BEAN
+        specName="MainOptionsButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="DailyOps"
+            enabled="true"
+            keyName="F2"
+            labelTag="DailyOperations"/>
+
+        <BUTTON
+            actionName="POS"
+            enabled="true"
+            keyName="F3"
+            labelTag="POS"/>
+
+        <BUTTON
+            actionName="Administration"
+            enabled="true"
+            keyName="F4"
+            labelTag="Administration"/>
+
+        <BUTTON
+            actionName="Clock"
+            enabled="true"
+            keyName="F5"
+            labelTag="ClockInOut"/>
+
+        <BUTTON
+            actionName="ServiceAlert"
+            enabled="true"
+            keyName="F6"
+            labelTag="ServiceAlert"/>
+
+        <!--BUTTON
+            actionName="OnlineOffice"
+            enabled="true"
+            keyName="F7"
+            labelTag="BackOffice"/-->
+
+        <BUTTON
+            actionName="LaunchBrowser"
+            enabled="true"
+            keyName="F7"
+            labelTag="Browser"/>
+
+        <BUTTON
+            actionName="TrainingOnOff"
+            enabled="true"
+            labelTag="Training"
+            keyName="F8" />
+
+	<BUTTON actionName="Inventory"
+	    enabled="true"
+	    keyName="F9"
+	    labelTag="ItemInquiry"/>
+
+        <!-- BUTTON actionName="TransReentry"
+            enabled="true"
+            keyName="F9"
+            labelTag="TransReentryOn" / -->
+    </BEAN>
+
+    <BEAN
+        specName="OnlineOfficeStatusSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="BrowserStatusBean">
+    </BEAN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="mainText"
+        specName="MAIN_OPTIONS">
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY propName="promptTextTag"   propValue="ChooseOptionPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY propName="screenNameTag" propValue="MainOptionsScreenName"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="WorkPanel"
+            beanSpecName="LogoSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[false],Undo[false],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="MainOptionsButtonSpec">
+        </ASSIGNMENT>
+    </OVERLAYSCREEN>
+
+    <DEFAULTSCREEN
+        specName="OnlineOfficeDefaultSpec"
+        templateSpecName="OnlineOfficeTemplateSpec"
+        displaySpecName="EYSPOSDisplaySpec">
+    </DEFAULTSCREEN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="OnlineOfficeDefaultSpec"
+        resourceBundleFilename="commonText"
+        specName="ONLINE_OFFICE">
+
+        <ASSIGNMENT
+            areaName="BrowserPanel"
+            beanSpecName="OnlineOfficeSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="BrowserStatusPanel"
+            beanSpecName="BrowserStatusSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="OnlineOfficeNavigationPanel"
+            beanSpecName="OnlineOfficeNavigationSpec">
+        </ASSIGNMENT>
+
+        <CONNECTION
+            listenerInterfaceName="BrowserStatusListener"
+            listenerPackage="oracle.retail.stores.pos.ui.behavior"
+            sourceBeanSpecName="OnlineOfficeSpec"
+            targetBeanSpecName="BrowserStatusSpec"/>
+
+    </OVERLAYSCREEN>
+</UICFG>

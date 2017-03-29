@@ -1,0 +1,41 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/conduit/RegenerateRTLogConduit.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   05/05/10 - remove deprecated log manager and technician
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DISPATCHER SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/dispatch.dtd">
+<DISPATCHER name="STANDALONE">
+    <LOCALE language="en" country="US"/>
+    <APPLICATION name="APPLICATION"
+                 class="TierTechnician"
+                 package="oracle.retail.stores.foundation.manager.tier"
+			     startservice="classpath://oracle/retail/stores/pos/services/rtlog/regenerateRTLogTour.xml">
+    </APPLICATION>
+
+    <MANAGER name="RTLogExportDaemonManager"
+             class="RTLogExportDaemonManager"
+             package="oracle.retail.stores.domain.manager.rtlog">
+    </MANAGER>
+
+    <MANAGER name="ThreadManager"
+             class="ThreadManager"
+             package="oracle.retail.stores.foundation.manager.thread">
+        <PROPERTY propname="threadPool" propvalue="StaticCache"/>
+        <PROPERTY propname="threadPoolProperty" propvalue="maxSize=4"/>
+    </MANAGER>
+
+</DISPATCHER>

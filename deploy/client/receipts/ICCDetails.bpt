@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/ICCDetails.bpt /rgbustores_13.4x_generic_branch/6 2011/11/02 11:57:45 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   11/02/11 - implemented credit or debit name on ICCDetails
+ *                         receipt
+ *    cgreene   10/25/11 - added more captured info
+ *    cgreene   10/20/11 - added generic card information for Stero copy
+ *    cgreene   09/13/11 - do not cut the paper after the ankle
+ *    cgreene   06/28/11 - rename hashed credit card field to token
+ *    cgreene   06/02/11 - Tweaks to support Servebase chipnpin
+ *
+ * ===========================================================================
+ *
+ -->
+<blueprint id="Tenders" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/client/receipts/Logo.bpt" id="15900312" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/client/receipts/Header.bpt" id="28180617" cutPaper="false" />
+    <report name="TendersReport" id="1" cutPaper="false">
+        <group id="32027652">
+            <line id="1308631">
+                <methodElement precededBySpace="false" valuePrintedWhenFalse="  Credit" valuePrintedWhenTrue="  Debit" id="7229924" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="boolean" name="isDebitCard" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+                <methodElement id="9560356">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="22261875" />
+            </line>
+            <line id="17276128">
+                <element text="   Card:" id="31625187" />
+                <methodElement printedWhenLengthZero="false" id="17798819">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getCardType" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9987441">
+                <element text="   Account:" id="8261823" />
+                <methodElement id="13207250">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25889695">
+                <element text="   Auth:" id="31482478" />
+                <methodElement id="12372321">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="U" prefix="(" suffix=")" id="17582136">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getAuthorizationMethod" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25505342" dependsOnPresenceOf="30936981">
+                <element text="   Terminal ID:" id="8727741" dependsOnPresenceOf="30936981" />
+                <methodElement printedWhenLengthZero="false" id="30936981">
+                    <method returns="TenderLineItemIfc[]" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalId" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19353344" dependsOnPresenceOf="28879489">
+                <element text="   Application ID:" id="8727741" dependsOnPresenceOf="28879489" />
+                <methodElement printedWhenLengthZero="false" id="28879489">
+                    <method returns="TenderLineItemIfc[]" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationID" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20630925" dependsOnPresenceOf="18730153">
+                <element text="   Application Name:" id="8727741" dependsOnPresenceOf="18730153" />
+                <methodElement printedWhenLengthZero="false" id="18730153">
+                    <method returns="TenderLineItemIfc[]" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationLabel" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2060711" dependsOnPresenceOf="23205836">
+                <element text="   PAN Seq Num.:" id="8727741" dependsOnPresenceOf="23205836" />
+                <methodElement printedWhenLengthZero="false" id="23205836">
+                    <method returns="TenderLineItemIfc[]" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getPanSequenceNumber" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11049725">
+                <element text="   Verification:" id="28016009" dependsOnPresenceOf="31538930" />
+                <methodElement printedWhenLengthZero="false" valuePrintedWhenFalse="PIN" valuePrintedWhenTrue="Signature" id="31538930">
+                    <method returns="TenderLineItemIfc[]" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="boolean" name="isSignatureRequired" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="335609" dependsOnPresenceOf="11862635">
+                <element text="   Capture Method:" id="28016009" />
+                <methodElement formatter="-1#Unknown|0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" id="11862635">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21909250" />
+            <line id="27270146">
+                <element text="ICC Details" id="23586022" />
+            </line>
+            <line id="31116574" />
+            <line id="17101287">
+                <element text="Auth. Req. Cryptogram:" id="8727741" />
+                <methodElement id="9717281">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getAuthorisationRequestCryptogram" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1952069">
+                <element text="Application Interchange Profile:" id="8727741" />
+                <methodElement id="7556024">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationInterchangeProfile" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6860726">
+                <element text="Application Transaction Counter:" id="8727741" />
+                <methodElement id="18005762">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationTransactionCounter" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2451698">
+                <element text="Unpredictable Number:" id="8727741" />
+                <methodElement id="5173070">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getUnpredictableNumber" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26610858">
+                <element text="Terminal Verification Result:" id="8727741" />
+                <methodElement id="386918">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalVerificationResult" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26122104">
+                <element text="Cryptogram Transaction Type:" id="8727741" />
+                <methodElement id="17192489">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getCryptogramTransactionType" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20221414">
+                <element text="Issuer Application Data:" id="8727741" />
+                <methodElement id="29482502">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getIssuerApplicationData" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20037918">
+                <element text="Application Identifier:" id="8727741" />
+                <methodElement id="13722733">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationID" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21534010">
+                <element text="Cryptogram Information Data:" id="8727741" />
+                <methodElement id="520437">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getCryptogramInformationData" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27545135">
+                <element text="CVM Results:" id="8727741" />
+                <methodElement id="19021921">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getCvmResults" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27369686">
+                <element text="Application Response Cryptogram:" id="8727741" />
+                <methodElement id="15783733">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationResponseCryptogram" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11991702">
+                <element text="POS Entry Mode1:" id="8727741" />
+                <methodElement id="26759085">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getPosEntryMode1" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22304106">
+                <element text="POS Entry Mode2:" id="8727741" />
+                <methodElement id="2166354">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getPosEntryMode2" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18736707">
+                <element text="Application Usage Control:" id="8727741" />
+                <methodElement id="6505959">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationUsageControl" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3576675">
+                <element text="Application Version Number:" id="8727741" />
+                <methodElement id="32268959">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationVersionNumber" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="777562">
+                <element text="Transacation Status Information:" id="8727741" />
+                <methodElement id="28150226">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTransactionStatusInformation" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25125411">
+                <element text="Terminal Type:" id="8727741" />
+                <methodElement id="30869523">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalType" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2224762">
+                <element text="Terminal Capabilities:" id="8727741" />
+                <methodElement id="14041979">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalCapabilities" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14630841">
+                <element text="Denial Issue Action Codes:" id="8727741" />
+                <methodElement id="12701523">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getIssuerActionCodesDenial" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2115832">
+                <element text="Online Issue Action Codes:" id="8727741" />
+                <methodElement id="12712052">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getIssuerActionCodesOnline" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31974366">
+                <element text="Default Issue Action Codes:" id="8727741" />
+                <methodElement id="6688265">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getIssuerActionCodesDefault" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19016785">
+                <element text="Authorization Response Code:" id="8727741" />
+                <methodElement id="28444906">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getAuthorisationResponseCode" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12196030">
+                <element text="Terminal Country Code:" id="8727741" />
+                <methodElement id="32606831">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalCountryCode" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25781338">
+                <element text="Terminal Currency Code:" id="8727741" />
+                <methodElement id="17669556">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalCurrencyNumber" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/client/receipts/Ankle.bpt" id="8456599" cutPaper="false" />
+    <report name="CopyReport" id="14366671" cutPaper="false">
+        <group id="908342821">
+            <line id="17652030" />
+            <line id="9501460">
+                <element text="Store Copy" id="21649028" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/client/receipts/Footer.bpt" id="24495467" />
+</blueprint>
+

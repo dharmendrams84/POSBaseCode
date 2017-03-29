@@ -1,0 +1,535 @@
+<?xml version='1.0' ?>
+<!--
+/* =============================================================================
+* Copyright (c) 2001, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * =============================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/technician/RetailTransactionTechnician.xml /rgbustores_13.4x_generic_branch/11 2012/02/16 11:31:08 asinton Exp $
+ * =============================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   02/16/12 - set cardtyperules.xml configuration for
+ *                         HouseAccountPaymentFormatter.
+ *    abondala  09/22/11 - set the cipher spec for secure jms connection if
+ *                         integrating with MQ server.
+ *    cgreene   08/03/11 - refactored commext to be able to support directory
+ *                         queues
+ *    ohorne    07/21/11 - corrected rampart policy used in
+ *                         RMWebserviceConnector
+ *    ohorne    06/17/11 - Spring loaded ISDTK properties
+ *    ohorne    06/16/11 - removed autoEncrypt and hkmKeyfile from
+ *                         PinCommConnector config
+ *    ohorne    06/01/11 - replaced ip/port with tokens in PinCommConnector
+ *                         wiring
+ *    ohorne    05/31/11 - added house account payment for Pincomm
+ *    vtemker   04/12/11 - pos sim webservice fix
+ *    cgreene   03/09/11 - apf refactoring and tweaks
+ *    abondala  02/16/11 - updated
+ *    abondala  02/15/11 - load the MQConnectionhelper class only if integrated
+ *                         with Websphere
+ *    abondala  02/14/11 - fixed the RM - POS integration
+ *    abondala  02/03/11 - updated after code review
+ *    abondala  01/27/11 - Introduce commext for processing final result
+ *                         messages in rm-pos integration
+ *    sgu       09/27/10 - change Siebel timeout seconds
+ *    ohorne    09/10/10 - return line items are not updated in external order
+ *                         system
+ *    acadar    09/01/10 - merged with tip
+ *    acadar    09/01/10 - changes for sending a funded failed status to Siebel
+ *    acadar    08/27/10 - changes to add a new order status
+ *    sgu       08/31/10 - remove logger connector
+ *    sgu       08/31/10 - remove log entry formatter
+ *    sgu       08/30/10 - remove siebel log flow
+ *    sgu       08/30/10 - check in all
+ *    ohorne    08/13/10 - added useAdjustmentNRC to SiebelOrderFundedFormatter
+ *    acadar    08/12/10 - changes for payments
+ *    acadar    08/12/10 - changes for posting of negative payments
+ *    tzgarba   08/02/10 - Updated broadcasting class to threaded multicast
+ *                         connector
+ *    abondala  07/30/10 - comext update for multithreaded support of
+ *                         MulticastConnector
+ *    mchellap  07/29/10 - Changes for ORSIM webservice migration
+ *    sgu       07/14/10 - remove whitespace from message types
+ *    sgu       07/14/10 - change to have UpdatePayment and Sync steps both
+ *                         dependent on Fund step
+ *    sgu       07/14/10 - give logical names to siebel queue names
+ *    sgu       07/14/10 - redirect to sync txn even if update payment fails
+ *    acadar    07/14/10 - merged with tip
+ *    acadar    07/14/10 - do not prompt for sig cap when refund; include
+ *                         restocking fee in the item price; configuration for
+ *                         refundPayments
+ *    ohorne    07/13/10 - Siebel mappings now loaded via Spring
+ *    mchellap  06/24/10 - Merge checkin
+ *    mchellap  06/23/10 - Billpay connector refactoring
+ *    mchellap  06/22/10 - Added billpay connectors
+ *    sgu       06/23/10 - added order payment route
+ *    abondala  06/21/10 - updating siebel with payment in a different call
+ *    ohorne    06/14/10 - added SiebelOrderPaymentFormatter
+ *    sgu       06/15/10 - use one instance of the LoggerConnector
+ *    sgu       06/15/10 - add log flow for siebel update flow
+ *    sgu       06/14/10 - check in siebel update flow logger configuration
+ *    sgu       06/14/10 - check in logger flow for siebel
+ *    sgu       06/14/10 - check in all
+ *    ohorne    06/09/10 - added writeInPartNumber to
+ *                         SiebelOrderFundedFormatter
+ *    abondala  06/08/10 - filter transactions for siebel
+ *    ohorne    06/05/10 - added Siebel formatter mapping for securityType
+ *                         property
+ *    abondala  06/03/10 - wiring the formatter to a connector to translate the
+ *                         response during the flow if the message is sent from
+ *                         a QueuedForward connector where the message is taken
+ *                         from the file queue and then given to the chained
+ *                         connector.
+ *    abondala  06/02/10 - Siebel update flow
+ *    ohorne    05/27/10 - UserName is now UserID for Siebel Formatters
+ *    ohorne    05/26/10 - removed passwordAlias option from Siebel formatters
+ *    mchellap  03/24/10 - SIM Webservice user password encryption
+ *    abhayg    03/23/10 - Enabling POS SIM WebService Security
+ *    abhayg    03/23/10 - POS SIM secure webservice invocation
+ *    nkgautam  03/09/10 - added new property execution interval for
+ *                         FileQueueConnector
+ *    masahu    01/28/10 - Introducing a new connector to redirect message back
+ *                         to the connector
+ *    abondala  01/02/10 - Update Header date
+ *    vikini    12/10/09 - Installer for Itembasket and InventoryUpdate
+ *    vikini    12/09/09 - Incorporating Code Review Comments
+ *    vikini    12/07/09 - Installer specific changes
+ *    vikini    12/03/09 - Filter and DTO creation
+ *    vikini    11/30/09 - Separating Batched non batched File Queue Connector
+ *    vikini    11/20/09 - Separating Batched File Queue and File Queue
+ *                         Connector
+ *    acadar    11/10/09 - added MulticastConnector
+ *    nkgautam  11/03/09 - DBQueue/FileQueue Connector configurations
+ *    vikini    10/26/09 - Incorporating review comments
+ *    vikini    10/22/09 - incorporating review comments
+ *    vikini    10/22/09 - RetailTransactionTechnician Creation
+ *
+ * =============================================================================
+-->
+<!DOCTYPE MSGDISP SYSTEM "classpath://oracle/retail/stores/platform/client/message/config/msgdisp.dtd">
+<MSGDISP monitorinterval="300">
+    <COMMENT>
+        RetailTransactionTechnician COMMEXT configuration XML for retail
+        transaction data persistence, store and forward, and export from ORPOS
+        to external systems, e.g. ORSIM, ORRM, Siebel, and Billpay.
+    </COMMENT>
+
+    <!--  Message formatters are listed below. Formatters must implement
+         oracle.retail.stores.commext.message.formatter.FormatterIfc -->
+    <FORMATTERS>
+         <!-- No formatting done, just pass through as it is -->
+        <FORMATTER name="PassThroughFormatter" javaclass="oracle.retail.stores.commext.message.formatter.PassThroughFormatter" />
+
+        <!-- Get Transaction Object from Valet. Convert Message into  TransactionIfc -->
+        <FORMATTER name="TransactionDataFormatter" javaclass="oracle.retail.stores.domain.connector.formatter.TransactionDataFormatter" />
+
+        <!-- Transaction Object is formatted to be sent to SIM -->
+        <!-- Begin PSI
+        <FORMATTER name="PSITransactionsFormatter" javaclass="oracle.retail.stores.pos.formatter.PSITransactionFormatter" />
+
+        <FORMATTER name="PSIWSRequestCreator" javaclass="oracle.retail.stores.pos.formatter.PSITransactionBatchFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://retail.oracle.com/SIM/PosTransaction/v1" />
+            <PROPERTY propname="OperationLocalPart" propvalue="ProcessMultiplePosTxnsRequest"/>
+            <PROPERTY propname="nameSpace" propvalue="ns1"/>
+            <PROPERTY propname="action" propvalue="urn:processMultiplePosTxns" />
+            <PROPERTY propname="endPtURL" propvalue="$PSI_URL" />
+            <PROPERTY propname="svcName" propvalue="ProcessMultiplePosTxnsRequest" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="30"/>
+        </FORMATTER>
+        End PSI -->
+
+        <!--Begin Siebel
+        <FORMATTER name="SiebelOrderFundedFormatter" javaclass="oracle.retail.stores.formatter.siebel.FundedOrderFormatter">
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+            <PROPERTY propname="writeInPartNumber" propvalue="SEBLRSVWIP1"/>
+        </FORMATTER>
+
+        <FORMATTER name="SiebelOrderPaymentFormatter" javaclass="oracle.retail.stores.formatter.siebel.PaymentFormatter">
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+        </FORMATTER>
+
+        <FORMATTER name="SiebelOrderFundedFailedFormatter" javaclass="oracle.retail.stores.formatter.siebel.StatusUpdateFormatter">
+            <PROPERTY propname="function" propvalue="Funded Failed"/>
+            <PROPERTY propname="userID" propvalue="$SIEBEL_GLOBAL_USER"/>
+            <PROPERTY propname="password" propvalue="$SIEBEL_GLOBAL_PASSWD"/>
+            <PROPERTY propname="securityType" propvalue="$SIEBEL_SECURITY"/>
+            <PROPERTY propname="endPointUrl" propvalue="$SIEBEL_URL" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="60"/>
+        </FORMATTER>
+
+        <FORMATTER name="TransactionSyncFormatter" javaclass="oracle.retail.stores.formatter.siebel.TransactionSyncFormatter" />
+
+        End Siebel-->
+
+        <!-- Transaction Object is formatted to be sent to Bill pay simulator -->
+        <!-- Begin BillPay
+        <FORMATTER name="BillPayTransactionDataFormatter" javaclass="oracle.retail.stores.pos.formatter.BillPayTransactionDataFormatter" />
+        End BillPay -->
+
+        <!--Begin RM Final Webservice
+        <FORMATTER name="ReturnsResultFormatter" javaclass="oracle.retail.stores.posrmint.formatter.ReturnsResultFormatter">
+            <PROPERTY propname="operationNameSpace" propvalue="http://manager.webservices.stores.retail.oracle" />
+            <PROPERTY propname="OperationLocalPart" propvalue="processFinalResult"/>
+            <PROPERTY propname="nameSpace" propvalue="ns1"/>
+            <PROPERTY propname="action" propvalue="urn:processFinalResult" />
+            <PROPERTY propname="endPtURL" propvalue="$HTTP_PROTOCOL://$RM_HOST_NAME:$RM_APP_PORT/retwebsvc/services/ReturnsManager" />
+            <PROPERTY propname="svcName" propvalue="ProcessFinalResult" />
+            <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+        </FORMATTER>
+        End RM Final Webservice-->
+
+        <!-- BEGIN formatters for PINComm integration
+        <FORMATTER name="HouseAccountPaymentFormatter"
+            javaclass="oracle.retail.stores.domain.manager.payment.pincomm.HouseAccountPaymentFormatter" >
+            <PROPERTY propname="location" propvalue="$PINCOMM_STORE_NUMBER"/>
+            <PROPERTY propname="cardTypeRulesFile" propvalue="classpath://config/cardtyperules.xml"/>
+            <PROPERTY propname="timeOutInSeconds" propvalue="30"/>
+        </FORMATTER>
+        END formatters for PINComm integration -->
+
+    </FORMATTERS>
+
+    <!-- Connectors to external systems are listed below. Connector classes must
+        implement oracle.retail.stores.commext.message.connector.ConnectorIfc -->
+    <CONNECTORS>
+        <!-- This Connector saves Transaction Data into the Database. It connects MessageDispatcher to DataTechnician
+            which in turn saves the data onto the Database -->
+        <CONNECTOR name="SaveTransactionsToDatabaseConnector" javaclass="oracle.retail.stores.commext.connector.technician.TechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="RemoteDT" />
+        </CONNECTOR>
+
+        <!-- This Connector saves Transaction Data into the Database without raising exceptions. It connects MessageDispatcher
+            to DataTechnician which in turn saves the data onto the Database -->
+        <CONNECTOR name="SaveTransactionsToDatabaseSafeConnector" javaclass="oracle.retail.stores.commext.connector.technician.MessageResponseTechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="RemoteDT" />
+        </CONNECTOR>
+
+        <!-- WebService Connectors MulticastConnector. After persisting txn to database, it is given to the below integration points  -->
+        <CONNECTOR name="MulticastQueuedTransactions" javaclass="oracle.retail.stores.commext.connector.multicast.ThreadedMulticastConnector">
+             <!-- Begin PSI
+            <PROPERTY propname="msgTypes"  propvalue="FILTER_PSI_TRANSACTIONS"/>
+            End PSI -->
+            <!--Begin Siebel
+            <PROPERTY propname="msgTypes"  propvalue="FILTER_SIEBEL_TRANSACTIONS"/>
+            End Siebel-->
+            <!-- Begin BillPay
+            <PROPERTY propname="msgTypes"  propvalue="FILTER_BILL_PAY_TRANSACTIONS"/>
+            End BillPay -->
+            <!-- BEGIN filters for PINComm integration
+            <PROPERTY propname="msgTypes"  propvalue="FILTER_PAYMENT_TRANSACTIONS"/>
+            END filters for PINComm integration -->
+        </CONNECTOR>
+
+        <!-- This Connector saves Data Objects into the File Queue. Returns Single queued element. -->
+        <CHAINED_CONNECTOR name="SaveTransactionsToFileConnector" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="MulticastQueuedTransactions">
+            <PROPERTY propname="queueFileName"                 propvalue="SaveTransactionsQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <!-- Begin PSI
+        <CONNECTOR name="MulticastQueuedTransactionsForPSI" javaclass="oracle.retail.stores.commext.connector.multicast.MulticastConnector">
+            <PROPERTY propname="msgTypes"  propvalue="FORMAT_PSI_TRANSACTIONS"/>
+        </CONNECTOR>
+
+        <CONNECTOR name="RedirectTransactionsToSIM" javaclass="oracle.retail.stores.commext.connector.technician.BaseTechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="RemoteTT" />
+            <PROPERTY propname="targetConnector"  propvalue="EXPORT_PSI_UPDATES"/>
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SaveTransToFileForPSI" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="MulticastQueuedTransactionsForPSI">
+            <PROPERTY propname="queueFileName"                 propvalue="SIMTransactionsQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <CHAINED_CONNECTOR name="PSITransactionsFilterConnector" javaclass="oracle.retail.stores.domain.connector.TransactionFilterConnector" connector="SaveTransToFileForPSI">
+            <PROPERTY propname="configFileName"                propvalue="classpath://config/PSITransactionFilterConfig.xml"/>
+        </CHAINED_CONNECTOR>
+
+
+        <CHAINED_CONNECTOR name="SavePSITxnToFileQueueConnector" javaclass="oracle.retail.stores.commext.connector.queued.BatchedFileQueueConnector" connector="RedirectTransactionsToSIM">
+            <PROPERTY propname="queueFileName"                 propvalue="SIMBatchedTransactionsQueue"/>
+            <PROPERTY propname="batchSize"                     propvalue="10"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <CONNECTOR name="PSIInventoryWSConnector" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+            <PROPERTY propname="passwdEnabled" propvalue="$PASSWD_EN"/>
+            <PROPERTY propname="userID" propvalue="$PSI_WS_UID"/>
+            <PROPERTY propname="password" propvalue="$PSI_WS_PWD"/>
+            <PROPERTY propname="rampartFileLocation" propvalue="classpath://config/rampart-policy-sim.xml"/>
+            <PROPERTY propname="securityModule" propvalue="rampart" />
+        </CONNECTOR>
+
+        End PSI -->
+
+        <!-- Batched PSI transactions MulticastConnectos -->
+        <!--<CONNECTOR name="MulticastPSITransactions" javaclass="oracle.retail.stores.commext.connector.multicast.MulticastConnector">
+            <PROPERTY propname="msgTypes"  propvalue="EXPORT_PSI_UPDATES"/>
+        </CONNECTOR> -->
+
+
+        <!-- This Connector saves Data Objects into the Database Queue. -->
+        <!--CONNECTOR name="DBQueueConnector" javaclass="oracle.retail.stores.commext.connector.queued.DBQueueConnector">
+            <PROPERTY propname="batchSize"                     propvalue="10"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="30000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CONNECTOR-->
+
+
+        <!--Begin Siebel
+        <CONNECTOR name="MulticastQueuedTransactionsForSiebel" javaclass="oracle.retail.stores.commext.connector.multicast.MulticastConnector">
+            <PROPERTY propname="msgTypes"  propvalue="UPDATE_SIEBEL"/>
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SaveTransToFileForSiebel" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="MulticastQueuedTransactionsForSiebel">
+            <PROPERTY propname="queueFileName"                 propvalue="SiebelTransactionsQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SiebelTransactionsFilterConnector" javaclass="oracle.retail.stores.domain.connector.TransactionFilterConnector" connector="SaveTransToFileForSiebel">
+            <PROPERTY propname="configFileName"                propvalue="classpath://config/ExternalOrderTransactionFilterConfig.xml"/>
+        </CHAINED_CONNECTOR>
+
+       <CONNECTOR name="SiebelWebService" javaclass="oracle.retail.stores.connector.siebel.WebServiceConnector" />
+
+       <CHAINED_CONNECTOR name="FundSiebelOrderConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="SiebelWebService">
+            <PROPERTY propname="formatterName"                 propvalue="SiebelOrderFundedFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="FundSiebelOrderQueue"/>
+            <PROPERTY propname="sucessRedirectMessage"         propvalue="UPDATE_SIEBEL_PAYMENT,SIEBEL_SYNCH_DB"/>
+            <PROPERTY propname="failRedirectMessage"           propvalue="FUNDED_FAILED_MESSAGE"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+            <PROPERTY propname="loggerCategory"                propvalue="SiebelOrderFunded"/>
+       </CHAINED_CONNECTOR>
+
+       <CHAINED_CONNECTOR name="UpdateSiebelOrderPaymentConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="SiebelWebService">
+            <PROPERTY propname="formatterName"                 propvalue="SiebelOrderPaymentFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="UpdateSiebelOrderPaymentQueue"/>
+            <PROPERTY propname="sucessRedirectMessage"         propvalue=""/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+            <PROPERTY propname="loggerCategory"                propvalue="SiebelOrderPayment"/>
+       </CHAINED_CONNECTOR>
+
+       <CHAINED_CONNECTOR name="SyncTransactionFromSiebelOrderConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="SaveTransactionsToDatabaseSafeConnector">
+            <PROPERTY propname="formatterName"                 propvalue="TransactionSyncFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="SyncTransactionFromSiebelOrderQueue"/>
+            <PROPERTY propname="sucessRedirectMessage"         propvalue=""/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+            <PROPERTY propname="loggerCategory"                propvalue="SiebelTxnSync"/>
+       </CHAINED_CONNECTOR>
+
+
+       <CHAINED_CONNECTOR name="FundedFailedConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="SiebelWebService">
+            <PROPERTY propname="formatterName"                 propvalue="SiebelOrderFundedFailedFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="OrderFundedFailedQueue"/>
+            <PROPERTY propname="sucessRedirectMessage"         propvalue=""/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+
+       End Siebel-->
+
+        <!-- Begin BillPay
+        <CONNECTOR name="MulticastQueuedTransactionsForBillPay" javaclass="oracle.retail.stores.commext.connector.multicast.MulticastConnector">
+            <PROPERTY propname="msgTypes"  propvalue="EXPORT_BILL_PAY_TRANSACTIONS"/>
+        </CONNECTOR>
+
+        <CONNECTOR name="BillPayTechnicianConnector" javaclass="oracle.retail.stores.commext.connector.technician.TechnicianConnector">
+            <PROPERTY propname="technicianName" propvalue="BillPayTechnician" />
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SaveBillPayTxnToFileQueueConnector"
+            javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="MulticastQueuedTransactionsForBillPay">
+            <PROPERTY propname="queueFileName" propvalue="BillPayTransactionQueue" />
+            <PROPERTY propname="queueMonitorInterval" propvalue="30000" />
+            <PROPERTY propname="executionInterval" propvalue="1000" />
+        </CHAINED_CONNECTOR>
+
+        <CHAINED_CONNECTOR name="BillPayTransactionsFilterConnector" javaclass="oracle.retail.stores.domain.connector.TransactionFilterConnector" connector="SaveBillPayTxnToFileQueueConnector">
+            <PROPERTY propname="configFileName" propvalue="classpath://config/BillPayTransactionFilterConfig.xml"/>
+        </CHAINED_CONNECTOR>
+        End BillPay -->
+
+       <!--  Begin RMInteg -->
+
+        <!--Begin RM Final Webservice
+        <CONNECTOR name="RMWebserviceConnector" javaclass="oracle.retail.stores.commext.connector.webservice.AxisWebserviceConnector">
+           <PROPERTY propname="passwdEnabled" proptype="STRING" propvalue="true"/>
+           <PROPERTY propname="userID" proptype="STRING" propvalue="$RM_USER"/>
+           <PROPERTY propname="password" proptype="STRING" propvalue="$RM_PWD"/>
+           <PROPERTY propname="rampartFileLocation" proptype="STRING" propvalue="classpath://config/rampart-policy.xml"/>
+           <PROPERTY propname="securityModule" proptype="STRING" propvalue="rampart"/>
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SaveFinalResultMsgToFileQueue" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="RMWebserviceConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="ReturnsManagementQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="retryInterval"                 propvalue="300000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+        End RM Final Webservice-->
+
+        <!--Begin RM Final Messaging
+        <CONNECTOR name="RMMessagingServiceConnector" javaclass="oracle.retail.stores.commext.connector.jms.MessagingServiceConnector">
+            <PROPERTY propname="queueServer" proptype="STRING" propvalue="$JMS_HOST_NAME"/>
+            <PROPERTY propname="queuePort" proptype="STRING" propvalue="$MQ_PORT"/>
+            <PROPERTY propname="queueConnFactoryJNDI" proptype="STRING" propvalue="jms/ApplicationQCF"/>
+            <PROPERTY propname="jndiProtocol" proptype="STRING" propvalue="$JNDI_PROTOCOL"/>
+            <PROPERTY propname="secureJMSComm" proptype="STRING" propvalue="$SECURE_JMS"/>
+            <PROPERTY propname="jndiContextFactory" proptype="STRING" propvalue="weblogic.jndi.WLInitialContextFactory"/>
+            <PROPERTY propname="jmsUserId" proptype="STRING" propvalue="$JMS_USER"/>
+            <PROPERTY propname="jmsPassword" proptype="STRING" propvalue="$JMS_PWD"/>
+            <PROPERTY propname="queueName" proptype="STRING" propvalue="$QUEUE_NAME"/>
+            <PROPERTY propname="queueManager" proptype="STRING" propvalue="$QUEUE_MANAGER"/>
+            <PROPERTY propname="mqCipherSuite" proptype="STRING" propvalue="SSL_RSA_WITH_3DES_EDE_CBC_SHA"/>
+        </CONNECTOR>
+
+        <CHAINED_CONNECTOR name="SaveFinalResultMsgToFileQueue" javaclass="oracle.retail.stores.commext.connector.queued.FileQueueConnector" connector="RMMessagingServiceConnector">
+            <PROPERTY propname="queueFileName"                 propvalue="ReturnsManagementQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="retryInterval"                 propvalue="300000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+        </CHAINED_CONNECTOR>
+        End RM Final Messaging-->
+
+        <!-- BEGIN connectors for PINComm integration
+
+        <CONNECTOR name="MulticastQueuedTransactionsForPinComm" javaclass="oracle.retail.stores.commext.connector.multicast.MulticastConnector">
+            <PROPERTY propname="msgTypes"  propvalue="HOUSE_ACCOUNT_PAYMENT_TRANSACTIONS"/>
+        </CONNECTOR>
+
+        <CONNECTOR name="PinCommConnector"
+            javaclass="oracle.retail.stores.domain.manager.payment.pincomm.PinCommConnector"/>
+
+        <CHAINED_CONNECTOR name="PinCommPaymentConnector" javaclass="oracle.retail.stores.commext.connector.queued.QueuedForwardConnector" connector="PinCommConnector">
+            <PROPERTY propname="formatterName"                 propvalue="HouseAccountPaymentFormatter"/>
+            <PROPERTY propname="queueFileName"                 propvalue="HouseAccountPaymentQueue"/>
+            <PROPERTY propname="queueMonitorInterval"          propvalue="10000"/>
+            <PROPERTY propname="executionInterval"             propvalue="1000"/>
+            <PROPERTY propname="loggerCategory"                propvalue="HouseAccountPayment"/>
+        </CHAINED_CONNECTOR>
+
+        <CHAINED_CONNECTOR name="PinCommTransactionsFilterConnector" javaclass="oracle.retail.stores.domain.connector.TransactionFilterConnector" connector="MulticastQueuedTransactionsForPinComm">
+            <PROPERTY propname="configFileName"                propvalue="classpath://config/PaymentTransactionFilterConfig.xml"/>
+        </CHAINED_CONNECTOR>
+
+         END connectors for PINComm integration -->
+
+    </CONNECTORS>
+
+    <!-- Rules to determine actions to be performed after a route is run are
+        listed below. Rule classes must implement
+        oracle.retail.stores.commext.message.rule.SubsequentActionRuleIfc -->
+    <RULES>
+        <!-- Retry rule. If there is a failure in sending Data via the connector, try resending, x number of times.
+            Change value of retries property as required. Make sure it is NOT LESS THAN 1 -->
+        <RULE name="RetryRule"
+            javaclass="oracle.retail.stores.commext.message.rule.RetryActionRule">
+            <PROPERTY propname="retries" propvalue="10" proptype="INTEGER" />
+        </RULE>
+
+        <!-- If there is an Error, thow the exception ansd stop further processing -->
+        <RULE name="StopOnErrorRule"
+            javaclass="oracle.retail.stores.commext.message.rule.StopOnErrorActionRule"/>
+    </RULES>
+
+    <!-- The actual routes that the message dispatcher can send messages to are
+        listed below. -->
+    <MSGROUTERS>
+        <!-- Default Router : to be changed to use default Connector, if available -->
+        <DEFAULTROUTER rule="RetryRule">
+            <MSGCONNECTOR connector="SaveTransactionsToDatabaseConnector" formatter="PassThroughFormatter" />
+        </DEFAULTROUTER>
+
+        <!-- Persist Data into the Database.
+             WARNING: If incorrectly configured,transaction data will not be saved into the Database -->
+        <MSGROUTER type="PERSIST_TO_DB" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SaveTransactionsToDatabaseConnector" formatter="PassThroughFormatter" />
+            <MSGCONNECTOR connector="SaveTransactionsToFileConnector" formatter="TransactionDataFormatter"/>
+        </MSGROUTER>
+
+        <!-- Begin PSI
+        <MSGROUTER type="FILTER_PSI_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PSITransactionsFilterConnector" formatter="PassThroughFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="FORMAT_PSI_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SavePSITxnToFileQueueConnector" formatter="PSITransactionsFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="EXPORT_PSI_UPDATES" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PSIInventoryWSConnector" formatter="PSIWSRequestCreator" />
+        </MSGROUTER>
+         End PSI -->
+
+        <!--Begin Siebel
+        <MSGROUTER type="FILTER_SIEBEL_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SiebelTransactionsFilterConnector" formatter="PassThroughFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="UPDATE_SIEBEL" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="FundSiebelOrderConnector" formatter="SiebelOrderFundedFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="UPDATE_SIEBEL_PAYMENT" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="UpdateSiebelOrderPaymentConnector" formatter="SiebelOrderPaymentFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="SIEBEL_SYNCH_DB" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SyncTransactionFromSiebelOrderConnector" formatter="TransactionSyncFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="FUNDED_FAILED_MESSAGE" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="FundedFailedConnector" formatter="SiebelOrderFundedFailedFormatter"/>
+        </MSGROUTER>
+        End Siebel-->
+
+        <!--Begin RM Final Messaging
+        <MSGROUTER type="RM_FINAL_THROUGH_MESSAGING_SERVICE" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SaveFinalResultMsgToFileQueue" formatter="PassThroughFormatter" />
+        </MSGROUTER>
+        End RM Final Messaging-->
+
+        <!--Begin RM Final Webservice
+        <MSGROUTER type="RM_FINAL_THROUGH_AXIS_WEB_SERVICE" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="SaveFinalResultMsgToFileQueue" formatter="ReturnsResultFormatter" />
+        </MSGROUTER>
+        End RM Final Webservice-->
+
+        <!-- Begin BillPay
+        <MSGROUTER type="FILTER_BILL_PAY_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="BillPayTransactionsFilterConnector" formatter="PassThroughFormatter" />
+        </MSGROUTER>
+        <MSGROUTER type="EXPORT_BILL_PAY_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="BillPayTechnicianConnector" formatter="BillPayTransactionDataFormatter" />
+        </MSGROUTER>
+        End BillPay -->
+
+        <!-- BEGIN message routing for PINComm integration
+        <MSGROUTER type="FILTER_PAYMENT_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PinCommTransactionsFilterConnector" formatter="PassThroughFormatter"/>
+        </MSGROUTER>
+
+        <MSGROUTER type="HOUSE_ACCOUNT_PAYMENT_TRANSACTIONS" rule="StopOnErrorRule">
+            <MSGCONNECTOR connector="PinCommPaymentConnector" formatter="HouseAccountPaymentFormatter"/>
+        </MSGROUTER>
+        END message routing for PINComm integration -->
+
+    </MSGROUTERS>
+
+</MSGDISP>

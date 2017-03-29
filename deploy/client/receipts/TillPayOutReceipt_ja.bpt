@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TillPayOutReceipt_ja.bpt /main/13 2010/09/06 14:06:06 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    stallama  04/29/09 - Fixed alignment issue for the Reason Code.
+ *    blarsen   03/12/09 - alignment issues with I18N characters - adding
+ *                         stretch
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    cgreene   02/20/09 - set cutPaper to false on main report body
+ *    ddbaker   01/26/09 - Test Automation Changes for TillPayOutReceipt
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="TillPayOutReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="33445118" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="30617157">
+                <element text="理由:" id="29783034" />
+                <methodElement id="13008654" stretch="false">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LocalizedCodeIfc" name="getReason" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="String" name="getText" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="22256666" justified="2" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25358187">
+                <element text="理由番号:" id="10868789" />
+                <methodElement id="710963">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LocalizedCodeIfc" name="getReason" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="String" name="getCode" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20214052">
+                <element text="支払い先:" id="26055425" dependsOnPresenceOf="4171493" />
+                <methodElement printedWhenLengthZero="false" id="4171493">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getPayeeName" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="908342821">
+            <line id="32516997">
+                <element text="        " id="29118577" dependsOnPresenceOf="27487462" />
+                <methodElement printedWhenLengthZero="false" id="27487462">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String[]" name="getAddressLines" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="908342822">
+            <line id="12146666">
+                <element text="承認:" id="24125097" dependsOnPresenceOf="986461" />
+                <methodElement printedWhenLengthZero="false" id="986461">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LocalizedCodeIfc" name="getApproval" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                            <method returns="String" name="getText" class="oracle.retail.stores.common.utility.LocalizedCodeIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15273950">
+                <element text="従業員番号:" id="12351692" dependsOnPresenceOf="11027802" />
+                <methodElement printedWhenLengthZero="false" id="11027802">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3866500">
+                <element text="コメント:" id="5582452" />
+                <methodElement printedWhenLengthZero="false" id="26772773">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getComments" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18449527" />
+            <line id="14081991" />
+            <line id="22509741" />
+            <line id="22892006" />
+            <line id="10829284">
+                <element text="署名:" id="2331547" fillChar="_" stretch="true" />
+            </line>
+            <line id="32552915" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="2" cutPaper="false">
+        <group id="908342820">
+            <line id="11845181" />
+            <line id="934469">
+                <element text="店舗コピー" id="2440970" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="28863522" />
+</blueprint>
+
+

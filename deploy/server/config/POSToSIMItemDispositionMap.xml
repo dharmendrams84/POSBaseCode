@@ -1,0 +1,37 @@
+<?xml version='1.0' ?>
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* Copyright (c) 1998, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: 
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+
+ * ===========================================================================
+ */
+-->
+
+<!-- This is a mapping xml between pos reason code to SIM reason code.
+Value in <POS> tag is reason code in POS and corresponding SIM code under <SIM> tag -->
+
+<postosim>
+	<CODE>
+		<POS>11</POS>
+		<SIM></SIM>
+	</CODE>
+	<CODE>
+		<POS>33</POS>
+		<SIM>82</SIM>
+	</CODE>
+	<CODE>
+		<POS>45</POS>
+		<SIM></SIM>
+	</CODE>
+	<CODE>
+		<POS>55</POS>
+		<SIM></SIM>
+	</CODE>
+</postosim>

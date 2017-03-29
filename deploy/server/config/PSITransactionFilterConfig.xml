@@ -1,0 +1,132 @@
+<?xml version='1.0' ?>
+<!--
+/* =============================================================================
+* Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * =============================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/PSITransactionFilterConfig.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * =============================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    mchellap  10/27/10 - BUG#10234072 Removed SPECIAL_ORDER and
+ *                         SPECIAL_ORDER_CANCEL
+ *    abondala  06/08/10 - updated
+ *    nkgautam  02/16/10 - removed LAYWAY_PAYMENT from the list of transaction
+ *                         types exported for reservation
+ *    vikini    01/07/10 - checkin after refresh to tip
+ *    vikini    01/07/10 - Fixing Errors in Transaction Updates
+ *    abondala  01/02/10 - Update Header date
+ *    mchellap  12/23/09 - Added special order txns to inventory reservation
+ *    nkgautam  12/21/09 - added transaction type for Inventory Reservation
+ *    vikini    12/16/09 - Fixed an issue with comment within comment
+ *    vikini    12/07/09 - Added Serialization Filter
+ *
+ * =============================================================================
+-->
+<FILTER>
+    <COMMENT> Connector Configuration for Transaction Data Persistence and Export to External systems</COMMENT>
+
+    <!-- The Transaction Names should be same as provided in TransactionConstantsIfc TYPE_DESCRIPTORS[] -->
+    <!-- The Transaction Names should be same as provided in TransactionConstantsIfc STATUS_DESCRIPTORS[] -->
+
+     <!-- Enter Transaction Names which have to be exported for Inventory Updates  -->
+    <!-- Begin Inventory Update
+    <INTEGRATIONTYPE name="InventoryUpdates">
+       <TRANSACTION name="SALE"/>
+       <TRANSACTION name="RETURN"/>
+       <TRANSACTION name="VOID"/>
+       <TRANSACTION name="EXCHANGE"/>
+       <TRANSACTION name="LAYAWAY_COMPLETE"/>
+       <TRANSACTION name="LAYAWAY_DELETE"/>
+       <TRANSACTION name="ORDER_COMPLETE"/>
+       <TRANSACTION name="ORDER_CANCEL"/>
+       <TRANSACTION name="ORDER_PARTIAL"/>
+       <TRANSACTION name="SEND"/>
+
+       <TRANSACTION_METHOD name="isTrainingMode" negate="true"/>
+
+       <STATUS name="COMPLETED"/>
+	   <STATUS name="VOIDED"/>
+    </INTEGRATIONTYPE>
+     End Inventory Update -->
+
+
+     <!-- Enter Transaction Names which have to be exported for Inventory Reservation -->
+    <!--  Begin Inventory Reservation
+    <INTEGRATIONTYPE name="InventoryReservation">
+       <TRANSACTION name="LAYAWAY"/>
+       <TRANSACTION name="LAYAWAY_PICKUP"/>
+       <TRANSACTION name="LAYAWAY_DELETE"/>
+       <TRANSACTION name="ORDER"/>
+       <TRANSACTION name="ORDER_INITIATE"/>
+       <TRANSACTION name="ORDER_COMPLETE"/>
+       <TRANSACTION name="ORDER_CANCEL"/>
+       <TRANSACTION name="ORDER_PARTIAL"/>
+       <TRANSACTION name="SPECIAL_ORDER_COMPLETE"/>
+       <TRANSACTION name="SPECIAL_ORDER_PARTIAL"/>
+
+       <TRANSACTION_METHOD name="isTrainingMode" negate="true"/>
+
+       <STATUS name="COMPLETED"/>
+       <STATUS name="VOIDED"/>
+    </INTEGRATIONTYPE>
+        End Inventory Reservation  -->
+
+
+     <!-- Enter Transaction Names which have to be exported for Inventory Reservation -->
+    <!--  Begin Item Serialization
+    <INTEGRATIONTYPE name="Item Serialization">
+       <TRANSACTION name="LAYAWAY_INITIATE"/>
+       <TRANSACTION name="LAYAWAY_COMPLETE"/>
+       <TRANSACTION name="LAYAWAY_DELETE"/>
+       <TRANSACTION name="ORDER_INITIATE"/>
+       <TRANSACTION name="ORDER_COMPLETE"/>
+       <TRANSACTION name="ORDER_CANCEL"/>
+       <TRANSACTION name="ORDER_PARTIAL"/>
+       <TRANSACTION name="LAYAWAY"/>
+
+       <TRANSACTION_METHOD name="isTrainingMode" negate="true"/>
+
+       <STATUS name="COMPLETED"/>
+       <STATUS name="VOIDED"/>
+    </INTEGRATIONTYPE>
+        End Item Serialization  -->
+
+
+<!-- Unused Transactions and Status
+    <INTEGRATIONTYPE name="Restrict">
+       <TRANSACTION name="OPEN_STORE"/>
+       <TRANSACTION name="CLOSE_STORE"/>
+       <TRANSACTION name="OPEN_REGISTER"/>
+       <TRANSACTION name="CLOSE_REGISTER"/>
+       <TRANSACTION name="OPEN_TILL"/>
+       <TRANSACTION name="CLOSE_TILL"/>
+       <TRANSACTION name="LOAN_TILL"/>
+       <TRANSACTION name="PICKUP_TILL"/>
+       <TRANSACTION name="SUSPEND_TILL"/>
+       <TRANSACTION name="RESUME_TILL"/>
+       <TRANSACTION name="PAYIN_TILL"/>
+       <TRANSACTION name="PAYOUT_TILL"/>
+       <TRANSACTION name="ENTER_TRANSACTION_REENTRY"/>
+       <TRANSACTION name="EXIT_TRANSACTION_REENTRY"/>
+       <TRANSACTION name="TILL_VOID"/>
+       <TRANSACTION name="ENTER_TRAINING_MODE"/>
+       <TRANSACTION name="EXIT_TRAINING_MODE"/>
+       <TRANSACTION name="INSTANT_CREDIT_ENROLLMENT"/>
+       <TRANSACTION name="HOUSE_PAYMENT"/>
+       <TRANSACTION name="BANK_DEPOSIT_STORE"/>
+       <TRANSACTION name="REDEEM"/>
+       <TRANSACTION name="PAYROLL_PAYOUT_TILL"/>
+       <TRANSACTION name="NO_SALE"/>
+       <TRANSACTION name="LAYAWAY_PAYMENT"/>
+
+       <STATUS status="FAILED"/>
+	   <STATUS status="SUSPENDED"/>
+	   <STATUS status="CANCELED"/>
+	   <STATUS status="SUSPENDEDCANCELED"/>
+       <STATUS status ="SUSPENDEDRETRIEVED"/>
+
+    </INTEGRATIONTYPE> -->
+
+</FILTER>

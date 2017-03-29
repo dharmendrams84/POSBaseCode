@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/installer/pos/build-antinstall.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:25 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    blarsen   11/04/10 - The use-jre-in-java-home logic was not filtering
+ *                         paths that include bea (which is the location used
+ *                         by qa and a few others).
+ *    mszekely  10/21/10 - BUG 10187844: Correcting defaults for JAVA_HOME
+ *    abondala  01/02/10 - Update Header date
+ *
+ * ===========================================================================
+ */
+-->
+<project name="install-pos-antinstall" basedir=".">
+    
+    <target name="antinstaller-get-default-store-server-hostname">
+        
+        <!-- Load the environment variables as properties -->
+        <property environment="env" />
+        
+        <!-- Determine if we're running on a Unix or Windows platform -->
+        <condition property="installer.os.is-unix" value="true">
+            <os family="unix"/>
+        </condition>
+        
+        <if>
+            <istrue value="${installer.os.is-unix}"/>
+            <then>
+                <antinstaller-property name="internal.input.store.server.default-hostname" value="${env.HOSTNAME}"/>
+            </then>      
+            <else>
+                <antinstaller-property name="internal.input.store.server.default-hostname" value="${env.COMPUTERNAME}"/>
+            </else>
+        </if>
+        
+    </target>
+    
+    
+    
+    <target name="antinstaller-get-default-jre-location">
+        
+        <!-- Load the environment variables as properties -->
+        <property environment="env" />
+        
+        <available file="${env.JAVA_HOME}/jre" type="dir" property="jre.subdir.exists"/>
+        
+        <if>
+            <not>
+                <or>
+                    <contains string="${env.JAVA_HOME}" substring="bea" casesensitive="false"/>
+                    <contains string="${env.JAVA_HOME}" substring="weblogic" casesensitive="false"/>
+                    <contains string="${env.JAVA_HOME}" substring="websphere" casesensitive="false"/>
+                </or>
+            </not>         
+            <then> 
+                <if>
+                <istrue value="${jre.subdir.exists}"/>
+                <then>
+                    <!-- <antinstaller-property name="internal.jre.location-default" value="${env.JAVA_HOME}/jre"/> -->
+                    <antinstaller-property name="internal.jre.location-default" value="${env.JAVA_HOME}/jre"/>
+                </then>
+                <else>
+                    <antinstaller-property name="internal.jre.location-default" value="${env.JAVA_HOME}"/>
+                </else>
+                </if>
+            
+           
+          </then>   
+          <else>
+              <antinstaller-property name="internal.jre.location-default" value=""/>
+          </else>
+		 
+      </if>
+         
+
+        
+    </target>
+    <target name="antinstaller-generate-install-summary">
+        
+        
+        <trycatch property="antinstaller.exeception" >
+            <try>
+                <!-- Create the summary html page by merging the velocity template with ant properties  -->
+                <velocity-template-gen templatefile="installer-templates/install_summary.html.vm" 
+                    outputfile="installer-resources/install_summary.html"/>
+                
+                <echo file="ant.install.debug.log" append="true">Generated installer-resources/install_summary.html</echo>
+                
+                <!-- Create the summary text page by merging the velocity template with ant properties -->
+                <velocity-template-gen templatefile="installer-templates/install_summary.txt.vm" 
+                    outputfile="installer-resources/install_summary.txt"/>
+                
+                <echo file="ant.install.debug.log" append="true">Generated installer-resources/install_summary.txt</echo>
+            </try>
+            
+            <catch>
+                <echo level="error" file="ant.install.debug.log">antinstaller-generate-install-summary task failed: ${antinstaller.exeception}</echo>
+                <fail>antinstaller-generate-install-summary task failed: ${antinstaller.exeception}</fail>
+            </catch>
+        </trycatch>
+        
+        <echo file="ant.install.debug.log">Generated installer-resources/install_summary.html</echo>
+    </target>
+    
+</project>

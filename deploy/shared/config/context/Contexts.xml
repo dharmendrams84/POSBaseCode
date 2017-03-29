@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/shared/config/context/Contexts.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+
+<!--
+    Contexts can be loaded here from Spring.
+-->
+<beans>
+
+      <!-- 
+         PersistenceContextKey is being loaded here.
+     -->
+      <bean id="PersistenceContextKey"  class="org.springframework.context.support.ClassPathXmlApplicationContext"
+             lazy-init="true">
+	   <constructor-arg>
+	       <list>
+		    <value>config/context/PersistenceContext.xml</value>
+	       </list>
+	   </constructor-arg>
+    </bean>
+	
+     <!-- 
+         ServiceContextKey is being loaded here. ServiceContextKey is child of PersistenceContextKey. 
+     -->
+     <bean id="ServiceContextKey" class="org.springframework.context.support.ClassPathXmlApplicationContext"
+           lazy-init="true">
+	   <constructor-arg>
+	       <list>
+		    <value>config/context/ServiceContext.xml</value>
+	       </list>
+	   </constructor-arg>
+         <constructor-arg>
+             <ref bean="PersistenceContextKey"/>
+          </constructor-arg>
+     </bean>
+     
+     <!-- 
+         ApplicationContext is being loaded here. ApplicationContext is child of ServiceContextKey.
+     -->
+     <bean id="ApplicationContextKey"  class="org.springframework.context.support.ClassPathXmlApplicationContext"
+           lazy-init="true">
+	   <constructor-arg>
+	       <list>
+		    <value>config/context/ApplicationContext.xml</value>
+	       </list>
+	   </constructor-arg>
+         <constructor-arg>
+             <ref bean="ServiceContextKey"/>
+          </constructor-arg>
+     </bean>
+     
+     <!-- 
+         DeviceContext is being loaded here.
+     -->
+     <bean id="DeviceContextKey"  class="org.springframework.context.support.ClassPathXmlApplicationContext"
+           lazy-init="true">
+	   <constructor-arg>
+	       <list>
+		    <value>config/context/DeviceContext.xml</value>
+	       </list>
+	   </constructor-arg>
+     </bean>
+     
+</beans>

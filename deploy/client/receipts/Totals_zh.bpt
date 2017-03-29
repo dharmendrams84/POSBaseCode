@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Totals_zh.bpt /main/10 2010/09/06 14:06:07 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    asinton   05/14/09 - Changed the call from getSaleDiscountTotal to
+ *                         getDiscountTotal so the total discount amount will
+ *                         show on returns as well.
+ *    cgreene   04/21/09 - negated restocking fee so that it appears as an
+ *                         amount opposite of the amounts given back
+ *    cgreene   04/01/09 - make trans tax override line depend on reason
+ *    cgreene   03/27/09 - implemented override trans tax by amt
+ *    cgreene   03/20/09 - make total discount align with discounts from Items
+ *    cgreene   03/18/09 - fix space of restocking line to align with other
+ *                         amounts
+ *    cgreene   03/18/09 - set Taxable Amount and Tax labels to depend on their
+ *                         value in the case the item was non-taxable like a
+ *                         gift card. This causes just one blank line to appear
+ *                         after Subtotal but we are ignoring this.
+ *    cgreene   03/13/09 - change item tax lines so that middle section can
+ *                         stretch to accommodate more text when padded
+ *    cgreene   03/12/09 - initial version
+ *
+ * ===========================================================================
+ *
+ -->
+<blueprint id="Totals" copies="1">
+    <report name="SubtotalReport" id="16879916" cutPaper="false">
+        <group id="474487880">
+            <line id="30303902" dependsOnPresenceOf="2172104">
+                <element text="总折扣" id="3380859" dependsOnPresenceOf="2172104" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="2172104">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getDiscountTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="CurrencyIfc" name="negate" class="com._360commerce.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="14952465" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="21010507" dependsOnPresenceOf="2172104" />
+            <line id="27817788">
+                <element text="小计" id="16464374" stretch="true" />
+                <methodElement id="32934204" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getPreTaxSubtotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="11276149" />
+            </line>
+        </group>
+        <group id="12477914">
+            <line id="3954559" dependsOnPresenceOf="12151488">
+                <element text="  " id="6951608" dependsOnPresenceOf="29230566" />
+                <methodElement fixedWidth="5" printedWhenLengthZero="false" id="29230566">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" 应缴税金额" id="9419492" dependsOnPresenceOf="20598115" stretch="true" />
+                <methodElement printedWhenLengthZero="false" id="20598115">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="CurrencyIfc" name="getTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="12758475" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="1110412" dependsOnPresenceOf="12151488">
+                <element text="  " id="6433714" />
+                <methodElement fixedWidth="5" printedWhenLengthZero="false" id="32056316">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" 税           " id="12151488" dependsOnPresenceOf="24909177" stretch="true">
+                    <method returns="boolean" name="isPrintItemTax" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="24909177">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="TaxInformationContainerIfc" name="getTaxInformationContainer" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="TaxInformationIfc[]" name="getOrderedTaxInformation" class="oracle.retail.stores.domain.tax.TaxInformationContainerIfc">
+                                    <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="27519656" dependsOnPresenceOf="2172104" />
+            </line>
+        </group>
+        <group id="412503">
+            <line id="2678661" dependsOnPresenceOf="3342228">
+                <element text="   交易税覆盖：" id="12267018" />
+                <methodElement formatter="#0.0000%" printedWhenLengthZero="false" printedWhenValueZero="false" id="25380934">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTaxIfc" name="getTransactionTax" class="oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc">
+                            <method returns="double" name="getOverrideRate" class="oracle.retail.stores.domain.transaction.TransactionTaxIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="33395054" justified="right" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTaxIfc" name="getTransactionTax" class="oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc">
+                            <method returns="CurrencyIfc" name="getOverrideAmount" class="oracle.retail.stores.domain.transaction.TransactionTaxIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="3770910" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="5583884" dependsOnPresenceOf="3342228">
+                <element text="   原因：" id="586597" dependsOnPresenceOf="3342228" />
+                <methodElement printedWhenLengthZero="false" id="3342228">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTaxIfc" name="getTransactionTax" class="oracle.retail.stores.domain.transaction.SaleReturnTransactionIfc">
+                            <method returns="LocalizedCodeIfc" name="getReason" class="oracle.retail.stores.domain.transaction.TransactionTaxIfc">
+                                <method returns="String" name="getText" class="com._360commerce.common.utility.LocalizedCodeIfc" param="Locale" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31286394">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="销售税总计" valuePrintedWhenTrue="" id="30287223" stretch="true">
+                    <method returns="boolean" name="isVATEnabled" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <methodElement id="25630003" dependsOnPresenceOf="30287223" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getTaxTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="25927067" dependsOnPresenceOf="30287223" />
+            </line>
+            <line id="24122519" dependsOnPresenceOf="24923131" />
+            <line id="30021768" dependsOnPresenceOf="24923131">
+                <element text="装运费用总计" id="28773898" dependsOnPresenceOf="24923131" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="24923131" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getCalculatedShippingCharge" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="15548370" dependsOnPresenceOf="24923131" />
+            </line>
+            <line id="30021769">
+                <element text="重新进货费用总计" id="28773891" dependsOnPresenceOf="16426194" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="16426194">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getRestockingFeeTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc">
+                                <method returns="CurrencyIfc" name="negate" class="com._360commerce.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="6284559" dependsOnPresenceOf="16426194" />
+            </line>
+            <line id="9077340" dependsOnPresenceOf="19477825" />
+            <line id="16728498" dependsOnPresenceOf="19477825">
+                <element text="预约订货费用" id="319699" dependsOnPresenceOf="19477825" stretch="true" />
+                <methodElement printedWhenLengthZero="false" id="19477825">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="CurrencyIfc" name="getCreationFee" class="oracle.retail.stores.domain.financial.LayawayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="33256704" dependsOnPresenceOf="19477825" />
+            </line>
+            <line id="20730972" />
+            <line id="2447534">
+                <element text="总计" id="1184712349" stretch="true" />
+                <methodElement id="25860324" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="23478067" />
+            </line>
+            <line id="16693774" />
+        </group>
+    </report>
+</blueprint>
+
+

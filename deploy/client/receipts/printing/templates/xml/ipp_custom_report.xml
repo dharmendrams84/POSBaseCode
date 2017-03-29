@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/printing/templates/xml/ipp_custom_report.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * Customized template for FO-XSL styled report/receipt documents generated 
+ * for eReceipt and/or IPP printing.
+ *
+ * This template can be used in conjunction with ../xsl/ipp_custom_report.xsl to
+ * demonstrate the inclusion of customized static content into receipts and reports.
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/07/09 - changes to files location
+ *    acadar    12/07/09 - fop template
+ *
+ * ===========================================================================
+ */
+-->
+<document>
+  <page>
+    <region>
+      <left-sidebar>
+        <border-text>CONFIDENTIAL INFORMATION</border-text>
+      </left-sidebar>
+      <right-sidebar>
+        <border-text>NOT FOR EXTERNAL DISTRIBUTION</border-text>
+      </right-sidebar>
+    </region>
+  </page>
+  <!-- receipt blueprint generated output-->
+  <receipt/>
+</document>

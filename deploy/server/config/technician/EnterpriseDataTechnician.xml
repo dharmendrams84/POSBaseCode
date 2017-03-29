@@ -1,0 +1,630 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/technician/EnterpriseDataTechnician.xml /rgbustores_13.4x_generic_branch/1 2011/08/23 13:05:22 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   08/22/11 - moved customer read transactions to storeserver
+ *                         command in order to get discounts from database
+ *    mszekely  03/08/11 - BUG 11073363: Updating scratchpad URL
+ *    ohorne    12/10/10 - scratch pad secure jdbc support via installer
+ *    abondala  07/07/10 - Use CSF framework for encrypting/decrypting database
+ *                         passwords in the technician xml files
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   04/15/10 - add expansion key for DB_HELPER
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DATATECHNICIAN SYSTEM "classpath://oracle/retail/stores/enterpriseconnection/manager/dtd/enterprisedatascript.dtd">
+
+<DATATECHNICIAN
+    package="oracle.retail.stores.domain.arts">
+
+    <!-- These transactions read and write to the local CentralOffice "scratchpad" database COPROXY -->
+    <TRANSACTION name="AlertDataTransaction" command="enterprisecommand-scratchpad"/>
+    <TRANSACTION name="EMessageReadDataTransaction" command="enterprisecommand-scratchpad"/>
+    <TRANSACTION name="LayawayDataTransaction" command="enterprisecommand-scratchpad"/>
+    <TRANSACTION name="OrderReadDataTransaction" command="enterprisecommand-scratchpad"/>
+    <TRANSACTION name="ReadTransactionsForReturn" command="enterprisecommand-scratchpad"/>
+    <TRANSACTION name="TransactionHistoryDataTransaction" command="enterprisecommand-scratchpad"/>
+
+    <!-- These transactions read and write to the standard Server Database quarrySB -->
+    <TRANSACTION name="BusinessReadDataTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerAddTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerAddTransactionNotQueued" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerDeleteTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerReadDataTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerReadGroupDataTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="CustomerWriteDataTransaction" command="enterprisecommand-storeserver"/>
+    <TRANSACTION name="OrderWriteDataTransaction" command="enterprisecommand-storeserver"/>
+
+<!--
+
+    The operations in this command group work with the local CentralOffice "scratchpad" database COPROXY.
+
+-->
+    <COMMAND name="enterprisecommand-scratchpad"
+        class="EnterpriseDataCommand"
+        package="oracle.retail.stores.enterpriseconnection.manager">
+
+        <POOLREF pool="jdbcpool-scratchpad"/>
+
+        <!-- This property is valid for the EnterpriseDataCommand class, but not for the DataCommand class. -->
+        <COMMANDPROPERTY propname="serviceName" propvalue="$IA_CO_SERVER_NAME$" />
+
+        <COMMANDPROPERTY propname="importerObjectFactoryName" propvalue="oracle.retail.stores.xmlreplication.ImporterObjectFactory" />
+
+        <OPERATIONCOMMON>
+             <PROPERTY propname="jdbcHelperClass" propvalue="$DB_HELPER$" />
+        </OPERATIONCOMMON>
+
+        <!-- The following operations are used to retrieve Retail Transacitons for returns -->
+        <OPERATION class="JdbcReadTransaction"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadTransaction">
+            <COMMENT>
+                This operation retrieves a transaction based on store id,
+                business day date, workstation id, and transaction sequence
+                number.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadTransactionsByID"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadTransactionsByID">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a transaction ID and optional date range.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadTransactionHistory"
+            package="oracle.retail.stores.enterpriseconnection.transaction"
+            name="ReadTransactionHistory">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a customer ID or a search criteria
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveTransactions"
+            package="oracle.retail.stores.enterpriseconnection.transaction"
+            name="ReadTransaction">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a customer ID or a search criteria
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveTransactions"
+            package="oracle.retail.stores.enterpriseconnection.transaction"
+            name="ReadTransactionsByID">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a customer ID or a search criteria
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseIsTransactionVoided"
+            package="oracle.retail.stores.enterpriseconnection.transaction"
+            name="IsTransactionVoided">
+            <COMMENT>
+                This operation check to see if a transaction has been
+                voided based on store id, business day date,
+                transaction sequence number and workstation id.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <!-- The following operations retreive order and emessage list information. -->
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveAlertList"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveAlertList">
+            <COMMENT>
+                This operation retrieves a list of orders and messages that
+                match some criteria.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <OPERATION class="JdbcRetrieveAlertList"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveAlertList">
+            <COMMENT>
+                This operation retrieve and alertList.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- The following operations retreive EMessage related information. -->
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveEMessage"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveEMessage">
+            <COMMENT>
+                Retrieves Messages by message ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <OPERATION class="JdbcRetrieveEMessage"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveEMessage">
+            <COMMENT>
+                This operation retrieves an EMessage.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveEMessage"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveEMessagesByStatus">
+            <COMMENT>
+                Retrieves Messages by order status.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveEMessagesByStatus"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveEMessagesByStatus">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveEMessage"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveEMessagesByCustomer">
+            <COMMENT>
+                Retrieves Messages by customer ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveEMessagesByCustomer"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveEMessagesByCustomer">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveEMessage"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveEMessagesByOrderID">
+            <COMMENT>
+                Retrieves Messages by order ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveEMessagesByOrderID"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveEMessagesByOrderID">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <!-- The following operations retreive Order related information. -->
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveOrders"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveOrder">
+            <COMMENT>
+                This operation retrieves transactions by Order ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+            <PROPERTY propname="summary" propvalue="false"/>
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveOrder"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveOrder">
+            <COMMENT>
+                This operation retrieves order(s)
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveOrders"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadOrderStatus">
+            <COMMENT>
+                This operation retrieves a list of Transactions by Order Status.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+            <PROPERTY propname="summary" propvalue="false"/>
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcReadOrderStatus"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadOrderStatus">
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveTransactionByOrder"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadOrderByTransaction">
+            <COMMENT>
+                This operation retrieves a list of Transactions by Order ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcReadOrderByTransaction"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadOrderByTransaction">
+        </OPERATION>
+
+        <!-- This operation does not need an Enterprise Operation of its own.  This
+             table comes with the full order retrieval. -->
+        <OPERATION class="JdbcReadOrderPaymentHistoryInfo"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadOrderPaymentHistoryInfo">
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveOrders"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveOrderSummaryByStatus">
+            <COMMENT>
+                This operation retrieves a list of Order Summaries by Order Status.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+            <PROPERTY propname="summary" propvalue="true"/>
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveOrderSummaryByStatus"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveOrderSummaryByStatus">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveOrders"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveOrderSummaryByOrderID">
+            <COMMENT>
+                This operation retrieves a list of Order Summaries by Order ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+            <PROPERTY propname="summary" propvalue="true"/>
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveOrderSummaryByOrderID"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveOrderSummaryByOrderID">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveOrders"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="RetrieveOrderSummaryByCustomer">
+            <COMMENT>
+                This operation retrieves a list of Order Summaries by Customer ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+            <PROPERTY propname="summary" propvalue="true"/>
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcRetrieveOrderSummaryByCustomer"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveOrderSummaryByCustomer">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <!-- Layaway operations -->
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveLayaways"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadLayaway">
+            <COMMENT>
+                This operation retrieves a list of transactions base on the Layaway ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcReadLayaway"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadLayaway">
+            <COMMENT>
+                This operation retrieves a layaway by ID.
+            </COMMENT>
+        </OPERATION>
+
+         <OPERATION class="JdbcReadLayawayPaymentHistoryInfo"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadLayawayPaymentHistoryInfo">
+            <COMMENT>
+                This operation retrieves layaway payment history info.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseRetrieveAndSaveLayawaysByCustomer"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadLayawaysByCustomerID">
+            <COMMENT>
+                This operation retrieves a list of layaway summaries by Customer ID.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+        <OPERATION class="JdbcReadLayawaysByCustomerID"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadLayawaysByCustomerID">
+            <COMMENT>
+                This operation retrieves a layaway by ID.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadTransactionFirstItemDescription"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadLayawayDescriptions">
+            <COMMENT>
+                This operation retrieves a description of the first
+                line item for a list of layaways.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadTransactionFirstItemDescription"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="ReadLayawayDescription">
+            <COMMENT>
+                This operation retrieves a description of the first
+                line item for a single layaway.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+    </COMMAND>
+
+<!--
+
+    The operations in this command group work with the standard Server Database QUARRYSB.
+
+-->
+    <COMMAND name="enterprisecommand-storeserver"
+        class="EnterpriseDataCommand"
+        package="oracle.retail.stores.enterpriseconnection.manager">
+
+        <POOLREF pool="jdbcpool-storedb"/>
+
+        <!-- This property is valid for the EnterpriseDataCommand class, but not for the DataCommand class. -->
+        <COMMANDPROPERTY propname="serviceName" propvalue="$IA_CO_SERVER_NAME$" />
+
+        <COMMANDPROPERTY propname="importerObjectFactoryName" propvalue="oracle.retail.stores.xmlreplication.ImporterObjectFactory" />
+
+        <OPERATIONCOMMON>
+             <PROPERTY propname="jdbcHelperClass" propvalue="oracle.retail.stores.domain.arts.jdbchelper.Db2Helper" />
+        </OPERATIONCOMMON>
+
+        <!-- The following operations save customer data which has been added outside the scope of a retail transaction. -->
+        <OPERATION class="JdbcSaveCustomer"
+            package="oracle.retail.stores.domain.arts"
+            name="SaveCustomer">
+            <COMMENT>
+                This operation saves a Customer.
+            </COMMENT>
+        </OPERATION>
+
+       <!-- <ENTERPRISEOPERATION class="EnterpriseSaveCustomerByReplication"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="SaveCustomer">
+            <COMMENT>
+                This operation saves a Customer to the Enterprise DB
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="false" />
+            <PROPERTY propname="executedLast" propvalue="true" />
+            <PROPERTY propname="exportConfigFile" propvalue="config/ReplicationExportConfig.xml" />
+        </ENTERPRISEOPERATION>-->
+
+        <!-- The following operations retrieve Customer Data -->
+        <ENTERPRISEOPERATION class="EnterpriseReadCustomer"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="ReadCustomer">
+            <COMMENT>
+                This operation retrieves a Customer.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+       <!--<ENTERPRISEOPERATION class="EnterpriseReadCustomerGroups"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="SelectCustomerGroups">
+            <COMMENT>
+                This operation retrieves customer group information; used to link customers to discounts.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>-->
+
+        <ENTERPRISEOPERATION class="EnterpriseReadCustomers"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="SelectCustomers">
+            <COMMENT>
+                This operation retrieves a list of Customers that
+                match some criteria.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadCustomers"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="ReadCustomerbyEmployee">
+            <COMMENT>
+                This operation retrieves a list of Customers that
+                match some criteria.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadCustomers"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="ReadCustomerbyTaxID">
+            <COMMENT>
+                This operation retrieves a list of Customers that
+                match some criteria.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseReadCustomers"
+            package="oracle.retail.stores.enterpriseconnection.customer" name="LookupBusiness">
+            <COMMENT>
+                This operation retrieves a list of Customers that
+                match some criteria.
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="CustomerIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.customer.CustomerClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="true" />
+            <PROPERTY propname="executedLast" propvalue="false" />
+        </ENTERPRISEOPERATION>
+
+        <OPERATION class="JdbcUpdateCustomerSequenceNumber"
+            package="oracle.retail.stores.domain.arts"
+            name="UpdateCustomerSequenceNumber">
+            <COMMENT>
+                This operation update customer sequence number.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- The following operations save order data which has been added outside the scope of a retail transaction. -->
+        <OPERATION class="JdbcUpdateOrder"
+                   package="oracle.retail.stores.domain.arts"
+                   name="UpdateOrderStatus">
+            <COMMENT>
+                This operation updates an order status based upon an order.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseSaveOrderByReplication"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="UpdateOrderStatus">
+            <COMMENT>
+                This operation saves an Order to the Enterprise DB
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="false" />
+            <PROPERTY propname="executedLast" propvalue="true" />
+            <PROPERTY propname="exportConfigFile" propvalue="config/ReplicationExportConfig.xml" />
+        </ENTERPRISEOPERATION>
+
+        <OPERATION class="JdbcUpdateOrder"
+            package="oracle.retail.stores.domain.arts"
+            name="UpdateOrder">
+            <COMMENT>
+                This operation updates an order status based upon an order.
+            </COMMENT>
+        </OPERATION>
+
+        <ENTERPRISEOPERATION class="EnterpriseSaveOrderByReplication"
+            package="oracle.retail.stores.enterpriseconnection.transaction" name="UpdateOrder">
+            <COMMENT>
+                This operation saves an Order to the Enterprise DB
+            </COMMENT>
+            <PROPERTY propname="homeServiceName" propvalue="TransactionIntegrationServiceSB" />
+            <PROPERTY propname="homeInterfaceName" propvalue="oracle.retail.stores.clientinterfaces.transaction.TransactionClientServiceHome" />
+            <PROPERTY propname="executedFirst" propvalue="false" />
+            <PROPERTY propname="executedLast" propvalue="true" />
+            <PROPERTY propname="exportConfigFile" propvalue="config/ReplicationExportConfig.xml" />
+        </ENTERPRISEOPERATION>
+
+    </COMMAND>
+
+    <!--
+       For any CONNECTIONPROPERTY element with propvalue beginning with "!" will be encrypted at startup
+    -->
+    <POOL name="jdbcpool-scratchpad"
+            class="DataConnectionPool"
+            package="oracle.retail.stores.foundation.manager.data"
+            >
+        <POOLPROPERTY propname="numConnections" propvalue="3" proptype="INTEGER"/>
+        <CONNECTION class="JdbcReplicationDataConnection"
+            package="oracle.retail.stores.enterpriseconnection.manager">
+            <CONNECTIONPROPERTY propname="driver" propvalue="$ENT_DB_JDBC_DRIVER$" />
+            <CONNECTIONPROPERTY propname="databaseUrl" propvalue="$ENT_DB_JDBC_URL$" />
+            <CONNECTIONPROPERTY propname="userid" propvalue="$ENT_DB_USER$" />
+            <!-- BEGIN Secure JDBC
+               <CONNECTIONPROPERTY propname="oracleCipherSuites" proptype="STRING" propvalue="(SSL_DH_anon_WITH_3DES_EDE_CBC_SHA, SSL_DH_anon_WITH_RC4_128_MD5,SSL_DH_anon_WITH_DES_CBC_SHA)"/>
+            END Secure JDBC -->
+            <CONNECTIONPROPERTY propname="password" propvalue="$ENT_DB_PASSWORD$" />
+            <CONNECTIONPROPERTY propname="exceptionMappingClass" propvalue="oracle.retail.stores.foundation.manager.data.JdbcSQLState"/>
+            <CONNECTIONPROPERTY propname="exceptionMapping" propvalue="$DB_EXCEPTION_MAP$"/>
+            <CONNECTIONPROPERTY propname="importReplicationConfigFileName" propvalue="config/ReplicationImportConfig.xml"/>
+        </CONNECTION>
+    </POOL>
+
+
+    <!--
+       For any CONNECTIONPROPERTY element with propvalue beginning with "!" will be encrypted at startup
+    -->
+    <POOL name="jdbcpool-storedb"
+            class="DataConnectionPool"
+            package="oracle.retail.stores.foundation.manager.data"
+            >
+        <POOLPROPERTY propname="numConnections" propvalue="3" proptype="INTEGER"/>
+        <CONNECTION class="JdbcDataConnection"
+            package="oracle.retail.stores.foundation.manager.data"
+            >
+            <CONNECTIONPROPERTY propname="driver" propvalue="$DB_JDBC_DRIVER$" />
+            <CONNECTIONPROPERTY propname="databaseUrl" propvalue="$DB_JDBC_URL_SECURE$" />
+            <CONNECTIONPROPERTY propname="userid" propvalue="$DB_USER$" />
+            <!-- BEGIN Secure JDBC
+               <CONNECTIONPROPERTY propname="oracleCipherSuites" proptype="STRING" propvalue="(SSL_DH_anon_WITH_3DES_EDE_CBC_SHA, SSL_DH_anon_WITH_RC4_128_MD5,SSL_DH_anon_WITH_DES_CBC_SHA)"/>
+            END Secure JDBC -->
+            <CONNECTIONPROPERTY propname="password" propvalue="$DB_PASSWORD$"  />
+            <CONNECTIONPROPERTY propname="exceptionMappingClass" propvalue="oracle.retail.stores.foundation.manager.data.JdbcSQLState"/>
+            <CONNECTIONPROPERTY propname="exceptionMapping" propvalue="$DB_EXCEPTION_MAP$"/>
+        </CONNECTION>
+      </POOL>
+
+    <EXCEPTIONHANDLER class="SQLExceptionHandler"
+                      package="oracle.retail.stores.domain.manager.data"/>
+
+</DATATECHNICIAN>

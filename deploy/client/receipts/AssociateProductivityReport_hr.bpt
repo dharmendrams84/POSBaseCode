@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/AssociateProductivityReport_hr.bpt /main/1 2010/07/29 14:02:48 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  07/29/10 - HR file of pos 13.2. Including in 13.3
+ *    cgreene   05/28/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    blarsen   02/25/09 - updated report to comply with changes to the
+ *                         requirements (associate name on separate line from
+ *                         their individual total)
+ *    ddbaker   01/22/09 - Test Automation Changes for
+ *                         AssociateProductivityReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="AssociateProductivityReport" copies="1">
+    <report name="SummaryReportReport" id="1">
+        <group id="1">
+            <line id="13080585">
+                <element text="Izvješće o produktivnosti suradnika" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="30308427" />
+            <line id="3916915">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text=" " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="31365828">
+                <element text="Prodavaonica:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Blagajna:" id="26203554" justified="2" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="25345246">
+                <element text="ID blagajnika:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="3686501">
+                <element text="" id="19280435" fillChar="_" stretch="true" />
+            </line>
+            <line id="14540614" />
+            <line id="17547166">
+                <element text="Datum početka:" id="23500062" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="31011538">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="5324129">
+                <element text="Datum završetka:" id="20400041" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="15307665">
+                    <method returns="EYSDate" name="getEndDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="26530674">
+                <element text="" id="21193370" fillChar="_" stretch="true" />
+            </line>
+            <line id="21948893" />
+            <line id="29752800">
+                <element text="Suradnik / ID" id="7676992" />
+                <element text=" " id="23508278" stretch="true" />
+                <element text="Iznos" id="30304297" />
+            </line>
+            <line id="27165481" />
+        </group>
+        <group id="2">
+            <line id="31473715">
+                <element text="" id="16864763" fillChar="_" stretch="true" />
+            </line>
+            <line id="23860799">
+                <methodElement precededBySpace="false" id="8089545">
+                    <method returns="AssociateProductivityIfc[]" name="getConsolidatedAssociateProductivity" class="oracle.retail.stores.pos.reports.AssociateProductivityReport">
+                        <method returns="EmployeeIfc" name="getAssociate" class="oracle.retail.stores.domain.financial.AssociateProductivityIfc">
+                            <method returns="PersonNameIfc" name="getPersonName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" /" id="15363683" />
+                <methodElement id="9410703">
+                    <method returns="AssociateProductivityIfc[]" name="getConsolidatedAssociateProductivity" class="oracle.retail.stores.pos.reports.AssociateProductivityReport">
+                        <method returns="EmployeeIfc" name="getAssociate" class="oracle.retail.stores.domain.financial.AssociateProductivityIfc">
+                            <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.employee.EmployeeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="6150740" stretch="true" />
+            </line>
+            <line id="8264502">
+                <methodElement precededBySpace="false" id="15804298" justified="2" stretch="true">
+                    <method returns="AssociateProductivityIfc[]" name="getConsolidatedAssociateProductivity" class="oracle.retail.stores.pos.reports.AssociateProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.domain.financial.AssociateProductivityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="30293957">
+                <element text="" id="1035158" fillChar="_" stretch="true" />
+            </line>
+            <line id="29154294" />
+            <line id="849515">
+                <element text="Totali" id="20997" />
+                <methodElement prefix="(" suffix=")" id="32099428">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.AssociateProductivityReport">
+                        <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                            <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="22141485" stretch="true" />
+                <methodElement id="14357750" justified="2">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.AssociateProductivityReport" />
+                </methodElement>
+            </line>
+            <line id="17171576">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="20231969" />
+            <line id="1023040">
+                <element text=" KRAJ IZVJEŠĆA " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>

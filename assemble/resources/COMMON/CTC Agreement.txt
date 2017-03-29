@@ -1,0 +1,12 @@
+Copyright/Trademark/Confidentiality Agreement
+NOTICE:
+
+This software is subject to the terms and conditions of the Oracle Corporation software license agreement for this product.
+
+ Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+
+
+IBM Runtime Environment for Windows(R), Java(TM) Technology Edition, version 1.6.  Copyright IBM Corporation, 1998, 2008.  All rights reserved.
+
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.  Other names may be trademarks of their respective owners.

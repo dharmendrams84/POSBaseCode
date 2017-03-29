@@ -1,0 +1,342 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/conduit/CollapsedConduitFF.xml /rgbustores_13.4x_generic_branch/2 2011/06/30 17:20:13 asinton Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   06/29/11 - removed FinancialNetworkManager from client conduit
+ *                         scripts
+ *    ohorne    05/13/11 - removed ISDTechnician and SimAuthTechnician
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   05/05/10 - remove deprecated log manager and technician
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DISPATCHER SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/dispatch.dtd">
+<DISPATCHER name="STANDALONE">
+    <APPLICATION name="APPLICATION"
+                 class="TierTechnician"
+                 package="oracle.retail.stores.foundation.manager.tier"
+                 startservice="classpath://oracle/retail/stores/pos/services/main/main.xml">
+        <PROPERTY propname="managerData"
+                  propvalue="name=UIManager,managerpropname=className,managerpropvalue=oracle.retail.stores.pos.ui.POSUIManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=DeviceManager,managerpropname=className,managerpropvalue=oracle.retail.stores.foundation.manager.device.DeviceManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=ParameterManager,managerpropname=className,managerpropvalue=oracle.retail.stores.foundation.manager.parameter.ParameterManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=ParameterManager,managerpropname=useDefaults,managerpropvalue=Y"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=UtilityManager,managerpropname=className,managerpropvalue=oracle.retail.stores.pos.manager.utility.UtilityManager"/>
+        <PROPERTY propname="preloadTourDirectory"
+                  propvalue="config\conduit\preloadTourDirectory.dat" />
+    </APPLICATION>
+
+    <TECHNICIAN name="BUSINESSTIER"
+                class="TierTechnician"
+                package="oracle.retail.stores.foundation.manager.tier"
+                export="Y">
+    </TECHNICIAN>
+
+    <MANAGER name="DataManager" class="DataManager"
+             package="oracle.retail.stores.foundation.manager.data">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/PosDataManager.xml" />
+    </MANAGER>
+
+    <TECHNICIAN name="RemoteDT" class="DataTechnician"
+                package="oracle.retail.stores.foundation.manager.data"
+                export="Y">
+        <PROPERTY
+            propname="dataScript"
+            propvalue="classpath://config/technician/DefaultDataTechnician.xml"/>
+    </TECHNICIAN>
+
+    <TECHNICIAN name="LocalDT" class="DataTechnician"
+                package="oracle.retail.stores.foundation.manager.data"
+                export="Y">
+        <PROPERTY
+            propname="dataScript"
+            propvalue="classpath://config/technician/PosLDBDataTechnician.xml"/>
+    </TECHNICIAN>
+
+    <TECHNICIAN
+        name="UITechnician"
+        class="UITechnician"
+        package="oracle.retail.stores.foundation.manager.gui" export="Y">
+
+        <CLASS
+            name="UISubsystem"
+            package="oracle.retail.stores.pos.ui"
+            class="POSJFCUISubsystem">
+
+            <CLASSPROPERTY
+                    propname="configFilename"
+                    propvalue="classpath://oracle/retail/stores/pos/config/defaults/defaultuicfg.xml"
+                    proptype="STRING"/>
+
+            <CLASSPROPERTY
+                    propname="loaderClassName"
+                    propvalue="oracle.retail.stores.foundation.manager.gui.loader.UIXMLLoader"
+                    proptype="STRING"/>
+
+            <CLASSPROPERTY
+                    propname="displayClassName"
+                    propvalue="oracle.retail.stores.pos.ui.beans.ApplicationFrame"
+                    proptype="STRING"/>
+
+            <CLASSPROPERTY
+                    propname="applicationPLAF"
+                    propvalue="oracle.retail.stores.pos.ui.plaf.eys.EYSLookAndFeel"
+                    proptype="STRING"/>
+
+            <CLASSPROPERTY
+                    propname="factoryClassName"
+                    propvalue="oracle.retail.stores.pos.ui.plaf.eys.EYSUIFactory"
+                    proptype="STRING"/>
+
+            <CLASSPROPERTY
+                    propname="uiPropertyFile"
+                    propvalue="classpath://config/ui/swanplaf.properties"
+                    proptype="STRING"/>
+        </CLASS>
+
+    </TECHNICIAN>
+
+    <TECHNICIAN name="DeviceTechnician"
+                class="DeviceTechnician"
+                package="oracle.retail.stores.foundation.manager.device"
+                export="Y">
+        <COMMENT>
+            The Technician that provides access to the devices.
+        </COMMENT>
+        <PROPERTY propname="deviceScript"
+                  propvalue="classpath://config/technician/PosDeviceTechnician.xml"/>
+    </TECHNICIAN>
+
+    <MANAGER name="ThreadManager"
+             class="ThreadManager"
+             package="oracle.retail.stores.foundation.manager.thread">
+        <PROPERTY propname="threadPool" propvalue="StaticCache"/>
+        <PROPERTY propname="threadPoolProperty" propvalue="maxSize=4"/>
+    </MANAGER>
+
+    <MANAGER name="UtilityManager"
+             class="UtilityManager"
+         package="oracle.retail.stores.pos.manager.utility">
+         <PROPERTY propname="cardTypeRulesFile"
+                   propvalue="classpath://config/cardtyperules.xml"/>
+    </MANAGER>
+
+    <MANAGER name="PrintableDocumentManager"
+             class="BlueprintedDocumentManager"
+             package="oracle.retail.stores.pos.receipt.blueprint">
+        <PROPERTY propname="persistBeansAsDataObject"
+                  propvalue="false"
+                  proptype="boolean"/>
+    </MANAGER>
+
+    <MANAGER name="JournalFormatterManager"
+             class="JournalFormatterManager"
+             package="oracle.retail.stores.pos.journal">
+    </MANAGER>
+
+    <MANAGER name="ResourceManager"
+             class="ResourceManager"
+             package="oracle.retail.stores.foundation.manager.resource"
+             export="N">
+        <PROPERTY propname="path"
+                  propvalue="config/ui;config/ui/bundles;config/ui/images;oracle/retail/stores/pos/config;config/device/bundles" />
+        <PROPERTY propname="imageExtensions"
+                  propvalue="" />
+    </MANAGER>
+    <TECHNICIAN name="ResourceTechnician"
+                class="ResourceTechnician"
+                package="oracle.retail.stores.foundation.manager.resource"
+                export="Y">
+        <PROPERTY propname="path"
+                  propvalue="config/ui;config/ui/bundles;config/ui/images;oracle/retail/stores/pos/config;config/device/bundles" />
+    </TECHNICIAN>
+
+    <!-- Begin_Default_Journaling -->
+    <MANAGER name="JournalManager"
+             class="JournalManager"
+             package="oracle.retail.stores.foundation.manager.journal"
+             export="N">
+    </MANAGER>
+
+    <TECHNICIAN name="LocalJournalTechnician"
+                class="JournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y">
+    </TECHNICIAN>
+    <!-- End_Default_Journaling -->
+
+    <!-- Begin_DB_Journaling
+    <MANAGER name="JournalManager"
+             class="QueuedJournalManager"
+             package="oracle.retail.stores.foundation.manager.journal"
+             export="N">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/PosJournalManager.xml" />
+    </MANAGER>
+
+    <TECHNICIAN name="JournalTechnician"
+                class="DBJournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y">
+        <PROPERTY propname="consolePrintable" propvalue="N"/>
+    </TECHNICIAN>
+    End_DB_Journaling -->
+
+    <TECHNICIAN name="ParameterTechnician" class = "ParameterTechnician"
+                package = "oracle.retail.stores.foundation.manager.parameter"
+                export = "Y" >
+                <PROPERTY propname="listenForUpdates" propvalue="Y"/>
+                <PROPERTY propname="paramScript"
+                      propvalue="classpath://config/technician/PosParameterTechnician.xml"/>
+    </TECHNICIAN>
+
+   <!-- Security Manager/Technician -->
+   <MANAGER name="SecurityManager" class="SecurityManager"
+       package="oracle.retail.stores.domain.manager.security"
+       export="N"/>
+   <TECHNICIAN name="SecurityTechnician" class="SecurityTechnician"
+       package="oracle.retail.stores.domain.manager.security"
+       export="Y">
+       <PROPERTY propname="securityConfig" propvalue="PointOfSaleSecurity"/>
+   </TECHNICIAN>
+
+   <MANAGER name="DLFormatManager"
+             class="ValidationManager"
+             package="oracle.retail.stores.domain.manager.validation"
+             export="N">
+       <PROPERTY propname="techName" propvalue="DLFormatTechnician"/>
+   </MANAGER>
+
+   <TECHNICIAN name="DLFormatTechnician" class="ValidationTechnician"
+                package="oracle.retail.stores.domain.manager.validation"
+                export="Y">
+        <PROPERTY
+            propname="configScript"
+            propvalue="classpath://config/validation/dlvalidationscript.xml"/>
+   </TECHNICIAN>
+
+    <!-- Mail Manager/Technician -->
+    <MANAGER name="MailManager"
+             class="MailManager"
+             package="oracle.retail.stores.foundation.manager.mail"
+             export="N"/>
+
+    <TECHNICIAN name="MailTechnician"
+                class="MailTechnician"
+                package="oracle.retail.stores.foundation.manager.mail"
+                export="Y"/>
+
+    <!-- DebitBinRange Manager/Technician -->
+    <MANAGER name="DebitBinRangeManager"
+             class="DebitBinRangeManager"
+             package="oracle.retail.stores.domain.manager.debit">
+    </MANAGER>
+    <TECHNICIAN name="DebitBinRangeTechnician"
+                class="DebitBinRangeTechnician"
+                package="oracle.retail.stores.domain.manager.debit"
+                export="Y">
+        <PROPERTY propname="debitBinFilename"
+                  propvalue="../config/debitbin.dat" proptype="STRING"/>
+    </TECHNICIAN>
+    <!--
+        <TECHNICIAN name="POSLogDaemonTechnician"
+               class="POSLogDaemonTechnician"
+               package="oracle.retail.stores.domain.manager.export"
+               export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.export.POSLogExportDaemonThread"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="300"/>
+        <PROPERTY propname="exportDirectoryName"
+                  propvalue="POSLog"/>
+        <PROPERTY propname="backupExportDirectoryName"
+                  propvalue="POSLogBackup"/>
+        <PROPERTY propname="trainingTransactionsExportable"
+                  propvalue="Y"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.domain.ixretail.log.POSLogWriter"/>
+    </TECHNICIAN>  -->
+
+
+<!--  Encryption -->
+    <MANAGER name="KeyStoreEncryptionManager"
+             class="KeyStoreEncryptionManager"
+             package="oracle.retail.stores.foundation.manager.encryption"
+             export="N">
+    </MANAGER>
+
+    <TECHNICIAN name="KeyStoreEncryptionTechnician"
+                class="KeyStoreEncryptionTechnician"
+                package="oracle.retail.stores.foundation.manager.encryption"
+                export="Y">
+    </TECHNICIAN>
+
+<!-- Begin RTLogExportDaemonTechnician Technician
+    <TECHNICIAN name="RTLogExportDaemonTechnician"
+                class="RTLogExportDaemonTechnician"
+                package="oracle.retail.stores.domain.manager.rtlog"
+                export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogExportDaemonThread"/>
+        <PROPERTY propname="daemonName"
+                  propvalue="RTLogExportDaemon"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="600"/>
+        <PROPERTY propname="exportDirectoryName"
+                  propvalue="POSLog"/>
+        <PROPERTY propname="databaseAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogDatabaseAdapter"/>
+        <PROPERTY propname="encryptionAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogEncryptionAdapter"/>
+        <PROPERTY propname="outputAdapterClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogEncryptingOutputAdapter"/>
+        <PROPERTY propname="exportFileConfigurationClassName"
+                  propvalue="oracle.retail.stores.exportfile.ExportFileConfiguration"/>
+        <PROPERTY propname="formatConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogFormat.xml"/>
+        <PROPERTY propname="entityReaderConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogExtractConfig.xml"/>
+        <PROPERTY propname="entityMappingConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogMappingConfig.xml"/>
+        <PROPERTY propname="resultAutditLogClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogExportFileResultAuditLog"/>
+        <PROPERTY propname="mappingObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.exportfile.EntityMappingObjectFactory"/>
+        <PROPERTY propname="recordFormatObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.exportfile.RecordFormatObjectFactory"/>
+        <PROPERTY propname="extractorObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.xmlreplication.ExtractorObjectFactory"/>
+        <PROPERTY propname="currencyAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogCurrencyAdapter"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="-1"/>
+    </TECHNICIAN>
+End RTLogExportDaemonTechnician Technician -->
+<!-- The following two properties can be applied to the RTLogExportDaemonTechnician; they are used to
+     indicate the window of operation for the RTLog export.  If the "windowOfOperationStart" is set to
+     "05:00:00" and the "windowOfOperationEnd" set to "01:00:00", then the window of operation for RTLog
+     export will be from 5:00 am in the morning until 1:00 am the next morning.
+
+        <PROPERTY propname="windowOfOperationStart"
+                  propvalue="00:00:00"/>
+        <PROPERTY propname="windowOfOperationEnd"
+                  propvalue="23:59:59"/>
+-->
+
+</DISPATCHER>

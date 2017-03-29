@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/InstantCreditInquiryInfoSlip_zh_TW.bpt /main/10 2010/09/06 14:05:56 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="InstantCreditInquiryInfoSlip" copies="1">
+    <report name="InstantCreditInquiryInfoSlipReport" id="1">
+        <group id="2">
+            <line id="3" />
+            <line id="7893517">
+                <element text="店內簽帳卡帳戶查詢" id="4" justified="1" stretch="true" />
+            </line>
+            <line id="19150088" dependsOnPresenceOf="31367150" />
+            <line id="21765866">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* 非收據，培訓模式 *" id="31367150" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip" />
+                </methodElement>
+            </line>
+            <line id="31722478" dependsOnPresenceOf="31367150" />
+            <line id="9362171">
+                <element text="帳號：" id="6591419" />
+                <methodElement id="31559270">
+                    <method returns="InstantCreditIfc" name="getInstantCredit" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="String" name="getTruncatedAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2268968" />
+            <line id="25875839">
+                <element text="當前餘額：" id="21861779" />
+                <methodElement id="10289431">
+                    <method returns="InstantCreditIfc" name="getInstantCredit" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip">
+                        <method returns="CurrencyIfc" name="getCurrentBalance" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21929971" />
+            <line id="18604544">
+                <element text="可用信用額度：" id="27812681" />
+                <methodElement id="14254969">
+                    <method returns="InstantCreditIfc" name="getInstantCredit" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip">
+                        <method returns="CurrencyIfc" name="getAvailableCredit" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17975812" />
+            <line id="13871983">
+                <element text="上次付款日期：" id="28423923" />
+                <methodElement formatter="Date.SHORT" id="5041435">
+                    <method returns="InstantCreditIfc" name="getInstantCredit" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip">
+                        <method returns="EYSDate" name="getLastPaymentDate" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29438026" />
+            <line id="215908">
+                <element text="上次付款金額：" id="6928705" />
+                <methodElement id="31927423">
+                    <method returns="InstantCreditIfc" name="getInstantCredit" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip">
+                        <method returns="CurrencyIfc" name="getLastPaymentAmount" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9263209" />
+        </group>
+    </report>
+</blueprint>
+
+

@@ -1,0 +1,71 @@
+/* ===========================================================================
+* Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/sale/relateditem/GetPickOneGroupSite.java /rgbustores_13.4x_generic_branch/1 2011/05/05 16:17:11 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/03/10 - update header date
+ *
+ * ===========================================================================
+ * $Log:
+ 1    360Commerce 1.0         12/13/2005 4:47:04 PM  Barry A. Pape   
+ *
+ *
+ * ===========================================================================
+ */
+package oracle.retail.stores.pos.services.sale.relateditem;
+
+import oracle.retail.stores.domain.lineitem.SaleReturnLineItemIfc;
+import oracle.retail.stores.domain.stock.RelatedItemGroupIfc;
+import oracle.retail.stores.foundation.tour.application.Letter;
+import oracle.retail.stores.foundation.tour.ifc.BusIfc;
+import oracle.retail.stores.pos.services.PosSiteActionAdapter;
+
+//--------------------------------------------------------------------------
+/**
+     This site gets the next group of pick one related items.
+     $Revision: /rgbustores_13.4x_generic_branch/1 $
+ **/
+//--------------------------------------------------------------------------
+public class GetPickOneGroupSite extends PosSiteActionAdapter
+{
+    public void arrive(BusIfc bus)
+    {
+        String letter = "Done";
+        RelatedItemCargo cargo = (RelatedItemCargo)bus.getCargo();
+        SaleReturnLineItemIfc item = (SaleReturnLineItemIfc) cargo.getTransaction().getLineItems()[cargo.getPrimaryItemSequenceNumber()];
+        RelatedItemGroupIfc[] relatedItemGroups = item.getPLUItem().getRelatedItemContainer().getRelatedItemGroups(RelatedItemGroupIfc.PICK_ONE);
+        int currentGroup = cargo.getGroupNumber();
+        int lastGroup = cargo.getGroupNumber();
+        for (int i = 0; i < relatedItemGroups.length; i++)
+        {            
+            int groupNumber = relatedItemGroups[i].getGroupNumber();
+            if (groupNumber > lastGroup)
+            {
+                if (currentGroup == lastGroup)
+                {
+                    currentGroup = groupNumber;
+                }
+                else if (groupNumber < currentGroup)
+                {
+                    currentGroup = groupNumber;
+                }
+            }
+            
+        }
+        if (lastGroup != currentGroup)
+        {
+            letter = "Continue";
+            cargo.setRelatedItems(item.getPLUItem().getRelatedItemContainer().getRelatedItemGroup(RelatedItemGroupIfc.PICK_ONE, currentGroup).getRelatedItems());
+            cargo.setGroupNumber(currentGroup);
+            cargo.setNextRelatedItem(0);
+        }
+        
+        bus.mail(new Letter(letter), BusIfc.CURRENT);
+    }
+
+}

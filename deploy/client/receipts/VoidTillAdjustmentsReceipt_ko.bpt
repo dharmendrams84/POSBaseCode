@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/VoidTillAdjustmentsReceipt_ko.bpt /main/13 2010/09/06 14:06:09 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    blarsen   04/22/09 - updated format for till-function post voids to
+ *                         comply with recent changes to rqmts doc
+ *    sswamygo  03/20/09 - Right aligned the totals
+ *    sswamygo  03/20/09 - CurrencyIfc.getType().getCurrencyCode() instead of
+ *                         CurrencyIfc.getDescription().
+ *    sswamygo  03/19/09 - Updated to display Currency Type and Description
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    cgreene   03/10/09 - add Store Copy element to bottom of all Void
+ *                         receipts
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - added switch for transaction type on tender amount
+ *                         line
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for
+ *                         VoidTillAdjustmentsReceipt
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="VoidTillAdjustmentsReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="26460711">
+            <line id="29530019">
+                <element text="거래 실효됨:" id="28314360" stretch="true" />
+                <methodElement id="1100232">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="3327388" />
+            </line>
+            <line id="7435043" />
+            <line id="4070344">
+                <methodElement precededBySpace="false" formatter="12#대출|13#픽업|16#입금|17#출금|40#급여 출금" id="12972802">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="int" name="getTransactionType" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="20365159" />
+                <element text=" " id="28005329" />
+            </line>
+            <line id="26038603">
+                <methodElement precededBySpace="false" formatter="-1#미확인|0#현금|1#신용|2#기탁 수표|3#여행자 수표|4#상품권|5#우편 은행 수표|6#직불|7#쿠폰|8#상품권카드|9#점포 신용|10#쇼핑몰 상품권|11#발주|12#우편환|13#전자 수표" id="7455667">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="TenderDescriptorIfc" name="getTender" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransaction">
+                                <method returns="int" name="getTenderType" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="25258930" />
+                <methodElement precededBySpace="false" prefix="(" suffix=")" id="25620149" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc">
+                                <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                    <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" suffix=" " id="11075182" justified="2" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3223920">
+                <element text=" " id="27614082" />
+            </line>
+            <line id="27575732">
+                <element text="총 지불 역분개됨" id="19934497" />
+                <element text=" " id="12955278" stretch="true" />
+                <methodElement precededBySpace="false" suffix=" " id="32652836" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAdjustmentAmount" class="oracle.retail.stores.domain.transaction.TillAdjustmentTransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11513418" />
+            <line id="31168594" />
+            <line id="32330841" />
+            <line id="3977333" />
+            <line id="6620348">
+                <element text="직원 서명:" id="15545243" fillChar="_" stretch="true" />
+            </line>
+            <line id="1702354" />
+            <line id="23103909" />
+            <line id="15513215" />
+            <line id="12675864">
+                <element text="관리자 서명:" id="2331547" fillChar="_" stretch="true" />
+            </line>
+            <line id="6169134" />
+            <line id="1170635" />
+            <line id="1440568" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="29269190" cutPaper="false">
+        <group id="6">
+            <line id="736613" />
+            <line id="31034430">
+                <element text="점포 복사본" id="20784700" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

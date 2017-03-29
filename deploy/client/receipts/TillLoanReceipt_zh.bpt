@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TillLoanReceipt_zh.bpt /main/1 2010/09/06 14:06:11 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  09/06/10 - New translated file
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   11/25/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="TillLoanReceipt" copies="1">
+    <linkReport documentType="TillPickupReceipt" idePath="/pos/deploy/receipts/TillPickupReceipt_de.bpt" id="4806368" />
+</blueprint>

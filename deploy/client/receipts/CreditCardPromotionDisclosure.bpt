@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/CreditCardPromotionDisclosure.bpt /main/1 2010/09/29 16:05:32 asinton Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   09/28/10 - More updates for credit card promotion disclosure.
+ *    asinton   09/24/10 - Initial checkin for Credit Card Disclosure.
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="CreditCardPromotionDisclosure" copies="1">
+    <report name="PromotionReport" id="5" cutPaper="false">
+        <group id="14565381">
+            <line id="19744931" />
+            <line id="20783706">
+                <element text="" id="10113461" />
+                <element text="Promotion Type:" id="5082908" justified="center" stretch="true" />
+                <element text="" id="17841206" />
+            </line>
+            <line id="9165762">
+                <methodElement id="16251447" justified="center" stretch="true">
+                    <method returns="String" name="getCreditCardPromotionDescriptionPart1" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean" />
+                </methodElement>
+            </line>
+            <line id="24648196">
+                <methodElement id="22471764" justified="center" stretch="true">
+                    <method returns="String" name="getCreditCardPromotionDescriptionPart2" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean" />
+                </methodElement>
+            </line>
+            <line id="23853594" />
+            <line id="18423568">
+                <element text="Promotion Duration:" id="13206766" justified="center" stretch="true" />
+            </line>
+            <line id="17434027">
+                <methodElement id="18501549" justified="center" stretch="true">
+                    <method returns="String" name="getCreditCardPromotionDuration" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean" />
+                </methodElement>
+            </line>
+            <line id="4229703" />
+            <line id="17687883">
+                <element text="Promotional APR:" id="21756483" justified="center" stretch="true" />
+            </line>
+            <line id="13807153">
+                <methodElement id="17072067" justified="center" stretch="true">
+                    <method returns="String" name="getFormattedCreditCardPromotionRate" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean" />
+                </methodElement>
+            </line>
+            <line id="21663442" />
+            <line id="18615128">
+                <element text="Purchase APR:" id="30434889" justified="center" stretch="true" />
+            </line>
+            <line id="3202759">
+                <methodElement id="13745702" justified="center" stretch="true">
+                    <method returns="String" name="getFormattedCreditCardAccountRate" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean" />
+                </methodElement>
+            </line>
+            <line id="10579194" />
+            <line id="30690077" />
+            <line id="19636281">
+                <element text="(V) – VARIABLE RATES SUBJECT TO" id="10760015" />
+            </line>
+            <line id="33215459">
+                <element text="CHANGE WITH MARKET, BASED ON PRIME" id="6899806" />
+            </line>
+            <line id="29091843">
+                <element text="RATE." id="22121486" />
+            </line>
+            <line id="29260439" />
+            <line id="6818661">
+                <element text="IF MINIMUM MONTHLY PAYMENTS ARE 60" id="28227560" />
+            </line>
+            <line id="29704902">
+                <element text="DAYS PAST DUE, THE PROMOTION MAY BE" id="14915113" />
+            </line>
+            <line id="27601741">
+                <element text="TERMINATED AND A PENALTY APR MAY" id="29835430" />
+            </line>
+            <line id="24017442">
+                <element text="APPLY. PROMOTIONAL PURCHASES ON" id="12363376" />
+            </line>
+            <line id="31718246">
+                <element text="EXISTING ACCOUNTS MAY NOT RECEIVE" id="7340417" />
+            </line>
+            <line id="17637059">
+                <element text="FULL BENEFIT OF PROMOTION TERMS," id="11447738" />
+            </line>
+            <line id="11457052">
+                <element text="INCLUDING REDUCED APR IF APPLICABLE," id="9638500" />
+            </line>
+            <line id="10210495">
+                <element text="IF ACCOUNT IS SUBJECT TO PENALTY" id="15443371" />
+            </line>
+            <line id="25719757">
+                <element text="PRICING. PAYMENTS OVER THE MINIMUM" id="27660932" />
+            </line>
+            <line id="14931682">
+                <element text="WILL BE APPLIED AS REQUIRED BY" id="14213937" />
+            </line>
+            <line id="7008986">
+                <element text="APPLICABLE LAW. IF YOU RECEIVE A" id="7474031" />
+            </line>
+            <line id="21057815">
+                <element text="CHANGE IN TERMS OF PENALTY RATE" id="4429456" />
+            </line>
+            <line id="12954700">
+                <element text="NOTICE THAT BECOMES EFFECTIVE" id="4618039" />
+            </line>
+            <line id="11721741">
+                <element text="BEFORE THE DELIVERY/INSTALLATION" id="24094017" />
+            </line>
+            <line id="2957510">
+                <element text="DATE OF YOUR PURCHASE, THE NEW" id="29931754" />
+            </line>
+            <line id="396862">
+                <element text="PURCHASE APR OR PENALTY APR (AS" id="20578278" />
+            </line>
+            <line id="2783898">
+                <element text="APPLICABLE) WILL APPLY TO THE" id="19180213" />
+            </line>
+            <line id="30231999">
+                <element text="PURCHASE BALANCE ADDED TO YOUR" id="10193605" />
+            </line>
+            <line id="10648844">
+                <element text="ACCOUNT UPON DELIVERY/INSTALLATION." id="31482783" />
+            </line>
+            <line id="12486428">
+                <element text="SUBJECT TO APPROVAL BY GE MONEY BANK." id="8651865" />
+            </line>
+            <line id="10561928" />
+            <line id="31436577">
+                <element text="REFER TO THE FINANCE PLAN TERMS" id="2708432" />
+            </line>
+            <line id="13601290">
+                <element text="PROVIDED BY THE MERCHANT FOR" id="23740383" />
+            </line>
+            <line id="16921545">
+                <element text="ADDITIONAL DETAILS OF YOUR" id="414263" />
+            </line>
+            <line id="28432023">
+                <element text="PROMOTIONAL PURCHASE" id="22803356" />
+            </line>
+            <line id="16886197" />
+            <line id="27841089">
+                <element text="I HAVE REVIEWED THE DETAILS OF MY" id="21140140" />
+            </line>
+            <line id="3389698">
+                <element text="PROMOTIONAL SALE WHERE APPLICABLE AND" id="665209" />
+            </line>
+            <line id="10307153">
+                <element text="AGREE TO THE TERMS INDICATED ABOVE" id="24226707" />
+            </line>
+            <line id="10480401" />
+            <line id="23537718">
+                <element text="Sign X _____________________________" id="14696661" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+

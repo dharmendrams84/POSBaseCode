@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/HourlyProductivityReport_zh.bpt /main/12 2010/09/06 14:05:55 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abhayg    08/02/10 - REPORTS PRINTED IN TRAINING MODE SHOULD DISPLAY
+ *                         TRAINING MODE
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - changed the time intervals that are displayed to
+ *                         Time.SHORT so that Chinese gets its special chars
+ *    blarsen   02/21/09 - changing leftmost labels from fixedWidth to stretch
+ *                         and reduced the middle column from 15 to 8 (with FA
+ *                         approval) - this is to allow for more space on the
+ *                         receipt for other languages
+ *    ddbaker   01/22/09 - Test Automation Changes for HourlyProductivityReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="HourlyProductivityReport" copies="1">
+    <report name="SummaryReportReport" id="1">
+        <group id="1">
+            <line id="18687346">
+                <element text="每小时生产率报表" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="8755816" />
+            <line id="22831804">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text="  " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="5660886">
+                <element text="店铺：" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="收银机：" id="26203554" justified="2" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="15696851">
+                <element text="收银员 ID：" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* 不是报表，培训模式  *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="19814424">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="333047" />
+            <line id="21097047">
+                <element text="开始日期：" id="24744773" />
+                <methodElement formatter="Date.SHORT" id="6821348">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="32059743">
+                <element text="结束日期：" id="46465" />
+                <methodElement formatter="Date.SHORT" id="19017836">
+                    <method returns="EYSDate" name="getEndDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="8970080">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="32048085" />
+            <line id="25124023">
+                <methodElement precededBySpace="false" formatter="Date.SHORT" id="19497315" justified="1" stretch="true">
+                    <method returns="EYSDate" name="getCurrentDay" class="oracle.retail.stores.pos.reports.HourlyProductivityReport" />
+                </methodElement>
+            </line>
+            <line id="15893619" />
+            <line id="21033077">
+                <element text="时间" id="23427450" stretch="true" />
+                <element text="交易       金额" id="28476206" />
+            </line>
+        </group>
+        <group id="2">
+            <line id="6164937" />
+            <line id="32520704">
+                <methodElement precededBySpace="false" formatter="Time.SHORT" id="19585036">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="EYSDate" name="getStartTime" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" - " id="270438" />
+                <methodElement precededBySpace="false" formatter="Time.SHORT" id="31781611">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="EYSDate" name="getEndTime" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21081000" />
+            <line id="25763111">
+                <element text="销售" id="1341343" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="14950690" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc">
+                                <method returns="int" name="getCountGrossTransactionSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="12393021" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc">
+                                <method returns="CurrencyIfc" name="getAmountGrossTransactionSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="444220">
+                <element text="退货" id="1341343" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="11750908" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc">
+                                <method returns="int" name="getCountGrossTransactionReturns" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="845308" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="TimeIntervalActivityIfc" name="getTimeInterval" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.TimeIntervalActivityIfc">
+                                <method returns="CurrencyIfc" name="getAmountGrossTransactionReturns" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10186897">
+                <element text="净销售额" id="1341343" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="18299560" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="int" name="getNetCount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="16531960" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15199745">
+                <element text="净总额的百分比" id="1341343" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" formatter="##.##%" id="30968296" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="double" name="getCountPercentage" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" formatter="##.##%" id="18823015" justified="2">
+                    <method returns="HourlyProductivityReportItem[]" name="getReportItems" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="double" name="getAmountPercentage" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="11572813" />
+            <line id="6125624">
+                <element text="总计" id="23390184" />
+                <methodElement fixedWidth="5" prefix="(" suffix=")" id="5465021">
+                    <method returns="HourlyProductivityReportItem" name="getTotalSales" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem">
+                            <method returns="String" name="getDescription" class="com._360commerce.commerceservices.common.currency.CurrencyIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32680722" />
+            <line id="8621455">
+                <element text="销售" id="10293028" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="26972088" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalSales" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="int" name="getNetCount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="8326034" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalSales" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29546351">
+                <element text="退货" id="979523" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="21304423" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalReturns" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="int" name="getNetCount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="22274881" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalReturns" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2363817">
+                <element text="净销售额" id="979523" stretch="true" />
+                <methodElement fixedWidth="8" precededBySpace="false" id="30215137" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalNet" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="int" name="getNetCount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="12" id="22348334" justified="2">
+                    <method returns="HourlyProductivityReportItem" name="getTotalNet" class="oracle.retail.stores.pos.reports.HourlyProductivityReport">
+                        <method returns="CurrencyIfc" name="getNetAmount" class="oracle.retail.stores.pos.reports.HourlyProductivityReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="8824757">
+                <element text="" id="5780407" fillChar="_" stretch="true" />
+            </line>
+            <line id="14458098" />
+            <line id="14050342">
+                <element text=" 报表结束 " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* 不是报表，培训模式  *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

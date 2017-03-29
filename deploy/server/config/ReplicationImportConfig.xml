@@ -1,0 +1,920 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/ReplicationImportConfig.xml /rgbustores_13.4x_generic_branch/5 2011/10/13 12:03:55 yiqzhao Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    yiqzhao   10/12/11 - add first/last name virtual columns in pa_cnct for
+ *                         improving performance
+ *    jswan     08/18/11 - Added TR_LTM_PRM with
+ *                         persistanceAction=UpdateInsert; this allows a
+ *                         transaction with a row in the table to be retireved
+ *                         more than once.
+ *    asinton   07/28/11 - removed GF_ from ID_NCRPT_ACNT_GF_CRD and
+ *                         ID_MSK_ACNT_GF_CRD, Removed column ID_ACNT_TND.
+ *    cgreene   06/09/11 - added dao to persist and retrieve ICC card details
+ *    jswan     09/08/10 - Removed Party ID processing from DTM import into the
+ *                         Scratch Pad database. This data comes from Central
+ *                         Office; Party IDs are guarenteed to be unique across
+ *                         the enterprise when coming from CO.
+ *    abondala  08/23/10 - added IRS customer table to the return transaction
+ *    mchellap  06/22/10 - Added billpay tables
+ *    acadar    06/11/10 - changes for postvoid and signature capture
+ *    acadar    06/08/10 - merged to tip
+ *    acadar    06/07/10 - changes for signature capture
+ *    abondala  06/07/10 - added siebel tables
+ *    cgreene   05/26/10 - refactor xmlreplication exporters
+ *    cgreene   05/26/10 - refactor CustomerTablePartyIDGenerator
+ *    npoola    04/01/10 - Added the UnitOfMeasure entries to ItemStock entity
+ *                         to export it to POS
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/25/09 - Updated ADE Header
+ *    asinton   05/19/09 - Added table TR_MDFR_SLS_RTN_PRC to the round trip
+ *                         from store to CO to store's scratchpad.
+ *    blarsen   04/29/09 - TR_RTL_LY not being imported to POS for layaways
+ *
+ * ===========================================================================
+ */
+ -->
+ <!--
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+    $Log:
+    3    360Commerce 1.2         3/29/2007 3:08:30 PM   Michael Boyd    CR
+    26172 - v8x merge to trunk
+
+
+    3    .v8x      1.1.1.0     2/6/2007 11:14:15 AM     Rohit Sachdeva
+    24408:CTR Issue. Return of Kit Items not             updating
+    correctly. Allows to do Return             even after a Previous
+    Return was                   successfully completed.
+    2    360Commerce 1.1         12/11/2006 9:11:06 AM  Jack G. Swan
+    Updated to reflect new location of XSD and special purpose class
+    files.
+    1    360Commerce 1.0         11/9/2006 6:38:18 PM   Jack G. Swan
+    $
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<TABLE_WRITERS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../modules/datareplication/config/ReplicationImport.xsd">
+    <COMMENT>This is a configuration file for the Data Import</COMMENT>
+
+    <TABLE tableName="TR_TRN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_RTL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_RTL_BPAY" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ACNT" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_RTL_BPAY" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_BL" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_RTL_TRN"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="DO_CRD_GF" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_NCRPT_ACNT_CRD" />
+    </TABLE>
+
+    <TABLE tableName="LE_LTM_MD_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_ITM_CPN_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_ALTR" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_CHK_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_CRDB_CRD_TN"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_CRD_ICC"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_CR_STR_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_DSC" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_GF_CF_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_GF_CRD_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_MNY_ORD_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_PRCH_ORD_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_PYAN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_SLS_RTN"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_ORD_EXT"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_SLS_RTN_TX"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TX" />
+    </TABLE>
+
+    <TABLE tableName="SHP_RDS_SLS_RTN_TX"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="CNT_SND_LAB" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TX" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_SND_CHK_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_TND_CHN"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_TRV_CHK_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_TX" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_RU_PRDV" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RU_PRDV" />
+    </TABLE>
+
+    <TABLE tableName="CO_MDFR_RTL_PRC"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="AI_MDFR_RT_PRC" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_PRM"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="AS_ITM_UNK" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="CO_MDFR_CMN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="AI_MDFR_CMN" />
+    </TABLE>
+
+    <TABLE tableName="CO_MDFR_SLS_RTN_TX"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="AI_MDFR_TX" />
+    </TABLE>
+
+    <TABLE tableName="CO_MDFR_TX_EXM"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="PA_CT_CAPT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="SHP_RDS_SLS_RTN"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="CNT_SND_LAB" />
+    </TABLE>
+
+    <TABLE tableName="PA_CT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_CT" />
+    </TABLE>
+    
+    <TABLE tableName="PA_IRS_CT" persistanceAction="UpdateInsert"> 
+        <PRIMARY_KEY_COLUMN columnName="ID_IRS_CT"/>
+    </TABLE>
+    
+    <TABLE tableName="PA_PRTY"
+        persistanceAction="InsertReportNoSqlError">
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+    </TABLE>
+
+    <TABLE tableName="LO_ADS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ADS" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_ADS" />
+    </TABLE>
+
+    <TABLE tableName="LO_EML_ADS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_EM_ADS" />
+    </TABLE>
+
+    <TABLE tableName="PA_PHN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_PHN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PHN" />
+    </TABLE>
+
+    <TABLE tableName="PA_CNCT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_CNCT" />
+        <PRIMARY_KEY_COLUMN columnName="TY_CNCT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+        <NOT_SUPPORTED_COLUMN columnName="UPR_LN_CNCT"/>
+		<NOT_SUPPORTED_COLUMN columnName="UPR_FN_CNCT"/>
+    </TABLE>
+
+    <TABLE tableName="CA_PRD_RP" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="FY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PR_PRD" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PR_PRD" />
+    </TABLE>
+
+    <TABLE tableName="CA_DY_BSN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+    </TABLE>
+
+    <TABLE tableName="OR_ORD" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+    </TABLE>
+
+    <TABLE tableName="OR_ORD_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="OR_LTM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="OR_LTM_MDFR_RPRC"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+        <PRIMARY_KEY_COLUMN columnName="LN_ITM_REF" />
+    </TABLE>
+
+    <TABLE tableName="OR_IRS_ORD" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+    </TABLE>
+
+    <TABLE tableName="DO_EMSG" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_EMSG" />
+    </TABLE>
+
+    <TABLE tableName="DO_EMSG_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_EMSG" />
+    </TABLE>
+
+    <TABLE tableName="ORGN_CT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORGN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PRTY" />
+    </TABLE>
+
+
+
+    <TABLE tableName="TR_CNT_INV" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_CTL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_FN_ACNT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_LON_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_PKP_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_RCV_FND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_RCV_INV" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_RDM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_SLS_PS_NO" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_STR_OPN_CL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="MINI_SND" />
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="TS_TM_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_WS_OPN_CL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_TL_OPN_CL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_TSFT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="TR_VD_PST" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="AS_LY" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_LY" />
+    </TABLE>
+
+    <TABLE tableName="AS_IRS_LY" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_LY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="CO_CNCT" />
+    </TABLE>
+
+    <TABLE tableName="TR_RTL_LY" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_LY" />
+    </TABLE>
+
+    <TABLE tableName="DO_CR_STR"
+        persistanceAction="InsertReportNoSqlError">
+    </TABLE>
+
+    <TABLE tableName="LE_ACNT_STKG" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_LCN" />
+    </TABLE>
+
+    <TABLE tableName="LE_ACNT_STKG_ST"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_LCN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_INV_ST" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_STR" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="FY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PR_PRD" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PR_PRD" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_STR_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TY_SB_TND" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CNY_ISSG_CY" />
+        <PRIMARY_KEY_COLUMN columnName="FY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PR_PRD" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PR_PRD" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_STR_SF_TND"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RPSTY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TY_SB_TND" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CNY_ISSG_CY" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_WS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="FY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PR_PRD" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PR_PRD" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_WS_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TY_SB_TND" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CNY_ISSG_CY" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="FY" />
+        <PRIMARY_KEY_COLUMN columnName="TY_PR_PRD" />
+        <PRIMARY_KEY_COLUMN columnName="ID_PR_PRD" />
+    </TABLE>
+
+    <TABLE tableName="AS_WS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_TL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RPSTY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TS_TM_SRT" />
+    </TABLE>
+
+    <TABLE tableName="LE_HST_TL_TND" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RPSTY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TS_TM_SRT" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TND" />
+        <PRIMARY_KEY_COLUMN columnName="TY_SB_TND" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CNY_ISSG_CY" />
+    </TABLE>
+
+    <TABLE tableName="HST_TX" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="FLG_TX_HDY" />
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="ID_TL_CRT" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+    </TABLE>
+
+    <TABLE tableName="AS_DRW_WS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_DRW_WS" />
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+    </TABLE>
+
+    <TABLE tableName="AS_TL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RPSTY_TND" />
+    </TABLE>
+
+    <TABLE tableName="PA_STR_RTL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+    </TABLE>
+
+    <TABLE tableName="PA_STR_RTL_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CD_GEO" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_CD_GEO" />
+    </TABLE>
+
+    <TABLE tableName="CO_TX_JUR_ATHY_LNK"
+        persistanceAction="InsertReportNoSqlError">
+    </TABLE>
+
+    <TABLE tableName="PA_ATHY_TX" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+    </TABLE>
+
+    <TABLE tableName="ID_IDN_PS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM_POS" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+    </TABLE>
+
+    <TABLE tableName="CO_CLN_ITM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_CLN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM_MBR" />
+    </TABLE>
+
+    <TABLE tableName="AS_ITM_RTL_STR"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+    </TABLE>
+
+    <TABLE tableName="AS_ITM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+    </TABLE>
+
+    <TABLE tableName="AS_ITM_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="AS_ITM_STK" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ITM" />
+    </TABLE>
+
+    <TABLE tableName="CO_UOM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="LU_UOM" />
+    </TABLE>
+
+    <TABLE tableName="CO_UOM_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="LU_UOM" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CO_SZ" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ED_SZ" />
+    </TABLE>
+
+    <TABLE tableName="CO_SZ_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ED_SZ" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CO_CLR" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ED_CLR" />
+    </TABLE>
+
+    <TABLE tableName="CO_CLR_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ED_CLR" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CO_STYL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="LU_STYL" />
+    </TABLE>
+
+    <TABLE tableName="CO_STYL_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="LU_STYL" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="PA_TY_TX"
+        persistanceAction="InsertReportNoSqlError">
+    </TABLE>
+
+    <TABLE tableName="CO_GP_TX_ITM" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+    </TABLE>
+
+    <TABLE tableName="CO_GP_TX_ITM_I8"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="RU_TX_GP" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="FLG_TX_HDY" />
+    </TABLE>
+
+    <TABLE tableName="RU_TX_RT" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ATHY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="ID_GP_TX" />
+        <PRIMARY_KEY_COLUMN columnName="TY_TX" />
+        <PRIMARY_KEY_COLUMN columnName="FLG_TX_HDY" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TX_RT_RU" />
+    </TABLE>
+
+    <TABLE tableName="ID_DPT_PS" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_DPT_POS" />
+    </TABLE>
+
+    <TABLE tableName="ID_DPT_PS_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_DPT_POS" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CR_BRN" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+    </TABLE>
+
+    <TABLE tableName="ID_LU_CD" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="DE_CD_LST" />
+        <PRIMARY_KEY_COLUMN columnName="NM_CD_GP" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CD_ENT" />
+    </TABLE>
+
+    <TABLE tableName="ID_LU_CD_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="DE_CD_LST" />
+        <PRIMARY_KEY_COLUMN columnName="NM_CD_GP" />
+        <PRIMARY_KEY_COLUMN columnName="LU_CD_ENT" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="RU_PRDV" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RU_PRDV" />
+    </TABLE>
+
+    <TABLE tableName="RU_PRDV_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_RU_PRDV" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="CO_SHP_MTH" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_SHP_MTH" />
+    </TABLE>
+
+    <TABLE tableName="CO_SHP_MTH_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_SHP_MTH" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="OR_DEL_DTL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_CT" />
+        <PRIMARY_KEY_COLUMN columnName="AI_ORD_DEL_DTL" />
+    </TABLE>
+
+    <TABLE tableName="OR_RCPNT_DTL" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_ORD" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_ORD_RCPNT" />
+    </TABLE>
+
+    <TABLE tableName="CO_PRCGP" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_PRCGP" />
+    </TABLE>
+
+    <TABLE tableName="CO_PRCGP_I8" persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_PRCGP" />
+        <PRIMARY_KEY_COLUMN columnName="LCL" />
+    </TABLE>
+
+    <TABLE tableName="TR_LTM_SLS_RTN_ORD"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+    </TABLE>
+
+    <TABLE tableName="TR_MDFR_SLS_RTN_PRC"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_LN_ITM" />
+        <PRIMARY_KEY_COLUMN columnName="AI_MDFR_RT_PRC" />
+    </TABLE>
+
+    <TABLE tableName="DO_TR_RTL"
+        persistanceAction="UpdateInsert">
+        <PRIMARY_KEY_COLUMN columnName="ID_STR_RT" />
+        <PRIMARY_KEY_COLUMN columnName="ID_WS" />
+        <PRIMARY_KEY_COLUMN columnName="DC_DY_BSN" />
+        <PRIMARY_KEY_COLUMN columnName="AI_TRN" />
+        <PRIMARY_KEY_COLUMN columnName="ID_DO_TRN" />
+    </TABLE>
+
+</TABLE_WRITERS>

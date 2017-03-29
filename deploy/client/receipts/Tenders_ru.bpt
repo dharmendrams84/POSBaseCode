@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Tenders_ru.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:12 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   09/12/11 - revert aba number encryption, which is not sensitive
+ *    ohorne    08/19/11 - added Manual and Micr entry method
+ *    cgreene   08/15/11 - updated entry method for new enum
+ *    cgreene   08/01/11 - changed entry method Dip to ICC
+ *    cgreene   07/29/11 - added capture method to receipt for icc cards
+ *    rrkohli   07/13/11 - encryption CR
+ *    cgreene   06/28/11 - rename hashed credit card field to token
+ *    cgreene   06/09/11 - added dao to persist and retrieve ICC card details
+ *    cgreene   06/02/11 - Tweaks to support Servebase chipnpin
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    asinton   05/06/10 - Added Prepaid Remaining Balance to receipt and
+ *                         ejournal
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   05/13/09 - added a line to print the coupon number
+ *    cgreene   04/30/09 - shorten printed tender to Mall Gift Cert. and do not
+ *                         defult to Manual so that it does not get printed
+ *                         unless set.
+ *    cgreene   04/22/09 - added ability for store credit to know if customer
+ *                         is business so name can print properly (only once)
+ *    cgreene   04/16/09 - corrected getAuditTraceNum to be from
+ *                         TenderChargeIfc
+ *    cgreene   04/08/09 - moved store credit name from two lines to one
+ *    cgreene   04/04/09 - print ID Type for all tenders that support
+ *                         getPersonalIDType)Locale) method
+ *    cgreene   04/01/09 - implement method getTenders which
+ *                         returns getCollectedTenderLineItems except for order
+ *                         cancels which return all tenders
+ *    mweis     03/31/09 - add audit trace number for debit receipts
+ *    mweis     03/27/09 - receipt does not print last name for store credit
+ *    cgreene   03/26/09 - mockup moved up so Credit for gift cards prints uder
+ *                         desc
+ *    cgreene   03/25/09 - changed # to Number and GC Available Balance to
+ *                         Balance Available
+ *    cgreene   03/24/09 - implement EnterableTenderIfc as interface for
+ *                         getting setting entryMethod
+ *    djenning  03/24/09 - print giftcard available balance even if the value
+ *                         is zero ( as long as it is a giftcard tender )
+ *    cgreene   03/18/09 - add isIssued to gift cert line
+ *    djenning  03/18/09 - increasing length of getCardType to 15 to account
+ *                         for HouseCard
+ *    cgreene   03/16/09 - Add line to print As Mall caert Purchase Order
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    cgreene   03/14/09 - rearranged check bank section. Made sure classes
+ *                         were interfaces
+ *    cgreene   03/14/09 - get FirstLast Name specifically from Storecredit
+ *                         object sot hat MailBankCheck wont acciddently print
+ *                         these values
+ *    cgreene   03/13/09 - added isGiftCardCredit line to print Reload upon
+ *                         returns
+ *    cgreene   03/13/09 - stretched ID Type and names so they don't spill to
+ *                         next line
+ *    cgreene   03/13/09 - moved Cert Num line above GC line and reset
+ *                         indenting to 3 spaces in on all lines except first
+ *                         line
+ *    djenning  03/13/09 - adding cert. # when a gift cert. is tendered.
+ *    cgreene   03/06/09 - initial version
+ *
+ * ===========================================================================
+ *
+ -->
+<blueprint id="Tenders" copies="1">
+    <report name="TendersReport" id="1">
+        <group id="32027652">
+            <line id="10486149">
+                <element text=" " id="5458031" />
+                <methodElement fixedWidth="21" formatter="-1#Неизв|0#Наличн|1#Кредит|2#Депониров. чек|3#Дорожн.чек|4#Подар.серт|5#Чек д/пер.по пчт|6#Дебет|7#Купон|8#Подар.кар|9#Кредит маг|10#Подар.серт.торг.ц|11#Заказ на покупк|12#Платежн. поруч|13#Эл.чек" id="24901944">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="int" name="getTypeCode" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <methodElement id="14647841" justified="right" stretch="true">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="6284558" />
+            </line>
+            <line id="18663270">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="   Кредит" id="22048607">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isGiftCardCredit" class="oracle.retail.stores.domain.tender.TenderGiftCardIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6377951">
+                <element text="  " id="10559701" dependsOnPresenceOf="18677691" />
+                <methodElement fixedWidth="3" printedWhenLengthZero="false" id="18677691">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderAlternateCurrencyIfc">
+                            <method returns="String" name="getDescription" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" Пол. сумма:" id="8271301" dependsOnPresenceOf="18677691" />
+                <methodElement fixedWidth="16" printedWhenLengthZero="false" printedWhenValueZero="false" id="8187588">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderAlternateCurrencyIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6276604">
+                <element text="   Обменный курс:" id="20084327" dependsOnPresenceOf="26090693" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="26090693">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAlternateCurrencyTendered" class="oracle.retail.stores.domain.tender.TenderAlternateCurrencyIfc">
+                            <method returns="BigDecimal" name="getBaseConversionRate" class="oracle.retail.stores.commerceservices.common.currency.AbstractCurrency" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12829461">
+                <element text="   Карта" id="31625187" dependsOnPresenceOf="25604215" />
+                <methodElement fixedWidth="15" printedWhenLengthZero="false" id="25604215">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getCardType" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3972145">
+                <element text="   Счет:" id="15077275" dependsOnPresenceOf="13606396" />
+                <methodElement fixedWidth="7" printedWhenLengthZero="false" id="13606396" justified="right">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24608388">
+                <element text="   Банк:" id="27602767" dependsOnPresenceOf="15513422" />
+                <methodElement printedWhenLengthZero="false" id="15513422">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getABANumber" class="oracle.retail.stores.domain.tender.TenderCheckIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31142365">
+                <element text="   № банк. счета:" id="3144947" dependsOnPresenceOf="27121997" />
+                <methodElement printedWhenLengthZero="false" id="27121997">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EncipheredDataIfc" name="getAccountNumberEncipheredData" class="oracle.retail.stores.domain.tender.TenderCheckIfc">
+                            <method returns="String" name="getMaskedNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32623418">
+                <element text="   № чека:" id="26538945" dependsOnPresenceOf="447391" />
+                <methodElement printedWhenLengthZero="false" id="447391">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getCheckNumber" class="oracle.retail.stores.domain.tender.TenderCheckIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20089978">
+                <element text="   Авт.:" id="6734485" dependsOnPresenceOf="12689524" />
+                <methodElement printedWhenLengthZero="false" id="12689524">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="3" formatter="U" prefix="(" suffix=")" printedWhenLengthZero="false" id="21084664" dependsOnPresenceOf="12689524">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuthorizationMethod" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1952069" dependsOnPresenceOf="30936981">
+                <element text="   ИД терминала:" id="8727741" dependsOnPresenceOf="30936981" />
+                <methodElement printedWhenLengthZero="false" id="30936981">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getTerminalId" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6860726" dependsOnPresenceOf="28879489">
+                <element text="   ИД приложения:" id="8727741" dependsOnPresenceOf="28879489" />
+                <methodElement printedWhenLengthZero="false" id="28879489">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationID" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2451698" dependsOnPresenceOf="18730153">
+                <element text="   Название приложения:" id="8727741" dependsOnPresenceOf="18730153" />
+                <methodElement printedWhenLengthZero="false" id="18730153">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getApplicationLabel" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26610858" dependsOnPresenceOf="23205836">
+                <element text="   Первичный № счета:" id="8727741" dependsOnPresenceOf="23205836" />
+                <methodElement printedWhenLengthZero="false" id="23205836">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getPanSequenceNumber" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="32623419">
+                <element text="   # трассир. д/ауд:" id="26538946" dependsOnPresenceOf="447392" />
+                <methodElement printedWhenLengthZero="false" id="447392">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuditTraceNumber" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29669049">
+                <element text="   Номер:" id="30816741" dependsOnPresenceOf="11050748" />
+                <methodElement printedWhenLengthZero="false" id="11050748">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getCouponNumber" class="oracle.retail.stores.domain.tender.TenderCouponIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19013366">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="   Как чек" id="25145451">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isMallCertificateAsCheck" class="oracle.retail.stores.domain.tender.TenderGiftCertificateIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="   Как заказ на пост." id="1876603">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isMallCertificateAsPurchaseOrder" class="oracle.retail.stores.domain.tender.TenderGiftCertificateIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19315814" dependsOnPresenceOf="32355351">
+                <element text="   Серт." id="4906936" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" Выдан" id="23114122">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isIssued" class="oracle.retail.stores.domain.tender.TenderGiftCertificateIfc" />
+                    </method>
+                </methodElement>
+                <element text=" #" id="22538494" />
+                <methodElement printedWhenLengthZero="false" id="32355351">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getGiftCertificateNumber" class="oracle.retail.stores.domain.tender.TenderGiftCertificateIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10738507">
+                <element text="   Verification:" id="28016009" dependsOnPresenceOf="31538930" />
+                <methodElement printedWhenLengthZero="false" valuePrintedWhenFalse="PIN" valuePrintedWhenTrue="Signature" id="31538930">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="IntegratedChipCardDetailsIfc" name="getICCDetails" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="boolean" name="isSignatureRequired" class="oracle.retail.stores.domain.tender.IntegratedChipCardDetailsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12135651" dependsOnPresenceOf="11862635">
+                <element text="   Метод считывания:" id="28016009" />
+                <methodElement formatter="0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" printedWhenValueZero="true" id="11862635">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27545692">
+                <element text="   Доступный остаток:" id="1080721" dependsOnPresenceOf="29417857" />
+                <methodElement printedWhenLengthZero="false" id="29417857">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="GiftCardIfc" name="getGiftCard" class="oracle.retail.stores.domain.tender.TenderGiftCard">
+                            <method returns="CurrencyIfc" name="getCurrentBalance" class="oracle.retail.stores.domain.utility.GiftCard" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29471144">
+                <element text="   Доступный остаток:" id="16088014" dependsOnPresenceOf="17447215" />
+                <methodElement printedWhenLengthZero="false" id="17447215">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getPrepaidRemainingBalance" class="oracle.retail.stores.domain.tender.TenderCharge" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25782309">
+                <element text="    " id="10684866" dependsOnPresenceOf="28017535" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="28017535">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAgencyName" class="oracle.retail.stores.domain.tender.TenderPurchaseOrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22239651">
+                <element text="    #" id="10684866" dependsOnPresenceOf="28017535" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="30568848">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getPurchaseOrderNumber" class="oracle.retail.stores.domain.tender.TenderPurchaseOrderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6659667">
+                <element text="   № кредита маг.:" id="5016576" dependsOnPresenceOf="13084921" />
+                <methodElement printedWhenLengthZero="false" id="13084921">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getStoreCreditID" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24521554" dependsOnPresenceOf="18574511">
+                <element text="   Имя:" id="29862368" dependsOnPresenceOf="18574511" />
+                <methodElement printedWhenLengthZero="false" id="18574511">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="StoreCreditIfc" name="getStoreCredit" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc">
+                            <method returns="String" name="getFullName" class="oracle.retail.stores.domain.utility.StoreCreditIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29471144">
+                <element text="   Тип кода" id="16088014" dependsOnPresenceOf="6689727" />
+                <methodElement printedWhenLengthZero="false" id="6689727">
+                    <method returns="TenderLineItemIfc[]" name="getTenders" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getPersonalIDType" class="oracle.retail.stores.domain.tender.TenderCheckIfc" param="Locale" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

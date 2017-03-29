@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/LayawayDeleteReceipt_pt.bpt /main/13 2010/09/06 14:05:57 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   12/17/09 - changed number of copies to 3
+ *    cgreene   05/14/09 - added lines to print MailBank Check info
+ *    djenning  04/21/09 - moving layaway legal statement below VAT summary
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    cgreene   03/30/09 - ade method isRefundDue to layaway transaction to aid
+ *                         in printing refund amount on receipt
+ *    cgreene   03/30/09 - implement printing of layaway location on receipt by
+ *                         adding new location code to layaway object and
+ *                         deprecating the old string
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    glwang    02/27/09 - remove brackets from legal statement.
+ *    ddbaker   02/25/09 - Updated for merges
+ *    ddbaker   02/25/09 - Updated for multiple copies of special order and
+ *                         layaway receipts.
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="LayawayDeleteReceipt" copies="3">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="6783657" />
+            <line id="28524838">
+                <element text="No Reserva:" id="13399538" />
+                <methodElement id="16881106">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="String" name="getLayawayID" class="oracle.retail.stores.domain.financial.LayawayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24791433">
+                <element text="  Expira:" id="27009863" />
+                <methodElement formatter="Date.SHORT" id="1727831">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="EYSDate" name="getExpirationDate" class="oracle.retail.stores.domain.financial.LayawayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24248500">
+                <element text="  Cliente:" id="30020564" />
+                <methodElement id="21965963">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.financial.LayawayIfc">
+                                <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19722638">
+                <element text=" " id="25119194" />
+                <methodElement formatter="0#Res.|1#Trab|2#Celul.|5#Outro" suffix=":" id="14488177">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.financial.LayawayIfc">
+                                <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="int" name="getPhoneType" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="4749472">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.financial.LayawayIfc">
+                                <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                    <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1429997">
+                <element text="  Local:" id="24802908" />
+                <methodElement id="21435461">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="LocalizedCodeIfc" name="getLocationCode" class="oracle.retail.stores.domain.financial.LayawayIfc">
+                                <method returns="String" name="getText" class="com._360commerce.common.utility.LocalizedCode" param="Locale" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16631166" />
+        </group>
+    </report>
+    <linkReport documentType="Items" idePath="/pos/deploy/receipts/Items.bpt" id="16879915" cutPaper="false" />
+    <linkReport documentType="Totals" idePath="/pos/deploy/receipts/Totals.bpt" id="16879916" cutPaper="false" />
+    <report name="SubtotalReport" id="16879917" cutPaper="false">
+        <group id="412503">
+            <line id="6771926">
+                <element text="Pgto. Total" id="33004721" stretch="true" />
+                <methodElement id="20171169" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getTotalAmountPaid" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc" />                           
+                    </method>
+                </methodElement>
+                <element text="   " id="3128104" />
+            </line>
+            <line id="32689826" />
+            <line id="9517781">
+                <element text="Taxa Elim." id="6764041" stretch="true" />
+                <methodElement id="22199209" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="CurrencyIfc" name="getDeletionFee" class="oracle.retail.stores.domain.financial.LayawayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="24604199" />
+            </line>
+            <line id="21830977">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="16486471">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isRefundDue" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879918" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879919" cutPaper="false">
+        <group id="26460711">
+            <line id="25720620">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="4526337">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isRefundDue" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29087666">
+                <element text="Reemb.Total" id="20274640" stretch="true" />
+                <methodElement id="28782117">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTenderTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="32834634" />
+            </line>
+            <line id="21886820" />
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <report name="LayawayIDReport" id="16879920" cutPaper="false">
+        <group id="29724790">
+            <line id="5618579">
+                <element text="Declar.Legal Reserva Responsab." id="25733420" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="MailBankCheck" idePath="/pos/deploy/receipts/MailBankCheck.bpt" id="13704629" cutPaper="false" />
+    <report name="LayawayIDReport" id="16879921" cutPaper="false">
+        <group id="29724791">
+            <line id="21169525" />
+            <line id="28113457">
+                <element text="Nº RESERVA" id="29937172" justified="center" stretch="true" />
+            </line>
+            <line id="9299042" />
+            <line id="26009930">
+                <methodElement fixedWidth="40" id="20051781" printedAsBarcode="true" justified="center">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="LayawayIfc" name="getLayaway" class="oracle.retail.stores.domain.transaction.LayawayTransactionIfc">
+                            <method returns="String" name="getLayawayID" class="oracle.retail.stores.domain.financial.LayawayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="1763596" />
+            <line id="12206609">
+                <copyElement id="28240870" justified="center" stretch="true">
+                    <copyText>Cópia Loja</copyText>
+                    <copyText>Cópia Cliente</copyText>
+                    <copyText>Cópia Mercadoria</copyText>
+                    <copyText>Cópia Loja</copyText>
+                    <copyText>Cópia Cliente</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

@@ -1,0 +1,2257 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/technician/DefaultDataTechnician.xml /rgbustores_13.4x_generic_branch/1 2011/09/15 13:34:45 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   09/15/11 - removed deprecated methods and changed static
+ *                         methods to non-static
+ *    jkoppolu  03/01/11 - Added scan sheet Transaction
+ *    cgreene   01/28/11 - XML tweaks after refactoring data transactions
+ *    cgreene   01/27/11 - refactor creation of data transactions to use spring
+ *                         context
+ *    abondala  07/07/10 - Use CSF framework for encrypting/decrypting database
+ *                         passwords in the technician xml files
+ *    nkgautam  07/02/10 - bill pay report changes
+ *    nkgautam  06/24/10 - mapped savebillpaytransaction
+ *    ohorne    06/11/10 - mapped UpdateTransactionExternalOrder
+ *    acadar    06/08/10 - merged to tip
+ *    acadar    06/07/10 - changes for signature capture
+ *    npoola    06/03/10 - merged with the latest code base
+ *    npoola    06/02/10 - removed the training mode increment id dependency
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    nkgautam  12/18/09 - Removed DBQueue Entries
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DATATECHNICIAN SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/datascript.dtd">
+
+<DATATECHNICIAN
+    package="oracle.retail.stores.domain.arts">
+
+    <!-- Below is a list of transaction names and which DataCommand is
+    responsible for performing each of the DataOperations it specifies. An
+    actual list of DataTransaction class names can be found in
+    config/context/PersistenceContext.xml. -->
+
+    <TRANSACTION name="AdvancedInquiryDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="AdvancedPricingRuleKeyDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="AlertDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="AuditLogTransaction" command="jdbccommand"/>
+    <TRANSACTION name="BusinessReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CalendarDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CertificateTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CodeListDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CodeListSaveDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ConfirmedClockEntryTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CurrencyDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerAddTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerAddTransactionNotQueued" command="jdbccommand"/>
+    <TRANSACTION name="CustomerDeleteTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerReadGroupDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerReadPricingGroupTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="DataReplicationDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="DatabasePurgeTransaction" command="jdbccommand"/>
+    <TRANSACTION name="DatabaseQueueTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EMessageReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EMessageWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeFindForLoginTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeFindForUpdateTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeTimeClockDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeWriteTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ExecuteSQLDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="FinancialTotalsDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="IDDIReadTransaction" command="jdbccommand"/>
+    <TRANSACTION name="IDDIRegisterVersionTransaction" command="jdbccommand"/>
+    <TRANSACTION name="IDDIVersionTransaction" command="jdbccommand"/>
+    <TRANSACTION name="IXRetailTransactionWriteDataTrans" command="jdbccommand"/>
+    <TRANSACTION name="InsertServiceItem" command="jdbccommand"/>
+    <TRANSACTION name="ItemSizesTransaction" command="jdbccommand"/>
+    <TRANSACTION name="Job" command="jdbccommand"/>
+    <TRANSACTION name="JobEventMessages" command="jdbccommand"/>
+    <TRANSACTION name="JobNotifications" command="jdbccommand"/>
+    <TRANSACTION name="JobSchedule" command="jdbccommand"/>
+    <TRANSACTION name="JournalReadTransaction" command="jdbccommand"/>
+    <TRANSACTION name="JournalTransaction" command="jdbccommand"/>
+    <TRANSACTION name="LayawayDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ListPriceMaintenanceEvents" command="jdbccommand"/>
+    <TRANSACTION name="MerchandiseHierarchyDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="NotQueuedFinancialTotalsDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="NotQueuedStoreDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="NotQueuedTransactionWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="OrderCreateDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="OrderReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="OrderWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="PLUTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ParameterTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadCryptoKeyStoreTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadItemCost" command="jdbccommand"/>
+    <TRANSACTION name="ReadNewTaxRuleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadShippingMethodTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadTaxRuleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadTransactionsByIDDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadTransactionsForReturn" command="jdbccommand"/>
+    <TRANSACTION name="ReadWorkstationIDsByStore" command="jdbccommand"/>
+    <TRANSACTION name="RegistryDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="RoleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SaveFinancialTotalsDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SaveStoreDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ScanSheetTransaction" command="jdbccommand"/>
+    <TRANSACTION name="StoreDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="StoreDirectoryDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="StoreSafeReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="StoreSafeWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SupplierDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SupplyCategoryTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SupplyItemTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SupplyOrderTransaction" command="jdbccommand"/>
+    <TRANSACTION name="TaskInfo" command="jdbccommand"/>
+    <TRANSACTION name="TenderDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="TillChecksDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="TransactionHistoryDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="TransactionReadDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="TransactionWriteDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="UpdatePriceAdjustedItemsDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="UpdateReturnedItemsDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="UpdateServiceItem" command="jdbccommand"/>
+    <TRANSACTION name="UpdateTransactionExternalOrderDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="WorkWeekTransaction" command="jdbccommand"/>
+
+    <!-- End transaction to data command mapping. -->
+
+    <COMMAND name="jdbccommand"
+            class="DataCommand"
+            package="oracle.retail.stores.foundation.manager.data"
+         >
+        <COMMENT>
+            This command contains all operations supported on a JDBC
+            database connection.
+        </COMMENT>
+        <POOLREF pool="jdbcpool"/>
+
+        <OPERATIONCOMMON>
+             <PROPERTY propname="jdbcHelperClass" propvalue="$DB_HELPER$" />
+        </OPERATIONCOMMON>
+
+        <OPERATION name="SaveJournalEntry"
+                   class="JdbcSaveJournalEntry"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation inserts a journal entry into the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SelectIDDIInfo"
+                   class="JdbcSelectIDDIInfo"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list ofEmployees from a jdbc database,
+                 given a first and last name.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveBillPayTransaction"
+                   class="JdbcSaveBillPayTransaction"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation saves the bill pay details into the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SelectIDDIData"
+                   class="JdbcSelectIDDIData"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list ofEmployees from a jdbc database,
+                 given a first and last name.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="SaveIDDIVersion"
+                   class="JdbcSaveIDDIVersion"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation inserts or updates the dataset version into the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveIDDIRegisterVersion"
+                   class="JdbcSaveIDDIRegisterVersion"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation inserts or updates the dataset version into the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadAllDataSets"
+                   class="JdbcReadAllDataSets"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads dataset information for all datasets.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadJournalKeys"
+                   class="JdbcReadJournalKeys"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a list of keys from the database for journal entries that
+                match a given set of criteria.
+            </COMMENT>
+        </OPERATION>
+        <OPERATION name="ReadJournalEntry"
+                   class="JdbcReadJournalEntry"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific journal entry from the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadSupplyCategoryOperation"
+                   class="JdbcReadSupplyCategoryOperation"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of supply categories from a jdbc database,
+                 given a string lookup store and category and searchString  (SupplyItemSearchCriteria).
+            </COMMENT>
+        </OPERATION>
+        <OPERATION name="ReadSupplyItemOperation"
+                   class="JdbcReadSupplyItemOperation"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of Supply Items from the jdbc database.
+                The data returned is based on the criteria identified in the SupplyItemSearchCriteria object.
+                Supply items can be located by Store, Store and Category or Store and Item Description.
+            </COMMENT>
+        </OPERATION>
+        <OPERATION name="SaveSupplyOrderOperation"
+                   class="JdbcSaveSupplyOrderOperation"
+                   package="oracle.retail.stores.domain.arts">
+
+            <COMMENT>
+                This operation saves a SupplyOrder containing SupplyOrderLineItems
+                to the jdbc database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadAssociateTotals"
+                   class="JdbcReadAssociateTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveAssociateProductivity"
+                   class="JdbcSaveAssociateProductivity"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="PLULookup"
+                   class="JdbcPLUOperation"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                 given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SCLULookup"
+                   class="JdbcSCLUOperation"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a Store Coupon PLUItem from a jdbc database,
+                 given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadServiceItems"
+                   class="JdbcReadServiceItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves all service items from a jdbc database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadItemInfo"
+                   class="JdbcReadItemInfo"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves item information from jdbc database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadDepartmentList"
+                   class="JdbcReadDepartmentList"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a department by name or ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="employeelookup"
+                   class="JdbcEmployeeLookupOperation"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves an Employee from a jdbc database,
+                 given a string loginID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SelectEmployees"
+                   class="JdbcSelectEmployees"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list ofEmployees from a jdbc database,
+                 given a first and last name.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateEmployee"
+                   class="JdbcUpdateEmployee"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves an Employee from a jdbc database,
+                 given a string loginID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="insertEmployee"
+                   class="JdbcInsertEmployee"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves an Employee from a jdbc database,
+                 given a string loginID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="GenerateEmployeeID"
+                   class="JdbcGenerateEmployeeID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation generates a new employee ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveCustomer"
+                   class="JdbcSaveCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a Customer.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveIRSCustomer"
+                   class="JdbcSaveIRSCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves an IRS Customer.
+            </COMMENT>
+        </OPERATION>
+        
+        <OPERATION name="ReadScanSheet" class="JdbcReadScanSheet" package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves all scan sheet items from a jdbc database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadPasswordPolicy"
+                   class="JdbcReadPasswordPolicy"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads Password Policy and its criertia.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateEmployeeNumberFailedAttempts"
+                   class="JdbcUpdateEmployeeNumberFailedAttempts"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates EmployeeNumberFailedAttempts.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadPasswordHistory"
+                   class="JdbcReadPasswordHistory"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads Password History.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SavePasswordHistory"
+                   class="JdbcSavePasswordHistory"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation inserts Password History.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCustomer"
+                   class="JdbcReadCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a Customer.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadPricingGroup"
+                   class="JdbcReadPricingGroup"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a Customer pricing Group.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCustomerbyTaxID"
+                   class="JdbcReadCustomersByTaxID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves Customers on the basis of Tax
+                ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateCustomerSequenceNumber"
+                   class="JdbcUpdateCustomerSequenceNumber"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation update customer sequence number.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcGetLastTrainingCustomerSequenceNumber"
+             name="GetLastTrainingCustomerSequenceNumber"
+             package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the last transaction sequence
+                number for training mode.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcUpdateCustomerBatchIDs"
+             name="UpdateCustomerBatchIDs"
+             package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the t-log batch identifier.
+            </COMMENT>
+        </OPERATION>
+        <OPERATION class="JdbcRetrieveCustomerIDsByBatchID"
+             name="RetrieveCustomerIDsByBatchID"
+             package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads customer IDs by their batch
+                identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCustomerDataReplicationEntity"
+             name="ReadCustomerDataReplicationEntity"
+             package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves all transactions available for
+                data replication.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCustomerbyEmail"
+                   class="JdbcReadCustomerbyEmail"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a Customer.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SelectCustomers"
+                   class="JdbcSelectCustomers"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of Customers that
+                match some criteria.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCustomerbyEmployee"
+                   class="JdbcReadCustomerbyEmployee"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a Customer.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="WriteCaptureCustomer"
+                   class="JdbcWriteCaptureCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation writes captured customer information
+                caught during a transaction to the capture customer table.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateReturnedLineItems"
+                   class="JdbcUpdateReturnedLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the next sequence number
+                based on store id, business day date, and workstation id.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateVoidedReturnedLineItems"
+                   class="JdbcUpdateVoidedReturnedLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the next sequence number
+                based on store id, business day date, and workstation id.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdatePriceAdjustedLineItems"
+                   class="JdbcUpdatePriceAdjustedLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates a price adjusted line item.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="IsTransactionVoided"
+                   class="JdbcIsTransactionVoided"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation check to see if a transaction has been
+                voided based on store id, business day date,
+                transaction sequence number and workstation id.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTransaction"
+                   class="JdbcReadTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a transaction based on store id,
+                business day date, workstation id, and transaction sequence
+                number.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadOrderLineItemStatus"
+                   class="JdbcReadOrderLineItemStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves order line item status based on store id,
+                business day date, workstation id, transaction sequence
+                number and line item sequence number.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadDepartment"
+                   class="JdbcReadDepartment"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a department by name or ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTransactionHistory"
+                   class="JdbcReadTransactionHistory"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a customer ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTransactionListByStatus"
+                   class="JdbcReadTransactionListByStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of transactions based on store, business
+                date and status.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadBillPayments"
+                   class="JdbcReadBillPayments"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of bills paid based on start date and
+                currenct date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTransactionStatus"
+                   class="JdbcUpdateTransactionStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the transaction status.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CancelSuspendedTransactions"
+                   class="JdbcCancelSuspendedTransactions"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation cancels all suspended transactions for a
+                specified store and business date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTransactionsByID"
+                   class="JdbcReadTransactionsByID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a list of transactions based on a transaction ID and optional date range.
+            </COMMENT>
+        </OPERATION>
+        <OPERATION name="GetLastTrainingTransactionSequenceNumber"
+                   class="JdbcGetLastTrainingTransactionSequenceNumber"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the last transaction sequence number for training mode.
+            </COMMENT>
+        </OPERATION>
+        <OPERATION name="SaveRetailTransaction"
+                   class="JdbcSaveRetailTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a SaleReturnTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveCanceledTransaction"
+                   class="JdbcSaveCanceledTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a Canceled Transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveInstantCreditTransaction"
+                   class="JdbcSaveInstantCreditTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves an Instant Credit Enrollment Transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveVoidTransaction"
+                   class="JdbcSaveVoidTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a VoidTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveNoSaleTransaction"
+                   class="JdbcSaveNoSaleTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a NoSaleTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveEnterExitTrainingModeTransaction"
+                   class="JdbcSaveControlTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a NoSaleTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveControlTransaction"
+                   class="JdbcSaveControlTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves a ControlTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveRetailTransactionLineItems"
+                   class="JdbcSaveRetailTransactionLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves all line items associated
+                with the transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveOrderLineItems"
+                   class="JdbcSaveOrderLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves all order line items associated
+                with the transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveTenderLineItems"
+                   class="JdbcSaveTenderLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves all tender line items associated
+                with the transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreTotals"
+                   class="JdbcReadStoreTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation returns the totals for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreStatus"
+                   class="JdbcReadStoreStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation returns the status for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreStatuses"
+                   class="JdbcReadStoreStatuses"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation returns the open-business-date statuses for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RefreshStoreStatus"
+                   class="JdbcRefreshStoreStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation refreshes the status information for a store
+                for a particular business date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateStoreTotals"
+                   class="JdbcCreateStoreTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation creates the totals for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateStoreStatus"
+                   class="JdbcUpdateStoreStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the status for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AddStoreTotals"
+                   class="JdbcAddStoreTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the financial totals for a store
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreRegisters"
+                   class="JdbcReadStoreRegisters"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads all of a stores registers
+                for a particular business day.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRegisterTotals"
+                   class="JdbcReadRegisterTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the register information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadAllStoreRegisterStatus"
+                   class="JdbcReadAllStoreRegisterStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the current status of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadAllStoreRegisterSummaryStatus"
+                   class="JdbcReadAllStoreRegisterSummaryStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the current SummaryStatus of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRegisterStatus"
+                   class="JdbcReadRegisterStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the current status of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateRegisterStatus"
+                   class="JdbcCreateRegisterStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation creates the status portions of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateRegisterStatus"
+                   class="JdbcUpdateRegisterStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the status portions of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateRegisterTotals"
+                   class="JdbcUpdateRegisterTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the financial totals of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AddRegisterTotals"
+                   class="JdbcAddRegisterTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation adds to the financial totals of a register
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTillTotals"
+                   class="JdbcReadTillTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the till information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveTaxHistory"
+                   class="JdbcSaveTaxHistory"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation save the tax totals
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTillStatus"
+                   class="JdbcReadTillStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the current status of a till
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateTillTotals"
+                   class="JdbcCreateTillTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation creates the till financial totals
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateTillStatus"
+                   class="JdbcCreateTillStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation creates the till
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTillTotals"
+                   class="JdbcUpdateTillTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the till financial totals
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTillStatus"
+                   class="JdbcUpdateTillStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the till status information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadReportingPeriod"
+                   class="JdbcReadReportingPeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads a list of reporting periods
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadDepartmentTotals"
+                   class="JdbcReadDepartmentTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the department financial information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AddDepartmentTotals"
+                   class="JdbcAddDepartmentTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves the department financial information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTimeIntervalTotals"
+                   class="JdbcReadTimeIntervalTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads the workstation time activity information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AddTimeIntervalTotals"
+                   class="JdbcAddTimeIntervalTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves the workstation time activity information
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="InsertRole"
+                   class="JdbcInsertRole"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation performs INSERT operations
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateRole"
+                   class="JdbcUpdateRole"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation performs UPDATE operations
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRoles"
+                   class="JdbcReadRoles"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation performs SELECT statements
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRoleFunctions"
+                   class="JdbcReadRoleFunctions"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation performs SELECT statements
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveOrder"
+                   class="JdbcRetrieveOrder"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves order(s)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadOrderStatus"
+                   class="JdbcReadOrderStatus"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadOrderByTransaction"
+                   class="JdbcReadOrderByTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadOrderPaymentHistoryInfo"
+                   class="JdbcReadOrderPaymentHistoryInfo"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="RetrieveOrderSummaryByStatus"
+                   class="JdbcRetrieveOrderSummaryByStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveOrderSummaryByOrderID"
+                   class="JdbcRetrieveOrderSummaryByOrderID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveOrderSummaryByCustomer"
+                   class="JdbcRetrieveOrderSummaryByCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves order summary(s)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateOrderStatus"
+                   class="JdbcUpdateOrder"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates an order status based upon an order.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateOrder"
+                   class="JdbcUpdateOrder"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates an order status based upon an order.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateOrderByTransaction"
+                   class="JdbcUpdateOrderByTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="RetrieveEMessage"
+                   class="JdbcRetrieveEMessage"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves an EMessage.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveEMessagesByStatus"
+                   class="JdbcRetrieveEMessagesByStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveEMessagesByCustomer"
+                   class="JdbcRetrieveEMessagesByCustomer"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveEMessagesByOrderID"
+                   class="JdbcRetrieveEMessagesByOrderID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves EMessage(s).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SendEMessage"
+                   class="JdbcSendEMessage"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation sends an EMessage.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateEMessage"
+                   class="JdbcUpdateEMessage"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates an EMessage.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateEMessageStatus"
+                   class="JdbcUpdateEMessageStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the status of an EMessage.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveAlertList"
+                   class="JdbcRetrieveAlertList"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieve and alertList.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCurrencyType"
+                   class="JdbcReadCurrencyType"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads a currency type by country code.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCurrencyTypeList"
+                   class="JdbcReadCurrencyTypeList"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads a currency list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSelectCustomerGroups"
+            package="oracle.retail.stores.domain.arts" name="SelectCustomerGroups">
+            <COMMENT>
+                This operation retrieves the available customer groups.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdatePosIdentity"
+                   class="JdbcUpdatePosIdentity"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates the POS identity table by item ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ListPriceMaintenance"
+                   class="JdbcListItemPriceMaintenance"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation finds events based on a search criteria.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadItemCost"
+                   class="JdbcReadItemCost"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SearchStoreDirectory"
+                   class="JdbcSearchStoreDirectory"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="RetrieveAllStores"
+                   class="JdbcRetrieveAllStores"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="IncrementWorkstationSequenceNumber"
+                   class="JdbcIncrementWorkstationSequenceNumber"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the next sequence number
+                based on store id, and workstation id.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadDrawerStatus"
+                   class="JdbcReadDrawerStatus"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateDrawerStatus"
+                   class="JdbcUpdateDrawerStatus"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateStoreSafeTotals"
+                   class="JdbcUpdateStoreSafeTotals"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="InsertStoreCredit"
+                   class="JdbcInsertStoreCredit"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreCredit"
+                   class="JdbcReadStoreCredit"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveStoreCredit"
+                   class="JdbcSaveStoreCredit"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveRedeemTransaction"
+                   class="JdbcSaveRedeemTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveVoidRedeemTransaction"
+                   class="JdbcSaveVoidRedeemTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateStoreCredit"
+                   class="JdbcUpdateStoreCredit"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadLayaway"
+                   class="JdbcReadLayaway"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a layaway by ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadLayawayPaymentHistoryInfo"
+                   class="JdbcReadLayawayPaymentHistoryInfo"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves layaway payment history info.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadLayawayTenders"
+                   class="JdbcReadLayawayTenders"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves all the tenders applied to the layaway
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="ReadLayawaysByCustomerID"
+                   class="JdbcReadLayawaysByCustomerID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a layaway by ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadLayawayDescriptions"
+                   class="JdbcReadLayawayDescriptions"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a description of the first
+                line item for a group of layaways.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadLayawayDescription"
+                   class="JdbcReadLayawayDescription"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a description of the first
+                line item for a single layaway.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadLayawayTransactionStatus"
+                   class="JdbcReadLayawayTransactionStatus"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the status of a single layaway.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateLayaway"
+                   class="JdbcUpdateLayaway"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates a layaway by ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateLayawayForPayment"
+                   class="JdbcUpdateLayawayForPayment"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation updates a layaway by ID
+                after a type_layaway_payment is made.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="InsertLayaway"
+                   class="JdbcInsertLayaway"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation inserts a layaway.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="InsertPayment"
+                   class="JdbcInsertPayment"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation inserts a payment.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveLayawayPaymentHistoryInfo"
+                   class="JdbcSaveLayawayPaymentHistoryInfo"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation inserts updates layaway payment history info used for patriot act.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRegistryID"
+                   class="JdbcReadRegistryID"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveTillPayment"
+                   class="JdbcSaveTillPaymentTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SelectChecksFromTill"
+                   class="JdbcSelectChecksFromTill"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SelectMoneyOrdersFromTill"
+                   class="JdbcSelectMoneyOrdersFromTill"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="FindLatestTillPickupTime"
+                   class="JdbcFindLatestTillPickupTime"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveTillPickup"
+                   class="JdbcSaveTillPickup"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveTillLoan"
+                   class="JdbcSaveTillLoan"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveTenderMediaLineItems"
+                   class="JdbcSaveTenderMediaLineItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation saves the tender media line items associated
+                with a count.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="InsertEmployeeClockEntry"
+                   class="JdbcInsertEmployeeClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadEmployeeLastClockEntry"
+                   class="JdbcReadEmployeeLastClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadConfirmedClockEntries"
+                   class="JdbcReadConfirmedClockEntries"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="RemoveConfirmedClockEntry"
+                   class="JdbcRemoveConfirmedClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="AddConfirmedClockEntry"
+                   class="JdbcAddConfirmedClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateConfirmedClockEntry"
+                   class="JdbcUpdateConfirmedClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadLastClockEntryPairID"
+                   class="JdbcReadLastClockEntryPairID"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadLastEditedClockEntry"
+                   class="JdbcReadLastEditedClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateLastEditedClockEntry"
+                   class="JdbcUpdateLastEditedClockEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadWorkWeek"
+                   class="JdbcReadWorkWeek"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="UpdateWorkWeek"
+                   class="JdbcUpdateWorkWeek"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="InsertWorkWeek"
+                   class="JdbcInsertWorkWeek"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadEmployeeClockEntries"
+                   class="JdbcReadEmployeeClockEntries"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="InsertAuditEntry"
+                   class="JdbcInsertAuditLogEntry"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadAuditLogEntries"
+                   class="JdbcReadAuditLogEntries"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadLastAuditEntryID"
+                   class="JdbcReadLastAuditLogEntryID"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="InsertOrderByTransaction"
+                   class="JdbcInsertOrderByTransaction"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveOrderPaymentHistoryInfo"
+                   class="JdbcSaveOrderPaymentHistoryInfo"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadShippingMethod"
+                   class="JdbcReadShippingMethod"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadShippingChargeByPriceRange"
+                   class="JdbcReadShippingChargeByPriceRange"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadStoreSafeTotals"
+                   class="JdbcReadStoreSafeTotals"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="ReadWorkstationIDsByStore"
+                   class="JdbcReadWorkstationIDsByStore"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads all workstation IDs for a store.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveTransactionIDsByBatchID"
+                   class="JdbcRetrieveTransactionIDsByBatchID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads transaction IDs by their batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveTransactionIDsByBusinessDate"
+                   class="JdbcRetrieveTransactionIDsByBusinessDate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads transaction IDs for a specific business date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveTransactionIDsByTimePeriod"
+                   class="JdbcRetrieveTransactionIDsByTimePeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads transaction IDs for a specific time period.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTransactionForBatch"
+                   class="JdbcReadTransactionForBatch"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads a transaction for batch processing.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveStoreOpenCloseTransaction"
+                   class="JdbcSaveStoreOpenCloseTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Saves a store open/close transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateSafeFromStoreOpenCloseTransaction"
+                   class="JdbcUpdateSafeFromStoreOpenCloseTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates the store safe using data in a StoreOpenCloseTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveStoreOpenCloseSafeTenderMedia"
+                   class="JdbcSaveStoreOpenCloseSafeTenderMedia"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Writes the tender media data for the safe transactions on a
+                StoreOpenCloseTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveRegisterOpenCloseTransaction"
+                   class="JdbcSaveRegisterOpenCloseTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Saves a register open/close transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateUpdateTill"
+                   class="JdbcCreateUpdateTill"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Creates or updates a till status record as needed.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CreateUpdateTillTotals"
+                   class="JdbcCreateUpdateTillTotals"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Creates or updates till totals as needed.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveTillOpenCloseTransaction"
+                   class="JdbcSaveTillOpenCloseTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Saves a till open/close transaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateSafeFromTillOpenCloseTransaction"
+                   class="JdbcUpdateSafeFromTillOpenCloseTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates the store safe using data in a TillOpenCloseTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateSafeFromBankDepositTransaction"
+                   class="JdbcUpdateSafeFromBankDepositTransaction"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates the store safe using data in a BankDepositTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveBankDepositSafeTenderMedia"
+                   class="JdbcSaveBankDepositSafeTenderMedia"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Writes the tender media data for the safe transactions on a
+                BankDepositTransaction.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTransactionBatchIDs"
+                   class="JdbcUpdateTransactionBatchIDs"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the t-log batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTransactionTLogIDs"
+                   class="JdbcUpdateTransactionTLogIDs"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the t-log batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="MarkInventoryReservationOrderList"
+                   class="JdbcMarkInventoryReservationOrderList"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the inventory reservation batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTransactionRTLogIDs"
+                   class="JdbcUpdateTransactionRTLogIDs"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the RTlog batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="IncrementRTLogBatchCount"
+                   class="JdbcIncrementBatchCount"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates transactions with the RTlog batch identifier.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RetrieveAllSuppliers"
+                   class="JdbcRetrieveAllSuppliers"
+                   package="oracle.retail.stores.domain.arts">
+        </OPERATION>
+
+        <OPERATION name="SaveIXRetailTransaction"
+                   class="JdbcSaveIXRetailXMLPosLog"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadNewTaxRules"
+                   class="JdbcReadNewTaxRules"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                New for 7.0, replaces previous 2 classes (ReadTaxRules, ReadTaxRulesByPostalCode)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="LookupBusiness"
+                   class="JdbcSelectBusiness"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves business customers by business info.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ExecuteSQL"
+                   class="JdbcExecuteSQL"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Executes user defined SQL statements.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION
+            class="JdbcPurgeAgedData"
+            package="oracle.retail.stores.domain.arts"
+            name="PurgeAgedData">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreTills"
+                   class="JdbcReadStoreTills"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads all of a store's tills
+                for a particular business day.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- MerchandiseHierarchyGroup -->
+        <OPERATION name="DeAssociateMerchandiseHierarchyGroups"
+                   class="JdbcDeAssociateMerchandiseHierarchyGroups"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Removes an the association between an existing merchandise classification
+               hierarchy group as a child of another existing merchandise hierarchy
+               classification group.  If the child is no-longer associated with any
+               parent group, in any hierarchy then it is removed.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AssociateMerchandiseHierarchyGroups"
+                   class="JdbcAssociateMerchandiseHierarchyGroups"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Associates an existing merchandise classification hierarchy group
+               as a child of another existing merchandise hierarchy classification
+               group.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchMerchandiseHierarchyGroupItemIDs"
+                   class="JdbcFetchMerchandiseHierarchyGroupItemIDs"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetches the IDs for the set of Items that're assigned to the merchandise classification
+               hierarchy group (and it's children groups) from the MerchandiseHierarchy tables in the
+               ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <!-- Start PSI Data operations -->
+        <OPERATION name="FetchMerchandiseHierarchyLevelGroups"
+                   class="JdbcFetchMerchandiseHierarchyLevelGroups"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetches the levles for the given merchandise classification hierarchy from the
+               MerchandiseHierarchy tables in the ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchChildrenMerchandiseHierarchyGroupIDs"
+                   class="JdbcFetchChildrenMerchandiseHierarchyGroupIDs"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetches the definitions for the set of child merchandise classification hierarchy
+               group ids that're chilren of a particular group in the MerchandiseHierarchy tables of
+               the ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchAllLevelItems"
+                   class="JdbcFetchAllLevelItems"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetches the ItemDetails for the set of Items that're assigned to the merchandise classification
+               hierarchy group (and it's children groups) from the MerchandiseHierarchy tables in the
+               ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadStoreInfo"
+                   class="JdbcReadStoreInfo"
+                   package="oracle.retail.stores.domain.arts">
+        <COMMENT>
+           This operation returns the totals for a store
+        </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchItemPriceInfo"
+                   class="JdbcFetchItemPriceInfo"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation fetches items actual price and promotion end date
+            </COMMENT>
+        </OPERATION>
+        <!-- END PSI Data operations -->
+
+
+        <!--  BusinessCalendar data operations -->
+        <OPERATION name="CreateCalendar"
+                   class="JdbcCreateCalendar"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Creates a new BusinessCalendar as defined in the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchCalendarByID"
+                   class="JdbcFetchCalendarByID"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Fetches a pre-existing BusinessCalendar from the Calendar tables
+                in the ARTS data model (Release 4.0) - using internal ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchCalendarByName"
+                   class="JdbcFetchCalendarByName"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Fetches a pre-existing BusinessCalendar from the Calendar tables
+                in the ARTS data model (Release 4.0) - using external name.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RemoveCalendar"
+                   class="JdbcRemoveCalendar"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Removes an existing BusinessCalendar from the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="WriteCalendar"
+                   class="JdbcWriteCalendar"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates an existing BusinessCalendar in the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+
+
+    <!--  CalendarLevel data operations -->
+        <OPERATION name="CreateCalendarLevel"
+                   class="JdbcCreateCalendarLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Creates a new BusinessCalendar as defined in the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RemoveCalendarLevel"
+                   class="JdbcRemoveCalendarLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Removes an existing BusinessCalendar from the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="WriteCalendarLevel"
+                   class="JdbcWriteCalendarLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Updates an existing BusinessCalendar in the Calendar tables
+                in the ARTS data model (Release 4.0)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AssociateCalendarLevels"
+                   class="JdbcAssociateCalendarLevels"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Two pre-existing calendarLevels in the calendar tables are now
+                parent &amp; child.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="DeAssociateCalendarLevels"
+                   class="JdbcDeAssociateCalendarLevels"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               A parent &amp; child pair of calendarLevels in the calendar tables
+               are no longer parent &amp; child.
+            </COMMENT>
+        </OPERATION>
+
+
+
+    <!--  CalendarPeriod data operations -->
+        <OPERATION name="CreateCalendarPeriod"
+                   class="JdbcCreateCalendarPeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Create a single Period in the calendar structures in the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchSingleCalendarPeriod"
+                   class="JdbcFetchCalendarPeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Fetch a single Period from the calendar structures in the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="RemoveCalendarPeriod"
+                   class="JdbcRemoveCalendarPeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Remove a particular Period from the calendar structures of the database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchAllCalendarPeriodsContainingDate"
+                   class="JdbcFetchAllCalendarPeriodsContainingDate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that contain the given date.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllCalendarPeriodsInLevel"
+                   class="JdbcFetchAllCalendarPeriodsInLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are in the given level
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllCalendarPeriodsInLevelContainingDate"
+                   class="JdbcFetchAllCalendarPeriodsInLevelContainingDate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are in the given level and contain the given date.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllChildrenCalendarPeriods"
+                   class="JdbcFetchAllChildrenCalendarPeriods"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are children of the given period.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllChildrenCalendarPeriodsInLevel"
+                   class="JdbcFetchAllChildrenCalendarPeriodsInLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are children of the given period and are in the given level.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllParentCalendarPeriods"
+                   class="JdbcFetchAllParentCalendarPeriods"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are parents of the given period.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="FetchAllParentCalendarPeriodsInLevel"
+                   class="JdbcFetchAllParentCalendarPeriodsInLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Periods from the calendar structures of the database
+               that are parents of the given period and are in the given level.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="AssociateCalendarPeriods"
+                   class="JdbcAssociateCalendarPeriods"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Two pre-existing calendarPeriods in the calendar tables are now
+                parent &amp; child.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="DeAssociateCalendarPeriods"
+                   class="JdbcDeAssociateCalendarPeriods"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               A parent &amp; child pair of calendarPeriods in the calendar tables
+               are no longer parent &amp; child.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="CloseCalendarPeriod"
+                   class="JdbcCloseCalendarPeriod"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+              An open CalendarPeriod in the database is now closed.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- ReportingPeriod data operations -->
+        <OPERATION name="FetchAllReportingPeriodIDsBetweenDates"
+                   class="JdbcFetchAllReportingPeriodIDsBetweenDates"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Reporting Period IDs from the calendar structures of
+               the database - that fall (completely or partially) into a period of
+               time denoted by the given dates.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchAllReportingPeriodIDsContainingDate"
+                   class="JdbcFetchAllReportingPeriodIDsContainingDate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Reporting Period IDs from the calendar structures of
+               the database - that contain the given Date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchAllReportingPeriodIDsInLevel"
+                   class="JdbcFetchAllReportingPeriodIDsInLevel"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Reporting Period IDs from the calendar structures of
+               the database - that are in the given CalendarLevel.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="FetchAllReportingPeriodIDsInLevelContainingDate"
+                   class="JdbcFetchAllReportingPeriodIDsInLevelContainingDate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+               Fetch one or more Reporting Period IDs from the calendar structures of
+               the database - that are in the given CalendarLevel AND contain the
+               given date.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveParameters"
+                   class="JdbcUpdateParameters"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Writes the updated register settings to the appropriate registers.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveTillStartingFloat"
+                   class="JdbcSaveTillStartingFloat"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                Saves the starting float for the till
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="LookupCertificate"
+                   class="JdbcLookupCertificate"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation looks up a certificate.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="LookupStoreCredit"
+                   class="JdbcLookupStoreCredit"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation looks up a store credit.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="LookupRedeemedTender"
+                   class="JdbcLookupRedeemedTender"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation looks up a redeemed tender.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadItemSizes"
+                   class="JdbcReadItemSizes"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation looks up all the size codes.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadTaxHistory"
+                   class="JdbcReadTaxHistory"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads tax history.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadDataReplicationEntity"
+                   class="JdbcReadDataReplicationEntity"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves all transactions available for data replication.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadRegionDistrict"
+                   class="JdbcReadRegionDistrict"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the store information for the given store ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadSafeTenders"
+                   class="JdbcReadSafeTenders"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the safe tenders.
+            </COMMENT>
+        </OPERATION>
+
+
+        <OPERATION name="ReadGiftCertificateIssued"
+                   class="JdbcLookupCertificateIssued"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation gift certificate for the given certificate number.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="StoreCreditUniqueCheck"
+                   class="JdbcStoreCreditUniqueCheck"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation searches for a store credit that has been issued.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- BEGIN - CodeList Data Operations -->
+        <OPERATION name="ReadCodeList"
+                   class="JdbcReadCodeList"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCodeListDepartment"
+                   class="JdbcReadCodeListDepartment"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a code list for Department
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCodeListShippingMethod"
+                   class="JdbcReadCodeListShippingMethod"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a code list for Shipping Method
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCodeListDiscount"
+                   class="JdbcReadCodeListDiscount"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a code list for Manual Discounts
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadCodeListUnitOfMeasure"
+                   class="JdbcReadCodeListUnitOfMeasure"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a code list for Unit Of Measure
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveLocalizedCodeList"
+                   class="JdbcSaveLocalizedCodeList"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveLocalizedCodeListDiscount"
+                   class="JdbcSaveLocalizedCodeListDiscount"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveLocalizedCodeListUOM"
+                   class="JdbcSaveLocalizedCodeListUOM"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveLocalizedCodeListDepartment"
+                   class="JdbcSaveLocalizedCodeListDepartment"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <!-- CodeList Data Operations - END -->
+
+        <OPERATION name="ReadItemStyles"
+                   class="JdbcReadItemStyles"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads item styles
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadItemTypes"
+                   class="JdbcReadItemTypes"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads item types
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="ReadItemColors"
+                   class="JdbcReadItemColors"
+                   package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation reads item colors
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="UpdateTransactionExternalOrder"
+                   class="JdbcUpdateTransactionExternalOrder"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation updates external order transaction records with ids for line items added to an external order.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION name="SaveRetailTransactionDocument"
+                   class="JdbcSaveRetailTransactionDocument"
+                   package="oracle.retail.stores.domain.arts" >
+            <COMMENT>
+                This operation save any legal document like an external order contract that is associated with
+                the transaction
+            </COMMENT>
+        </OPERATION>
+
+    </COMMAND>
+
+    <!--
+       For any CONNECTIONPROPERTY element with propvalue beginning with "!" will be encrypted at startup
+    -->
+    <POOL name="jdbcpool"
+        class="DataConnectionPool" package="oracle.retail.stores.foundation.manager.data">
+        <POOLPROPERTY propname="numConnections" propvalue="8" proptype="INTEGER"/>
+        <CONNECTION class="JdbcDataConnection" package="oracle.retail.stores.foundation.manager.data">
+            <CONNECTIONPROPERTY propname="driver" propvalue="$DB_JDBC_DRIVER$" />
+            <CONNECTIONPROPERTY propname="databaseUrl" propvalue="$DB_JDBC_URL_SECURE$" />
+            <CONNECTIONPROPERTY propname="userid" propvalue="$DB_USER$" />
+            <!-- BEGIN Secure JDBC
+               <CONNECTIONPROPERTY propname="oracleCipherSuites" proptype="STRING" propvalue="(SSL_DH_anon_WITH_3DES_EDE_CBC_SHA, SSL_DH_anon_WITH_RC4_128_MD5,SSL_DH_anon_WITH_DES_CBC_SHA)"/>
+            END Secure JDBC -->
+            <CONNECTIONPROPERTY propname="password" propvalue="$DB_PASSWORD$"  />
+            <CONNECTIONPROPERTY propname="exceptionMappingClass" propvalue="oracle.retail.stores.foundation.manager.data.JdbcSQLState"/>
+            <CONNECTIONPROPERTY propname="exceptionMapping" propvalue="$DB_EXCEPTION_MAP$"/>
+            <!-- This per-connection setting is only supported by Oracle JDBC drivers. -->
+            <!-- BEGIN statementCacheSize -->
+            <CONNECTIONPROPERTY propname="statementCacheSize" propvalue="20" proptype="INTEGER"/>
+            <!-- END statementCacheSize -->
+        </CONNECTION>
+      </POOL>
+
+    <EXCEPTIONHANDLER class="SQLExceptionHandler"
+                      package="oracle.retail.stores.domain.manager.data"/>
+
+</DATATECHNICIAN>

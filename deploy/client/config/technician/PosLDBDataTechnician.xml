@@ -1,0 +1,494 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/technician/PosLDBDataTechnician.xml /rgbustores_13.4x_generic_branch/1 2011/09/15 13:34:45 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   09/15/11 - removed deprecated methods and changed static
+ *                         methods to non-static
+ *    hyin      01/31/11 - add SelectEmployees for offline searching employee
+ *                         fingerprints
+ *    cgreene   01/28/11 - XML tewaks after refactoring data transactions
+ *    abondala  07/08/10 - use CSF framework for offlinedb passwords
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   04/07/10 - update to match old LFF config
+ *    cgreene   02/08/10 - offlinedb logging tweaks
+ *    tzgarba   01/12/10 - Moved IDDI database creation into the connection
+ *                         pool start up to fix race condition
+ *    abondala  01/02/10 - Update Header date
+ *    mchellap  02/19/09 - Added new IDDI operation JdbcReadAllDataSets
+ *    mahising  11/15/08 - Update for Customer Module
+ *    mahising  11/13/08 - Added for Customer module for both ORPOS and ORCO
+ *
+ * ===========================================================================
+ */
+
+     $Log:
+      15   360Commerce 1.14        4/15/2008 5:22:45 PM   Sandy Gu        Added
+            offline IDDI support for shipping methods.
+      14   360Commerce 1.13        1/25/2008 12:41:04 AM  Manikandan Chellapan
+           CR#30019 ORPOS Item Inquiry fix
+      13   360Commerce 1.12        1/23/2008 2:39:58 PM   Matt Szekely
+           29,693 POS SIM integration installer changes
+      12   360Commerce 1.11        1/17/2008 5:02:09 AM   Manikandan Chellapan
+           PSI MerchandiseHierarchyTest Fixes
+      11   360Commerce 1.10        12/7/2007 6:30:39 PM   Anil Bondalapati
+           updated file related to POS database passwords encryption.
+      10   360Commerce 1.9         12/3/2007 1:32:48 AM   Naveen Ganesh
+           Commented PSI JDBCOperations. To be uncommented during ORPOS Client
+            installation.
+      9    360Commerce 1.8         11/22/2007 10:58:49 PM Naveen Ganesh   PSI
+           Code checkin
+      8    360Commerce 1.7         11/20/2007 8:34:53 AM  Tony Zgarba
+           Removed all references to old encryption interface classes.
+      7    360Commerce 1.6         7/16/2007 2:15:34 PM   Ranjan X Ojha   Fix
+           for RoleTransactions in Offline mode
+      6    360Commerce 1.5         5/29/2007 5:00:39 AM   Manikandan Chellapan
+           Modified RegisterMetaDataLookup,SaveRegisterIDDIVersion operations
+           to use server jdbc classes
+      5    360Commerce 1.4         5/28/2007 10:58:46 AM  Naveen Ganesh
+           Modified LocalDT to use derby database
+      4    360Commerce 1.3         5/25/2007 3:19:31 PM   Michael P. Barnett
+           Updated offline db configuration parameters.
+      3    360Commerce 1.2         5/22/2007 12:46:07 PM  Vikram Gopinath Added
+            commands, pool and transactions for IDDI client version updates
+      2    360Commerce 1.1         7/3/2006 3:41:29 PM    Charles D. Baker
+           Updated POS DB build scripts to utilize new DB build procedures.
+      1    360Commerce 1.0         12/13/2005 4:46:58 PM  Barry A. Pape
+     $
+     Revision 1.6  2004/08/30 23:03:26  jdeleau
+     @scr 6933  Start using variables for database connectivity, which
+     install anywhere can use so that our installs are set up correctly.
+
+     Revision 1.5  2004/07/20 19:44:38  jdeleau
+     @scr 3260 Enable reading service items in offline mode
+
+     Revision 1.4  2004/06/10 14:21:35  jdeleau
+     @scr 2775 Use the new tax data for the tax flat files
+
+     Revision 1.3  2004/06/03 16:29:18  jdeleau
+     @scr 2775 Initial drop of send tax code
+
+     Revision 1.2  2004/02/12 16:46:42  mcs
+     Forcing head revision
+
+     Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+     updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE DATATECHNICIAN SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/datascript.dtd">
+
+<!-- This technician configuration is used by POS client to get access to the
+    local database. -->
+<DATATECHNICIAN
+    package="oracle.retail.stores.domain.arts">
+
+    <TRANSACTION name="AdvancedInquiryDataTransaction" command="jdbccommand"/>
+
+<!-- As of Release 13.1 the codelist no longer uses a flat file; however,
+     the configuration for this transaction is left as an example.-->
+<!-- <TRANSACTION name="LocalCodeDataTransaction"  command="flatfilecommand"/> -->
+
+    <TRANSACTION name="PLUTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeFindForLoginTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadTaxRuleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadNewTaxRuleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="EmployeeFindForUpdateTransaction" command="jdbccommand"/>
+    <TRANSACTION name="RegisterMetaDataLookupTransaction" command="jdbccommand"/>
+    <TRANSACTION name="RegisterIDDIVersionTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CurrencyDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="SCLU" command="jdbccommand"/>
+    <TRANSACTION name="RoleTransaction" command="jdbccommand"/>
+    <TRANSACTION name="StoreDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="MerchandiseHierarchyDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="ReadShippingMethodTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CodeListDataTransaction" command="jdbccommand"/>
+    <TRANSACTION name="CustomerReadPricingGroupTransaction" command="jdbccommand"/>
+
+<!-- As of Release 13.1 the codelist no longer uses a flat file; however,
+     the configuration for this command and pool is being left as an example -->
+<!--     <COMMAND
+        name="flatfilecommand"
+        class="DataCommand"
+        package="oracle.retail.stores.foundation.manager.data">
+
+            <COMMENT>
+                This command contains all operations supported on a
+                flat file database connection.
+            </COMMENT>
+
+        <POOLREF pool="flatfilepool"/>
+
+        <OPERATIONCOMMON>
+             <PROPERTY propname="jdbcHelperClass" propvalue="oracle.retail.stores.domain.arts.jdbchelper.OracleHelper" />
+        </OPERATIONCOMMON>
+
+        <OPERATION
+            class="FFSaveCodeListMapOperation"
+            package="oracle.retail.stores.domain.arts"
+            name="SaveCodeListMap">
+                <COMMENT>
+                    This operation writes out all reason code data.
+                </COMMENT>
+        </OPERATION>
+
+        <OPERATION
+            class="FFRetrieveCodeListMapOperation"
+            package="oracle.retail.stores.domain.arts"
+            name="RetrieveCodeListMap">
+                <COMMENT>
+                    This operation reads in all reason code data.
+                </COMMENT>
+        </OPERATION>
+
+
+    </COMMAND>
+
+    <POOL
+        name="flatfilepool"
+        class="DataConnectionPool"
+        package="oracle.retail.stores.foundation.manager.data">
+
+        <COMMENT>
+            This pool defines a FlatFile connection to the gift registry database.
+        </COMMENT>
+
+        <POOLPROPERTY
+            propname="numConnections"
+            propvalue="1"
+            proptype="INTEGER"/>
+
+            <CONNECTION
+                class="FlatFileDataConnection"
+                package="oracle.retail.stores.foundation.manager.data.flatfile">
+
+                <CONNECTIONPROPERTY
+                    propname="configSource"
+                    propvalue="classpath://config/manager/FFTableDefs.xml"/>
+
+           </CONNECTION>
+
+    </POOL>
+-->
+
+    <COMMAND name="jdbccommand"
+            class="DataCommand"
+            package="oracle.retail.stores.foundation.manager.data"
+         >
+        <COMMENT>
+            This command contains all operations supported on a JDBC
+            database connection.
+        </COMMENT>
+        <POOLREF pool="offlinepool"/>
+
+        <OPERATIONCOMMON>
+             <PROPERTY propname="jdbcHelperClass" propvalue="oracle.retail.stores.common.data.jdbchelper.Db2Helper" />
+        </OPERATIONCOMMON>
+
+        <OPERATION class="JdbcPLUOperation" package="oracle.retail.stores.domain.arts"
+            name="PLULookup">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                 given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSCLUOperation" package="oracle.retail.stores.domain.arts"
+            name="SCLULookup">
+            <COMMENT>
+                This operation retrieves a Store Coupon PLUItem from a jdbc database,
+                 given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemInfo" package="oracle.retail.stores.domain.arts"
+            name="ReadItemInfo">
+            <COMMENT>
+                This operation retrieves a priced item from a jdbc database,
+                 given a string lookup key.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadServiceItems" package="oracle.retail.stores.domain.arts"
+            name="ReadServiceItems">
+            <COMMENT>
+                This operation retrieves all service items from a jdbc database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItem"
+            package="oracle.retail.stores.domain.arts" name="ReadItem">
+            <COMMENT>
+                    This operation reads an Item.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemsByDescription"
+            package="oracle.retail.stores.domain.arts" name="ReadItemsByDescription">
+            <COMMENT>
+                    This operation reads items by description.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemSizes"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadItemSizes">
+            <COMMENT>
+                This operation looks up all the size codes.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCurrencyType"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadCurrencyType">
+            <COMMENT>
+                This operation reads a currency type by country code.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCurrencyTypeList"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadCurrencyTypeList">
+            <COMMENT>
+                This operation reads a currency list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadDepartmentList"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadDepartmentList">
+            <COMMENT>
+                This operation retrieves a department by name or ID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcEmployeeLookupOperation" package="oracle.retail.stores.domain.arts"
+            name="employeelookup">
+            <COMMENT>
+                This operation retrieves an Employee from a jdbc database,
+                 given a string loginID.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSelectEmployees" package="oracle.retail.stores.domain.arts"
+            name="SelectEmployees">
+            <COMMENT>
+                This operation retrieves a list ofEmployees from a jdbc database,
+                 given a first and last name.
+            </COMMENT>
+        </OPERATION>
+		
+        <OPERATION class="JdbcReadNewTaxRules"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadNewTaxRules">
+            <COMMENT>
+                New for 7.0, replaces previous 2 classes (ReadTaxRules, ReadTaxRulesByPostalCode)
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSelectIDDIInfo" package="oracle.retail.stores.domain.arts"
+            name="RegisterMetaDataLookup">
+            <COMMENT>
+                This operation retrieves register metadata from offline database.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSaveIDDIRegisterVersion" package="oracle.retail.stores.domain.arts"
+            name="SaveRegisterIDDIVersion">
+            <COMMENT>
+                This operation saves dataset meta data to offline database
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadAllDataSets" package="oracle.retail.stores.domain.arts" name="ReadAllDataSets">
+            <COMMENT>
+                This operation reads dataset metadata for all datasets
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadTaxHistory"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadTaxHistory">
+            <COMMENT>
+                This operation reads tax history.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadRoles"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadRoles">
+            <COMMENT>
+                This operation performs SELECT statements
+            </COMMENT>
+        </OPERATION>
+
+       <OPERATION class="JdbcReadRoleFunctions"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadRoleFunctions">
+            <COMMENT>
+                This operation performs SELECT statements
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadShippingMethod"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadShippingMethod">
+            <COMMENT>
+                This operation retrieves shipping methods
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcSelectCustomerGroups" name="SelectCustomerGroups" package="oracle.retail.stores.domain.arts">
+            <COMMENT>
+                This operation retrieves the available customer groups.
+            </COMMENT>
+        </OPERATION>
+         <OPERATION class="JdbcReadPricingGroup"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadPricingGroup">
+            <COMMENT>
+                This operation retrieves a PricingGroup.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemStyles"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadItemStyles">
+            <COMMENT>
+                This operation reads item styles
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemTypes"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadItemTypes">
+            <COMMENT>
+                This operation reads item styles
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadItemColors"
+            package="oracle.retail.stores.domain.arts"
+            name="ReadItemColors">
+            <COMMENT>
+                This operation reads item colors
+            </COMMENT>
+        </OPERATION>
+
+        <!-- BEGIN - CodeList Data Operations -->
+        <OPERATION class="JdbcReadCodeList"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadCodeList" >
+            <COMMENT>
+                This operation reads a specific code list.
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCodeListDepartment"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadCodeListDepartment" >
+            <COMMENT>
+                This operation reads a code list for Department
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCodeListShippingMethod"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadCodeListShippingMethod" >
+            <COMMENT>
+                This operation reads a code list for Shipping Method
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCodeListDiscount"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadCodeListDiscount" >
+            <COMMENT>
+                This operation reads a code list for Manual Discounts
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcReadCodeListUnitOfMeasure"
+                   package="oracle.retail.stores.domain.arts"
+                   name="ReadCodeListUnitOfMeasure" >
+            <COMMENT>
+                This operation reads a code list for Unit Of Measure
+            </COMMENT>
+        </OPERATION>
+    <!-- CodeList Data Operations - END -->
+
+    <!-- Start PSI Data operations
+
+       <OPERATION class="JdbcReadStoreInfo"
+           package="oracle.retail.stores.domain.arts"
+           name="ReadStoreInfo">
+           <COMMENT>
+                This operation returns the totals for a store
+           </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcFetchChildrenMerchandiseHierarchyGroupIDs"
+            package="oracle.retail.stores.domain.arts"
+            name="FetchChildrenMerchandiseHierarchyGroupIDs">
+            <COMMENT>
+               Fetches the definitions for the set of child merchandise classification hierarchy
+               group ids that're chilren of a particular group in the MerchandiseHierarchy tables of
+               the ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcFetchMerchandiseHierarchyLevelGroups"
+            package="oracle.retail.stores.domain.arts"
+            name="FetchMerchandiseHierarchyLevelGroups">
+            <COMMENT>
+               Fetches the levles for the given merchandise classification hierarchy from the
+               MerchandiseHierarchy tables in the ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+       <OPERATION class="JdbcFetchAllLevelItems"
+            package="oracle.retail.stores.domain.arts"
+            name="FetchAllLevelItems">
+            <COMMENT>
+               Fetches the ItemDetails for the set of Items that're assigned to the merchandise classification
+               hierarchy group (and it's children groups) from the MerchandiseHierarchy tables in the
+               ARTS data model (Release 4.0).
+            </COMMENT>
+        </OPERATION>
+
+        <OPERATION class="JdbcFetchItemPriceInfo"
+            package="oracle.retail.stores.domain.arts"
+            name="FetchItemPriceInfo">
+            <COMMENT>
+                This operation fetches items actual price and promotion end date
+            </COMMENT>
+        </OPERATION>
+
+    END PSI Data operations -->
+
+    </COMMAND>
+
+    <POOL name="offlinepool"
+            class="DerbyDataConnectionPool"
+            package="oracle.retail.stores.foundation.manager.data"
+            >
+        <POOLPROPERTY propname="numConnections" propvalue="2" proptype="INTEGER"/>
+        <CONNECTION class="JdbcDataConnection"
+            package="oracle.retail.stores.foundation.manager.data"
+            >
+            <CONNECTIONPROPERTY propname="driver" propvalue="org.apache.derby.jdbc.EmbeddedDriver" />
+            <CONNECTIONPROPERTY propname="databaseUrl" propvalue="jdbc:derby:offlinedb" />
+            <CONNECTIONPROPERTY propname="userid" propvalue="OFFLINEDB" />
+            <CONNECTIONPROPERTY propname="password" propvalue="offlineDerbyUser"  />
+            <CONNECTIONPROPERTY propname="exceptionMappingClass" propvalue="oracle.retail.stores.foundation.manager.data.JdbcSQLState"/>
+            <CONNECTIONPROPERTY propname="exceptionMapping" propvalue="classpath://oracle/retail/stores/domain/arts/db2exceptionmap.xml"/>
+        </CONNECTION>
+    </POOL>
+   </DATATECHNICIAN>

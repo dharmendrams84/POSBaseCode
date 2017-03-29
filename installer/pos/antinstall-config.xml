@@ -1,0 +1,1589 @@
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    drbarber  01/30/12 - BUG 13632020: update installer screens to RSA
+ *                         version 3.1
+ *    drbarber  01/09/12 - BUG 13360607: masking first password prompt
+ *    abondala  11/16/11 - updated
+ *    abondala  11/16/11 - take out the ejb prefix from the jndi to make it
+ *                         work for both red and blue stacks and also to make
+ *                         it work for rmi and webservices ctr lookup.
+ *    drbarber  11/15/11 - updating RSA jurisdiction policy files statement
+ *    drbarber  11/15/11 - Cosmetic Installer Changes
+ *    abondala  11/07/11 - updated screen name
+ *    abondala  11/04/11 - updated the screens for RM and POS webservices
+ *    abondala  11/03/11 - udpated
+ *    abondala  11/03/11 - fixed the CTR-RMI lookup issue which is broken due
+ *                         to local queues configuration.
+ *    abondala  10/31/11 - updated after review
+ *    abondala  10/31/11 - centraloffice integration screens are updated to
+ *                         prompt for backoffice server information if BO is
+ *                         integrated with CO where POS post messages on the
+ *                         local queues hosted by BO and these local queues are
+ *                         integrated with the CO queues.
+ *    sgu       10/26/11 - remove jpos jars from installer bundle
+ *    asinton   10/24/11 - removed remaining references to Ingenico and
+ *                         Verifone CPOI dependancies since they are now
+ *                         covered by 3rd party under APF.
+ *    rrkohli   10/07/11 - 'Provide the details for the SSL Key store for
+ *                         secure configuration'
+ *    abondala  10/05/11 - introduced ant task for all string encryption
+ *                         functions which will be used by all the installers
+ *    mszekely  09/30/11 - BUG 13040600: Add debug logging to Installer
+ *    cgreene   09/26/11 - removed option for instlling with Ingenico devices
+ *    ohorne    09/23/11 - SSL PinComm support
+ *    mszekely  09/23/11 - BUG 13019027: POS not using correct JAVA_HOME on
+ *                         blue stack
+ *    ohorne    09/19/11 - decoupled sample data from installers
+ *    mszekely  08/29/11 - BUG 12913160: POS Installer: ensure all password
+ *                         properties have sendToAnt=false in installer UI
+ *    abondala  08/26/11 - enforce the user to enter the value for the port
+ *                         inputs and also validate
+ *    tksharma  08/19/11 - FromAddress Defaul Value changed for GPS compliance
+ *    mszekely  08/17/11 - BUG 12859927: Make logging level configurable via
+ *                         installer
+ *    jswan     08/15/11 - Modified to support gift card reversals.
+ *    tksharma  08/10/11 - changed installerphrase to pos4321
+ *    tksharma  08/09/11 - LAT WEbSerivce URL changes
+ *    drbarber  08/05/11 - BugDB: 12766761 - Update installer version
+ *                         references for Weblogic and RSA Key Manager and
+ *                         default Key Store Provider to RSA
+ *    drbarber  07/21/11 - BUG 12573758: Removing RSA client libraries
+ *    mszekely  07/19/11 - BUG 12760659: Installer Screens need to refer to RSA
+ *                         version 2.7.1
+ *    mszekely  07/12/11 - BUG 12736355: Adding confirm password screens
+ *    ohorne    07/05/11 - jai libs assembled as shared libs
+ *    ohorne    06/30/11 - enable MSR and Bar Code scanner fixes
+ *    abondala  06/29/11 - enable webservices option even if the tx retrieval
+ *                         is local so that transactions can be sent to co
+ *                         through webservice.
+ *    ohorne    06/23/11 - upgrade isd jars from 295 to 303a
+ *    abondala  06/20/11 - disable the jms option for data replication if not
+ *                         integrated with co
+ *    ohorne    06/16/11 - Changed ISD to ACI and PC-EFT to PC-EFT POS
+ *    abondala  06/07/11 - XbranchMerge
+ *                         abondala_send_tx_to_co_through_webservice from main
+ *    ohorne    05/13/11 - APF support for PINComm and Servebase
+ *    mszekely  03/31/11 - BUG 12313860: Re-removing derby screens
+ *    abondala  06/02/11 - email notification if the central office server is
+ *                         not responding
+ *    abondala  05/28/11 - Introduce webservice for sending transactions and
+ *                         ejournals to the centraloffice applicaiton.
+ *    abondala  04/29/11 - introduce webservice for sending transactions and
+ *                         ejournals to the centraloffice application
+ *    mszekely  04/08/11 - XbranchMerge mszekely_11073198-pos from
+ *                         rgbustores_13.4x_generic_branch
+ *    mszekely  03/31/11 - BUG 12313860: Correcting defaults in installer
+ *    djenning  03/29/11 - fix default timestamp for mysql
+ *    djenning  03/23/11 - mysql on POS
+ *    hyin      03/14/11 - remove derby jars page
+ *    rsnayak   03/08/11 - pos lat integration for label batch
+ *    abondala  02/19/11 - prompt for MQ jars required for sedning RM final
+ *                         result messages through MQ API.
+ *    abondala  02/16/11 - updated
+ *    sgu       02/10/11 - update jpos version
+ *    abondala  02/03/11 - updated
+ *    abondala  01/27/11 - Introduce commext for processing final result
+ *                         messages in rm-pos integration
+ *    sgu       02/02/11 - check in after merge
+ *    sgu       02/01/11 - check in after merge
+ *    sgu       01/24/11 - check in all
+ *    abondala  02/01/11 - merge the screens
+ *    jswan     01/31/11 - Rework config issue.
+ *    jswan     01/26/11 - Fix configuration issues to mitigate Secure RMI
+ *                         issues
+ *    hyin      01/25/11 - modification per review comment
+ *    hyin      01/25/11 - add support for digitalpersona fingerprint device
+ *    acadar    01/06/11 - code merged from 13.3
+ *    acadar    01/06/11 - XbranchMerge acadar_bug-10378177 from
+ *                         rgbustores_13.3x_generic_branch
+ *    djenning  12/17/10 - making some ssl regex replaces global and enabling a
+ *                         register keystore when jmsssl is used
+ *    erolsen   12/10/10 - XbranchMerge erolsen_bug-10383487 from
+ *                         rgbustores_13.3x_generic_branch
+ *    abondala  12/07/10 - enable https as default option for webservices
+ *    cgreene   12/07/10 - capitalized Returns Management
+ *    abondala  12/06/10 - XbranchMerge abondala_installer_was_jars_screen from
+ *                         main
+ *    sgu       12/03/10 - check in all
+ *    abondala  12/03/10 - XbranchMerge abondala_fix_installer_rm_integration
+ *                         from main
+ *    abondala  12/03/10 - fix RM integration
+ *    blarsen   11/30/10 - renamed input.wl.jndi.port to input.rm.wl.jndi.port
+ *                         for clarity reasons
+ *    ohorne    11/12/10 - Siebel install properties cleanup
+ *    ohorne    11/10/10 - dynamic creation of input.siebel.webServiceURL
+ *    mszekely  11/11/10 - BUG 10279684: jms password shown in plaintext
+ *    sgu       11/11/10 - add more rsa jars to the installer screen
+ *    mszekely  11/05/10 - BUG 10259941: SSL Trust Store screens for Client and
+ *                         Server both viewable in client install
+ *    mszekely  10/28/10 - BUG 10215052: POS installer failing in GUI mode on
+ *                         red stack with IBM devices selected.
+ *    mszekely  10/21/10 - BUG 10187844: Correcting defaults for JAVA_HOME
+ *    mszekely  10/18/10 - BUG 10198327: Correcting default value
+ *    abondala  10/13/10 - Do not prompt for CO webservices if the transaction
+ *                         retrieval is not CENTRAL.
+ *    mszekely  10/07/10 - BUG 10157827: Changing jre vendor from SUN to ORACLE
+ *    jswan     09/16/10 - Changes made to support clear text RTLog output and
+ *                         export of masked Credit and Debit card numbers.
+ *    abondala  09/13/10 - merge update
+ *    abondala  09/13/10 - updated
+ *    abondala  09/13/10 - Introduced a new screen that will prompt for all the
+ *                         applications that can be integrated.
+ *    asinton   09/10/10 - Add IBM libraries for classpath
+ *    erolsen   09/01/10 - BUG 10075236: correct requirements screen
+ *    asinton   08/30/10 - corrected default locale value when selecting
+ *                         Hungarian from hr_HR to hu_HU
+ *    abondala  08/26/10 - revert back the DB2 version from 9.7.0.2 to 9.7
+ *    djenning  08/24/10 - parameter distribution client-id needs to know
+ *                         whether secure backoffice communications is enabled.
+ *    abondala  08/17/10 - prompt for RM hostname if integrated on blue stack
+ *    abondala  08/17/10 - add username and password which will be used by CO
+ *                         webservices integration
+ *    djenning  08/06/10 - merge and keep password for jms when secure
+ *                         communications & weblogic
+ *    djenning  08/05/10 - security for weblogic POS
+ *    djenning  08/03/10 - update for optional truststore password
+ *    djenning  07/23/10 - pos phase 1
+ *    nkgautam  08/05/10 - changed default value of bill pay enabled to false
+ *    abondala  07/21/10 - fix RM - POS integration errors
+ *    mszekely  07/14/10 - BUG 9889733: Oracle Appserver no longer an option
+ *    npoola    07/09/10 - updated the was jars to 7.0.0.9 version
+ *    abondala  07/09/10 - updated log statements
+ *    mchellap  06/24/10 - Merge checkin
+ *    mchellap  06/18/10 - Added screen for billpay
+ *    mszekely  06/16/10 - BUG 9720757: Adding additional languages
+ *    asinton   06/04/10 - Updated install scripts to capture install phrase.
+ *    npoola    05/28/10 - refreshed to the new label
+ *    npoola    05/27/10 - updated the ibm jars with the 7.0 version from 6.1
+ *    abondala  06/09/10 - updated
+ *    abondala  06/04/10 - updated
+ *    abondala  06/04/10 - siebel authentication types
+ *    npoola    06/03/10 - displayed a new installer screen for the was jar for
+ *                         the webservice integration
+ *    asinton   06/02/10 - put jgl3.1.0.jar back into installer
+ *    abondala  05/27/10 - Installer changes for Siebel integration
+ *    asinton   05/21/10 - Set file permissions to most restrictive possible.
+ *    djenning  05/20/10 - weblogic integration
+ *    djenning  05/17/10 - fix security problem
+ *    asinton   05/13/10 - removed default ISD host name and port as they may
+ *                         mislead or be erroneous.
+ *    mszekely  05/14/10 - BUG 9711403: Blue Stack POS Installer when
+ *                         installing Storeserver prompts for scratchpad user
+ *                         and lists quarrysb as the default database
+ *    cgreene   05/13/10 - convert jgl libraries to java.util
+ *    cgreene   05/05/10 - reorganized order of installer screens
+ *    abondala  04/14/10 - co webservices integration
+ *    abondala  04/14/10 - updated webservices
+ *    cgreene   04/14/10 - rename deployment jars oracle.stores
+ *    nkgautam  03/17/10 - fix to prompt for SIM Webservice user id and
+ *                         password when security is enabled
+ *    abondala  03/02/10 - fix RM - POS integration port
+ *    asinton   01/25/10 - Installer change to prompt for Cherry Keyboard
+ *                         drivers when installing to HP platform.
+ *    djenning  01/14/10 - merge
+ *    djenning  01/12/10 - ssl + mq series topology change
+ *    abondala  01/02/10 - Update Header date
+ *    djenning  12/23/09 - upgrading to latest oracle db
+ *    vikini    12/16/09 - Installer changes for Inventory Inquiry and
+ *                         Serialization
+ *    vikini    12/10/09 - Changes for Itembasket and Inventory Update
+ *                         installer
+ *    vikini    12/10/09 - refreshing to tip
+ *    ohorne    12/09/09 - simplified/clarified Network Printing dialogs
+ *    abondala  12/09/09 - database can be loaded through installer for POS
+ *                         Server. Use this option if POS is not integrated
+ *                         with BO.
+ *    abondala  12/08/09 - load database through the installer
+ *    vikini    12/10/09 - InventoryUpdates installer changes
+ *    acadar    12/08/09 - refreshed to tip
+ *    abondala  12/07/09 - create scratchpad schema with installer if
+ *                         integrated with CentralOffice
+ *    acadar    12/08/09 - changes to the installer and classpath
+ *    acadar    12/02/09 - checked in Owen's changes for the Ipp installer
+ *    ohorne    12/02/09 - added installer support for IPP Printing
+ *    vikini    12/09/09 - Incorporating Code Review Comments
+ *    vikini    12/08/09 - creating new screen for UID Password for SIM WS
+ *    vikini    12/07/09 - installer changes for Inventory Updates
+ *    vikini    11/18/09 - Added RM-POS over SSL changes
+ *    abondala  11/13/09 - upgrade DB2 to 9.7 Version
+ *    tzgarba   11/02/09 - Phase 2 of third party refactor. Refactored
+ *                         remaining libraries and removed 11 more unused
+ *                         libraries.
+ *    mchellap  09/29/09 - BUG#8932741 Enable RM Webservice authentication
+ *    mszekely  07/16/09 - XbranchMerge mszekely_bug-8650269 from
+ *                         rgbustores_13.1x_branch
+ *    mszekely  07/15/09 - XbranchMerge mszekely_bug-8664452 from
+ *                         rgbustores_13.1x_branch
+ *    mszekely  07/14/09 - XbranchMerge mszekely_bug-8669052 from
+ *                         rgbustores_13.1x_branch
+ *    mszekely  06/29/09 - BUG 8642090 input.keystore.class is not being
+ *                         written to ant.install.properties
+ *    mszekely  07/07/09 - BUG 8664452 change Japan to Japanese
+ *    mszekely  07/01/09 - XbranchMerge mszekely_bug-8642090 from main
+ *    asinton   06/17/09 - Removing parameter MerchantNumber.
+ *    mszekely  06/08/09 - Bug 8548763 Replace Keystore with Key Store
+ *    abondala  05/29/09 - removed additional db2 license jar which is not
+ *                         needed with 9.5.3 db2 version.
+ *    mszekely  05/20/09 - BUG 8534776 Installers should reference PA-DSS
+ *                         instead of PABP
+ *    abondala  05/17/09 - updated all database screens
+ *    mszekely  05/05/09 - BUG 8491697 - correct default JMS client-id
+ *    mszekely  04/20/09 - BUG 8440800 classpaths for jpos and cpoi
+ *    mszekely  04/03/09 - BUG 8401760 - remove default java for POS installs
+ *    mszekely  04/02/09 - BUG 8401802 default ports should be dependent on
+ *                         stack
+ *    mszekely  03/30/09 - BUG 8394390 - populated default hostname
+ *    mszekely  03/30/09 - BUG 8370520 correct default URL
+ *    mszekely  02/25/09 - BUG 8287431 support for 42 char width printers
+ *    mchellap  02/20/09 - BUG 8274691 Updates for IDDI enhancement
+ *    mszekely  02/11/09 - BUG 8241193 updates for POS Item Basket
+ *    mszekely  02/10/09 - BUG 8235089 changing to WebSphere MQ
+ *    abondala  02/02/09 - updated files related to hashing algorithm
+ *    mszekely  01/29/09 - BUG 7898172 updating installer screens
+ *    mszekely  01/28/09 - BUG 8203151 update DB2 version
+ *    mszekely  01/23/09 - BUG 7639984 Inventory Reservation support
+ *    mszekely  12/19/08 - BUG 7484178 - remove parameter distribution
+ *    mszekely  12/12/08 - BUG 7589815 eReceipt is client only
+ *    mszekely  12/12/08 - BUG 7589815 eReceipt is client only
+ *    mszekely  12/11/08 - BUG 7544348 POS-RM installer changes
+ *    mszekely  12/11/08 - BUG 7544348 POS-RM installer changes
+ *    mszekely  12/10/08 - BUG 7544348 POS to RM
+ *    mszekely  12/10/08 - BUG 7544348 POS to RM
+ *    mszekely  12/09/08 - 7544348 POS to RM integration
+ *    mszekely  12/04/08 - BUG 7614042 better support for keystore OTHER
+ *    mszekely  12/03/08 - BUG 7544348 - RM to POS
+ *    mszekely  12/01/08 - BUG 7589815 - eReceipts
+ *    mszekely  12/01/08 - BUG 7532869
+ *    mszekely  11/20/08 - BUG 7532869 Show all locale option if all languages
+ *                         selected
+ *    mszekely  11/12/08 - BUG 7555392 RSA for installers
+ *    mszekely  11/11/08 - BUG 7555392 RSA for installers
+ *    mszekely  11/05/08 - BUG 7503801 updates for PosPal
+ *
+ * ===========================================================================
+ */
+-->
+
+<installer ui="swing,text"
+           verbose="true"
+           lookAndFeel="org.tp23.jgoodies.plaf.plastic.PlasticXPLookAndFeel"
+           name="POS Installer - Oracle Retail"
+           windowIcon="/oracle/retail/oracle-window-icon.png"
+           defaultImageResource="/oracle/retail/headerBg.jpg"
+           minJavaVersion="1.5"
+           antialiased="false"
+           wide="510:285"
+           high="600"
+           loadDefaults="false"
+           version="1.0">
+
+           <!-- wide="450:275" -->
+
+    <page type="input" name="Introduction" displayText="Oracle Retail Point-Of-Service" overflow="true">
+        <comment displayText="This will install the Oracle Retail Point-Of-Service application."/>
+        <comment explanatoryText="The Point of Service Installation Guide provides details on every value requested by &#x000A; this installer. Please read it before proceeding." />
+        <comment displayText=" " />
+        <comment displayText="Click the 'Next' button to proceed to the next screen."/>
+        <pause displayText="Press enter to continue" />
+    </page>
+
+    <page type="input" name="PreviousPOSInstall" displayText="Previous POS Install" overflow="true">
+        <comment displayText=" "/>
+        <comment displayText="" explanatoryText="If you have a previous version of POS installed, please uninstall it before you proceed." />
+        <pause displayText="Press enter to continue" />
+    </page>
+
+    <page type="license" name="LicenseAgreement" displayText="License Agreement" resource="/CTC Agreement.txt" usePaging="true">
+    </page>
+
+<!-- GENERIC PANEL -->
+    <page type="input" name="SupportedLanguages" displayText="Supported Languages">
+        <comment displayText="Please enter the supported languages" />
+        <checkbox displayText="English" property="input.en" defaultValue="true" />
+        <checkbox displayText="German" property="input.de" defaultValue="false" />
+        <checkbox displayText="French" property="input.fr" defaultValue="false" />
+        <checkbox displayText="Spanish" property="input.es" defaultValue="false" />
+        <checkbox displayText="Japanese" property="input.ja" defaultValue="false" />
+        <checkbox displayText="Korean" property="input.ko" defaultValue="false" />
+        <checkbox displayText="Russian" property="input.ru" defaultValue="false" />
+        <checkbox displayText="Chinese" property="input.zh" defaultValue="false" />
+        <checkbox displayText="Chinese TW" property="input.zh_TW" defaultValue="false" />
+        <checkbox displayText="Portuguese" property="input.pt" defaultValue="false" />
+        <checkbox displayText="Italian" property="input.it" defaultValue="false" />
+        <checkbox displayText="Turkish" property="input.tr" defaultValue="false" />
+        <checkbox displayText="Hungarian" property="input.hu" defaultValue="false" />
+        <checkbox displayText="Dutch" property="input.nl" defaultValue="false" />
+        <checkbox displayText="Greek" property="input.el" defaultValue="false" />
+        <checkbox displayText="Polish" property="input.pl" defaultValue="false" />
+        <checkbox displayText="Swedish" property="input.sv" defaultValue="false" />
+        <checkbox displayText="Croatian" property="input.hr" defaultValue="false" />
+    </page>
+
+    <!-- GENERIC PANEL -->
+    <page type="input" name="DefaultLocale" displayText="Enter Default Locale">
+        <select property="input.locale.default" defaultValue="en_US" displayText="">
+          <option text="en_US" value="en_US" ifProperty="${input.en}==true"/>
+          <option text="de_DE" value="de_DE" ifProperty="${input.de}==true" />
+          <option text="fr_FR" value="fr_FR" ifProperty="${input.fr}==true" />
+          <option text="es_ES" value="es_ES" ifProperty="${input.es}==true" />
+          <option text="ja_JP" value="ja_JP" ifProperty="${input.ja}==true" />
+          <option text="ko_KR" value="ko_KR" ifProperty="${input.ko}==true" />
+          <option text="ru_RU" value="ru_RU" ifProperty="${input.ru}==true" />
+          <option text="zh_CN" value="zh_CN" ifProperty="${input.zh}==true" />
+          <option text="zh_TW" value="zh_TW" ifProperty="${input.zh_TW}==true" />
+          <option text="pt_BR" value="pt_BR" ifProperty="${input.pt}==true" />
+          <option text="it_IT" value="it_IT" ifProperty="${input.it}==true" />
+          <option text="tr_TR" value="tr_TR" ifProperty="${input.tr}==true" />
+          <option text="hu_HU" value="hu_HU" ifProperty="${input.hu}==true" />
+          <option text="nl_NL" value="nl_NL" ifProperty="${input.nl}==true" />
+          <option text="el_GR" value="el_GR" ifProperty="${input.el}==true" />
+          <option text="pl_PL" value="pl_PL" ifProperty="${input.pl}==true" />
+          <option text="sv_SE" value="sv_SE" ifProperty="${input.sv}==true" />
+          <option text="hr_HR" value="hr_HR" ifProperty="${input.hr}==true" />
+        </select>
+    </page>
+
+    <page type="input" name="TierType" displayText="Tier Type">
+        <comment displayText="Please choose the tier type for this installation:" />
+        <comment displayText=" "/>
+        <select property="input.install.type" displayText="" defaultValue="CLIENT">
+            <option text="N-Tier Client" value="CLIENT"/>
+            <option text="N-Tier Server" value="SERVER"/>
+        </select>
+    </page>
+
+    <!-- Application Owner PANEL  -->
+    <!-- env.IS_UNIX is set in the install.sh -->
+    <page ifProperty="${env.IS_UNIX}=true" type="input" name="ApplicationOwner" displayText="Application Owner">
+        <comment displayText="Please choose the owner for this installation:" />
+        <comment displayText=" "/>
+        <text property="input.application.owner" displayText="Owner" defaultValue="${env.USER}"/>
+    </page>
+
+    <page type="input" name="InstallationLocation" displayText="Installation Location" postDisplayTarget="antinstaller-get-default-jre-location">
+        <comment displayText="Please choose the installation directory:" />
+        <comment displayText=" "/>
+        <conditional ifProperty="${input.install.type}=SERVER">
+            <hidden property="internal.install.directory.windows-default" value="C:\OracleRetailStore\Server"/>
+            <hidden property="internal.install.directory.unix-default" value="/OracleRetailStore/Server"/>
+        </conditional>
+        <conditional ifProperty="${input.install.type}=CLIENT">
+            <hidden property="internal.install.directory.windows-default" value="C:\OracleRetailStore\Client"/>
+            <hidden property="internal.install.directory.unix-default" value="/OracleRetailStore/Client"/>
+        </conditional>
+        <directory property="input.install.directory" displayText="Install Directory"
+            defaultValue="${internal.install.directory.unix-default}"
+            defaultValueWin="${internal.install.directory.windows-default}"
+            create="true"
+            checkExists="true"
+            noPrompt="true"/>
+    </page>
+
+    <page type="input" name="JRELocation" displayText="JRE Location">
+        <comment displayText="Please choose the JRE 1.6.x installation directory:" />
+        <comment displayText="* Note * JRE 1.6.x is required." />
+        <comment displayText=" " />
+       <app-root property="input.jre.directory" displayText="JRE Location"
+            defaultValue="${internal.jre.location-default}"
+            defaultValueWin="${internal.jre.location-default}"/>
+    </page>
+
+    <page type="input" name="JREVendor" displayText="JRE Vendor">
+        <comment displayText="Please select the JRE 1.6.x vendor:" />
+        <comment displayText="" />
+        <select property="input.jre.vendor" displayText="" defaultValue="ORACLE">
+            <option text="Oracle" value="ORACLE"/>
+            <option text="IBM" value="IBM"/>
+        </select>
+    </page>
+
+    <page type="input" name="StoreServerDetails" displayText="Store Server Details">
+        <comment displayText="Please enter the hostname of the computer running the Store Server" />
+        <text property="input.store.server.hostname" displayText="Hostname" defaultValue="${internal.input.store.server.default-hostname}"/>
+        <comment displayText=" "/>
+        <comment displayText="What port do you want to use for the Store Server? Default is 1300" />
+        <validated property="input.store.server.port" displayText="Port" defaultValue="1300" regex="^[0-9]{1,}$"/>
+    </page>
+
+    <page type="input" name="StoreID" displayText="Store ID">
+        <comment displayText="" explanatoryText="Please enter the 5 digit store id. Pad with leading zeros if necessary. " />
+        <validated property="input.configured.store.id" defaultValue="04241" displayText="Store ID"
+               regex="^[0-9]{5}$" />
+    </page>
+
+    <page ifProperty="${input.install.type}=CLIENT" type="input" name="RegisterNumber" displayText="Register Number">
+        <comment displayText="Please enter your register number." />
+        <comment displayText="The default register number is 129." />
+        <comment displayText=" " />
+        <validated property="input.register.number" displayText="Register Number" defaultValue="129" regex="^[0-9]{3}$"/>
+    </page>
+
+    <!--  input.appserver.type is set to STANDALONE which will be changed later based on the selection.-->
+    <page type="input" name="Integrate Applications" displayText="Integrate Applications">
+        <comment  displayText="Please select the applications to integrate with Oracle Point-Of-Service:" />
+        <comment displayText=" " />
+        <checkbox displayText="Central Office/Back Office" property="input.bo.co.integrate" defaultValue="false" />
+        <checkbox displayText="Store Inventory Management" property="input.enable.orsim.integration" defaultValue="false" />
+        <checkbox displayText="Siebel" property="input.enable.siebel.integration" defaultValue="false" />
+        <checkbox displayText="Returns Management" property="input.enable.rm" defaultValue="false" />
+        <checkbox displayText="Bill Pay" property="input.enable.billpay" defaultValue="false" />
+        <checkbox displayText="Labels and Tags" property="input.enable.lat.integration" defaultValue="false" />
+        <hidden   property="input.appserver.type" value="STANDALONE" />
+        <hidden   property="input.message.rm" value="" />
+    </page>
+
+    <!-- GENERIC PANEL  -->
+    <page ifProperty="(${input.enable.rm}=true) AND (${input.install.type}=SERVER)"  type="input" name="OracleRMmessaging" displayText="Oracle Returns Management messaging">
+        <comment displayText="" explanatoryText="Select method used to send Return Result messages to Oracle RM" />
+        <select property="input.message.rm" defaultValue=""
+                displayText="Select result messaging option for Oracle RM">
+            <option text="JMS Queue" value="JMS" />
+            <option text="Web Service" value="WEBSERVICE" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.message.rm}=JMS) OR (${input.bo.co.integrate}=true)" type="input" name="AppServerType" displayText="Application Server Type">
+        <comment displayText="Please select the application server you would like to use:" />
+        <comment displayText=" " />
+        <select property="input.appserver.type" displayText="" defaultValue="">
+            <option text="WebLogic Application Server" value="WL"/>
+            <option text="Websphere Application Server" value="WAS"/>
+        </select>
+    </page>
+
+    <!-- Start screens that will prompt for was jars if either BO/CO integrated or RM integrated with JMS option -->
+    <page ifProperty="(${input.appserver.type}=WAS)" type="input" name="WASJars" displayText="Websphere Application Server: Third Party Jars">
+        <comment displayText="Please select the correct jars location:" />
+        <comment displayText=" " />
+
+        <directory property="input.was.jars.dir.location" displayText="Required was jars location"
+            defaultValue="/opt/was-jars/"
+            defaultValueWin="C:\was-jars\"
+            checkExists="true"/>
+        <comment displayText=" " />
+        <directory property="input.mq.jars.dir.location" displayText="Required mq jars location"
+            defaultValue="/opt/mq-jars/"
+            defaultValueWin="C:\mq-jars\"
+            checkExists="true"/>
+
+    </page>
+    <!-- End Screens that will prompt for was jars if either BO/CO integrated or RM integrated with JMS option -->
+
+    <page ifProperty="${input.install.type}=SERVER" type="input" name="DatabaseType" displayText="Database Type">
+        <comment displayText="Please select the database you would like to use:" />
+        <comment displayText=" " />
+        <select property="input.db.type" displayText="" defaultValue="oracle">
+            <option text="Oracle 11gR2" value="oracle"/>
+            <option text="DB2 v9.7" value="ibm"/>
+        </select>
+    </page>
+
+    <page ifProperty="${input.install.type}=SERVER" type="input" name="DBOwnerDetails" displayText="Database Owner">
+        <comment displayText="Provide the details for the POS schema user" />
+        <comment displayText="that will create the schema objects." />
+        <comment displayText=" " />
+        <text property="input.db.owner.username" defaultValue="" displayText="Schema Username" />
+        <password property="input.db.owner.password" defaultValue="" displayText="Schema Password" textMask="true" sendToAnt="false" regex=".+" />
+        <password-confirm property="input.db.owner.password.pw" origField="input.db.owner.password" displayText="Confirm password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <comment displayText=" " />
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.db.type}=oracle)" type="input" name="DatabaseConfigOracle" displayText="Database User">
+        <comment displayText="Provide the details for the POS schema user" />
+        <comment displayText=" " />
+        <directory property="input.db.jdbc.driver.dir" displayText="JDBC Driver Path"
+            defaultValue="/opt/oracle/"
+            defaultValueWin="c:\oracle\"
+            checkExists="true"/>
+        <text property="input.db.jdbc.driver.class" displayText="JDBC Driver Class" defaultValue="oracle.jdbc.driver.OracleDriver"/>
+        <text property="input.db.jdbc.url" displayText="JDBC URL" defaultValue="jdbc:oracle:thin:@DB_HOST_NAME:1521:DB_NAME"/>
+        <text property="input.db.jdbc.jar" displayText="JDBC JAR" defaultValue="ojdbc5.jar"/>
+        <text property="input.db.username" displayText="Data Source Username" defaultValue=""/>
+        <password property="input.db.password" displayText="Data Source Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.db.password.pw" origField="input.db.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false" regex=".+"/>
+        <comment displayText=" " explanatoryText=" "/>
+        <hidden property="input.db.product" value="jdbc" />
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.db.type}=ibm)" type="input" name="DatabaseConfigDB2" displayText="Data Source User">
+        <comment displayText="Provide the details for the POS schema user" />
+        <comment displayText=" " />
+        <directory property="input.db.jdbc.driver.dir" displayText="JDBC Driver Path"
+            defaultValue="/opt/IBM/SQLLIB/java/"
+            defaultValueWin="C:\Program Files\IBM\SQLLIB\java\"
+            checkExists="true"/>
+        <text property="input.db.jdbc.driver.class" displayText="JDBC Driver Class" defaultValue="com.ibm.db2.jcc.DB2Driver"/>
+        <text property="input.db.jdbc.url" displayText="JDBC URL" defaultValue="jdbc:db2://DB_HOST_NAME:50001/DB_NAME"/>
+        <text property="input.db.jdbc.jar" displayText="JDBC JAR" defaultValue="db2jcc.jar"/>
+        <text property="input.db.jdbc.jar2" displayText="JDBC JAR 2" defaultValue="db2jcc_license_cu.jar"/>
+        <text property="input.db.username" displayText="Data Source Username" defaultValue=""/>
+        <password property="input.db.password" displayText="Data Source Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.db.password.pw" origField="input.db.password" displayText="Confirm password"  defaultValue="" textMask="true"   sendToAnt="false" regex=".+"/>
+        <hidden property="input.db.product" value="db2" />
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER)" type="input" name="InstallDB" displayText="Install Database Option">
+        <comment displayText="" explanatoryText="The database schema must be created and populated before the POS application is operational. If you are creating database through BackOffice application, skip this option" />
+        <select property="input.install.database" defaultValue="no" displayText="Select database installation option:" explanatoryText="">
+            <option text="Skip schema creation and data loading" value="no" />
+            <option text="Create schema with minimum dataset" value="minimum" />
+            <option text="Create schema with sample dataset" value="sample" />
+        </select>
+    </page>
+
+    <!-- identify sample dataset file -->
+    <page ifProperty="${input.install.database}=sample"
+          type="input" name="sampleDBlocation" displayText="Sample Dataset">
+        <comment displayText="" explanatoryText="The Sample Dataset is available on the Oracle Software Delivery Cloud" />
+        <file property="input.dataset.sample.file"
+              defaultValue="/oracle/retail/samples/sample-db.zip"
+              defaultValueWin="C:\oracle\retail\samples\sample-db.zip"
+              checkExists="true"
+              displayText="Sample dataset file" />
+    </page>
+
+    <!-- GENERIC PANEL -->
+    <page ifProperty="${input.install.type}=SERVER" type="input" name="Secure Options" displayText="Secure Options">
+        <comment  displayText="Please select the secure options from the below list:" />
+        <comment displayText=" " />
+        <checkbox displayText="Enable Secure JDBC" property="input.secure.jdbc" defaultValue="true" />
+        <checkbox displayText="Enable Secure RMI"  property="input.server.secure.rmi" defaultValue="true" />
+        <comment displayText="" explanatoryText=" "/>
+    </page>
+
+    <!-- ORACLE PANEL -->
+    <page ifProperty="(${input.secure.jdbc}=true) AND (${input.db.type}=oracle)" type="input" name="DataBaseSecureDetails" displayText="Data Source SSL Configuration">
+        <comment displayText="Provide the ssl port for the POS data source user" />
+        <validated  property="input.datasource.port.secure" defaultValue="2484" displayText="Data Source SSL Port" regex="^[0-9]{1,}$" />
+        <hidden property="input.oc4j.type" value="enterprise" />
+    </page>
+
+    <!-- DB2 PANEL -->
+    <page ifProperty="(${input.secure.jdbc}=true) AND (${input.db.type}=ibm)" type="input" name="DataBaseSecureDetails" displayText="Data Source SSL Configuration">
+        <comment displayText="Provide the ssl port for the POS data source user" />
+        <validated property="input.datasource.port.secure" defaultValue="20397" displayText="Data Source SSL Port" regex="^[0-9]{1,}$" />
+        <hidden property="input.oc4j.type" value="enterprise" />
+    </page>
+
+    <page type="input" name="TXRetrievalLocation" displayText="Transaction Retrieval Location"
+          ifProperty="${input.bo.co.integrate}=true">
+        <comment displayText="Please select location for Transaction Retrieval:" />
+        <comment displayText="" />
+        <select property="input.transaction.retrieval.location" displayText="" defaultValue="LOCAL">
+            <option text="Local" value="LOCAL"/>
+            <option text="Central" value="CENTRAL"/>
+            <option text="Central, Local Failover" value="CENTRAL_LOCAL_FAILOVER"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.db.type}=oracle) AND (${input.transaction.retrieval.location}^=CENTRAL)"
+          type="input" name="ScratchpadDatabaseInformationOracle" displayText="Scratchpad Database Information">
+        <comment displayText="Enter the requested information regarding the Scratchpad Database:" />
+        <comment displayText=" "/>
+        <directory property="input.scratchpad.db.jdbc.driver.dir" displayText="JDBC Driver Path"
+            defaultValue="/opt/oracle/"
+            defaultValueWin="c:\oracle\"
+            checkExists="true"/>
+        <text property="input.scratchpad.db.jdbc.driver.class" displayText="JDBC Driver Class" defaultValue="oracle.jdbc.driver.OracleDriver"/>
+        <text property="input.scratchpad.db.jdbc.url" displayText="JDBC URL" defaultValue="jdbc:oracle:thin:@DB_HOST_NAME:1521:DB_NAME"/>
+        <text property="input.scratchpad.db.jdbc.jar" displayText="JDBC JAR" defaultValue="ojdbc5.jar"/>
+        <text property="input.scratchpad.db.username" displayText="Schema Username" defaultValue=""/>
+        <password property="input.scratchpad.db.password" displayText="Schema Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.scratchpad.db.password.pw" origField="input.scratchpad.db.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.db.type}=mysql) AND (${input.transaction.retrieval.location}^=CENTRAL)"
+          type="input" name="ScratchpadDatabaseInformationOracle" displayText="Scratchpad Database Information">
+        <comment displayText="Enter the requested information regarding the Scratchpad Database:" />
+        <comment displayText=" "/>
+        <directory property="input.scratchpad.db.jdbc.driver.dir" displayText="JDBC Driver Path"
+            defaultValue="/opt/mysql/"
+            defaultValueWin="c:\mysql\"
+            checkExists="true"/>
+        <text property="input.scratchpad.db.jdbc.driver.class" displayText="JDBC Driver Class" defaultValue="com.mysql.jdbc.Driver"/>
+        <text property="input.scratchpad.db.jdbc.url" displayText="JDBC URL" defaultValue="jdbc:mysql://DB_HOST_NAME:3306/DB_NAME"/>
+        <text property="input.scratchpad.db.jdbc.jar" displayText="JDBC JAR" defaultValue="mysql-connector-java-5.1.14-bin.jar"/>
+        <text property="input.scratchpad.db.username" displayText="Schema Username" defaultValue=""/>
+        <password property="input.scratchpad.db.password" displayText="Schema Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.scratchpad.db.password.pw" origField="input.scratchpad.db.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+        <comment displayText="" explanatoryText=" "/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.db.type}=ibm) AND (${input.transaction.retrieval.location}^=CENTRAL)"
+           type="input" name="ScratchpadDatabaseInformationDB2" displayText="Scratchpad Database Information">
+        <comment displayText="Enter the requested information regarding the Scratchpad Database:" />
+        <comment displayText="" />
+        <directory property="input.scratchpad.db.jdbc.driver.dir" displayText="JDBC Driver Path"
+            defaultValue="/opt/IBM/SQLLIB/java/"
+            defaultValueWin="C:\Program Files\IBM\SQLLIB\java\"
+            checkExists="true"/>
+        <text property="input.scratchpad.db.jdbc.driver.class" displayText="JDBC Driver Class" defaultValue="com.ibm.db2.jcc.DB2Driver"/>
+        <text property="input.scratchpad.db.jdbc.url" displayText="JDBC URL" defaultValue="jdbc:db2://DB_HOST_NAME:50001/DB_NAME"/>
+        <text property="input.scratchpad.db.jdbc.jar" displayText="JDBC JAR" defaultValue="db2jcc.jar"/>
+        <text property="input.scratchpad.db.jdbc.jar2" displayText="JDBC JAR 2" defaultValue="db2jcc_license_cu.jar"/>
+        <text property="input.scratchpad.db.username" displayText="Schema Username" defaultValue=""/>
+        <password property="input.scratchpad.db.password" displayText="Schema Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.scratchpad.db.password.pw" origField="input.scratchpad.db.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+        <comment displayText="" explanatoryText=" "/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.transaction.retrieval.location}^=CENTRAL)"
+           type="input" name="Install Scratchpad Database" displayText="Scratchpad Database Install Options">
+        <comment displayText="" explanatoryText="The scratchpad database schema must be created prior to launching the POS application so that the transactions can be retrieved from CentralOffice." />
+        <comment displayText="" explanatoryText="If No is selected, the installer will assume that the schema already exists and will not attempt to recreate the database schema." />
+        <select property="input.install.scratchpad.database" defaultValue="true" displayText="Create the scratchpad database schema&#63;"
+                explanatoryText="">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT)" type="input" name="EnableClientSecureRMI" displayText="Enable Client Secure RMI">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that secure RMI will be used.  A value of &quot;No&quot; indicates that secure RMI will not be used." />
+        <select property="input.client.secure.rmi" defaultValue="true"
+                displayText="Enable Secure RMI&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.db.type}=ibm) AND (${input.transaction.retrieval.location}=CENTRAL)"
+        type="input" name="RMITimeout" displayText="RMI Timeout">
+        <comment displayText="Should RMI calls be subject to timeout? Typically set to yes when CTR is enabled." />
+        <comment displayText="" />
+        <select property="input.rmi.timeout.enabled" displayText="" defaultValue="false">
+            <option text="Yes" value="true"/>
+            <option text="No" value="false"/>
+        </select>
+    </page>
+
+    <page ifProperty="${input.install.type}=SERVER" type="input" name="POSAdminUser" displayText="POS Administrator User">
+        <comment displayText="Enter the username and password for the POS administrator account."/>
+        <comment displayText="The password must satisfy the following criteria:"/>
+        <comment displayText="    - Contain at least one alphabetic character" />
+        <comment displayText="    - Contain at least one numeric character" />
+        <comment displayText="    - At least seven characters in length" />
+        <comment displayText="" />
+
+        <text property="input.app.admin.username" displayText="POS Administrator Username" defaultValue="pos"/>
+
+        <!-- If we use ext-validated field, we cannot mask the password so we now use a password field with a regex -->
+        <!-- <ext-validated property="input.app.admin.password" displayText="POS Administrator Password" defaultValue=""
+            validationClass="oracle.retail.stores.build.installer.validation.StoresUserPasswordValidator" textMask="true"/> -->
+
+        <password property="input.app.admin.password" defaultValue="" displayText="POS Administrator Password" textMask="true" sendToAnt="false"
+            regex="(?=.*[a-zA-z])(?=.*[0-9]).{7,}"/>
+        <password-confirm property="input.app.admin.password.pw" origField="input.app.admin.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=SERVER)" type="input" name="EnableWebservices" displayText="Enable Transaction and Customer retrieval Web Services">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that Central Office Web Services will be used for Transaction and Customer retrievals.  A value of &quot;No&quot; indicates that ORCO Web Services will not be used and instead ORPOS makes an RMI call which will not support Clustering." />
+        <select property="input.enable.co.webservices" defaultValue="true"
+                displayText="Enable Central Office Web Services?">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.enable.co.webservices}=true)" type="input" name="POS-COWebServiceDetails" displayText="POS-CO WebService Details">
+        <comment displayText="" />
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates webservice communication will happen over HTTPS.  A value of &quot;No&quot; indicates webservice communication will happen over HTTP" />
+        <text property="input.co.webservices.hostname" displayText="CentralOffice Server Hostname" defaultValue=""/>
+        <text property="input.posco.webservices.username" displayText="User Id authorized to access webservice" defaultValue="" />
+        <password property="input.posco.webservices.password" displayText="Password of authorized user" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.posco.webservices.password.pw" origField="input.posco.webservices.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+        <select property="input.posco.protocol" defaultValue="https"
+                displayText="Enable Secure Communication &#63;">
+            <option text="Yes" value="https" />
+            <option text="No" value="http" />
+        </select>
+        <comment displayText="" explanatoryText="Please enter the port for the selected protocol" />
+        <validated property="input.posco.webservices.port" displayText="CentralOffice Webservice port" defaultValue="" regex="^[0-9]{1,}$"/>
+    </page>
+
+    <page type="input" name="ServerJournalConfiguration" displayText="Server Journal Configuration"
+          ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=SERVER) AND (${input.enable.co.webservices}=true)">
+        <comment displayText="The following journaling options are available:" />
+        <comment displayText=" " />
+        <comment displayText="Journal Entries written to JMS Queue or Webservice will be sent to the Corporate Office." />
+        <comment displayText=" " />
+        <select property="input.server.co.journal.options" displayText="EJournal options:" defaultValue="WEBSERVICE">
+            <option text="Write Journal Entries to JMS Queue" value="JMS"/>
+            <option text="Write Journal Entries to a Webservice" value="WEBSERVICE"/>
+            <option text="Do not Write Journal Entries to CentralOffice" value="NONE"/>
+        </select>
+        <comment displayText=" " />
+    </page>
+
+    <page type="input" name="ServerJournalConfiguration" displayText="Server Journal Configuration"
+          ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=SERVER) AND (${input.enable.co.webservices}=false)">
+        <comment displayText="The following journaling options are available:" />
+        <comment displayText=" " />
+        <comment displayText="Journal Entries written to JMS Queue or Webservice will be sent to the Corporate Office." />
+        <comment displayText=" " />
+        <select property="input.server.co.journal.options" displayText="EJournal options:" defaultValue="JMS">
+            <option text="Write Journal Entries to JMS Queue" value="JMS"/>
+            <option text="Do not Write Journal Entries to CentralOffice" value="NONE"/>
+        </select>
+        <comment displayText=" " />
+    </page>
+
+    <!-- WAS PANEL  -->
+    <page ifProperty="${input.appserver.type}=WAS" type="input" name="SelectJMSSSLLevel" displayText="Select JMS SSL Level">
+        <comment displayText="" explanatoryText="Select JMS SSL Level&#63;" />
+        <select property="input.jms.ssl.level" defaultValue="US"
+                displayText="">
+            <option text="US Strength(TRIPLE_DES_SHA_US)" value="US" />
+            <option text="Export Strength(RC4_MD5_EXPORT)" value="EXPORT" />
+            <option text="No SSL Support" value="NOSSL" />
+        </select>
+        <comment displayText="" />
+    </page>
+
+    <page ifProperty="(${input.enable.orsim.integration}=true) AND (${input.install.type}=CLIENT)" type="input" name="ORSIM Integration" displayText="ORSIM Integration">
+        <comment displayText="Please select the required SIM integration features:" />
+        <checkbox displayText="Inventory Inquiry" property="input.inventory.inquiry" defaultValue="false" />
+        <checkbox displayText="Item Basket" property="input.item.basket" defaultValue="false" />
+        <checkbox displayText="Serialization" property="input.serialization" defaultValue="false" />
+    </page>
+
+    <page ifProperty="(${input.enable.orsim.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="ORSIM Webservice URL" displayText="Enter ORSIM Webservice URL" >
+        <validated property="input.ORSIMWebServiceURL" displayText="Enter the Oracle Retail SIM Webservice URL" defaultValue="http://locahost..." regex="http://.*" />
+
+        <comment displayText="WebService Password Enabled?" explanatoryText="A value of &quot;Yes&quot; indicates that Webservice is Password enabled." />
+        <select property="input.is.ws.passwd.enabled" defaultValue="false" displayText="">
+           <option text="Yes" value="true" />
+           <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.is.ws.passwd.enabled}=true)" type="input" name="ORSIM Integration Properties" displayText="ORSIM Integration Properties">
+        <comment displayText="Enter User ID and Password for SIM Webservice" />
+        <comment displayText="(leave blank if Webservice is not Password enabled)" />
+        <text property="input.PSI.webservice.uid" displayText="Sim Webservice User ID" defaultValue=""/>
+        <password property="input.PSI.webservice.passwd" displayText="Webservice Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.PSI.webservice.passwd.pw" origField="input.PSI.webservice.passwd" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <!-- BUG 7639984 Inventory Reservation -->
+    <page ifProperty="(${input.enable.orsim.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="ORSIM Integration" displayText="ORSIM Integration">
+        <comment displayText="Please select the required SIM integration features:" />
+        <checkbox displayText="Inventory Inquiry" property="input.inventory.inquiry" defaultValue="false" />
+        <checkbox displayText="Inventory Reservation" property="input.inventory.reservation" defaultValue="false" />
+        <checkbox displayText="Item Basket" property="input.item.basket" defaultValue="false" />
+        <checkbox displayText="Serialization" property="input.serialization" defaultValue="false" />
+        <checkbox displayText="Inventory Update" property="input.inventory.update" defaultValue="false" />
+    </page>
+
+    <!--  Siebel Configuration -->
+    <page ifProperty="(${input.enable.siebel.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="EnableSiebelWebServiceOverSSL" displayText="Enable POS-Siebel Webservice access over SSL">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates webservice communication will happen over HTTPS.  A value of &quot;No&quot; indicates webservice communication will happen over HTTP" />
+        <select property="input.possiebel.protocol" defaultValue="https"
+                displayText="Enable Secure Communication &#63;">
+            <option text="Yes" value="https" />
+            <option text="No" value="http" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.enable.siebel.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="SiebelWebServiceAuthenticationType" displayText="POS-Siebel Webservice Authentication Type">
+        <comment displayText="" explanatoryText="A value of &quot;Siebel&quot; indicates using siebel specific authentication.  A value of &quot;WS-Security&quot; indicates sending and receiving of user credentials in a standards-compliant manner." />
+        <select property="input.possiebel.authentication.type" defaultValue="Siebel"
+                displayText="Authentication Type &#63;">
+            <option text="Siebel" value="Siebel" />
+            <option text="WS-Security" value="WS-Security" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.enable.siebel.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="OracleSiebelconfig" displayText="POS - Siebel configuration">
+        <conditional ifProperty="${input.possiebel.authentication.type}==Siebel">
+                <hidden property="input.siebel.om" value="eai_enu"/>
+            </conditional>
+        <conditional ifProperty="${input.possiebel.authentication.type}==WS-Security">
+                <hidden property="input.siebel.om" value="eai_anon_enu"/>
+            </conditional>
+        <conditional ifProperty="${input.possiebel.protocol}==https">
+                <hidden property="input.siebel.om" value="eai_secure_enu"/>
+        </conditional>
+        <comment displayText="" explanatoryText="Please enter configuration details for Siebel" />
+        <text property="input.siebel.webServiceURL" displayText="Enter the Siebel Webservice URL" defaultValue="${input.possiebel.protocol}://HOST[:PORT]/${input.siebel.om}/start.swe?SWEExtSource=SecureWebService&amp;SWEExtCmd=Execute&amp;WSSOAP=1" />
+        <comment displayText=" " explanatoryText=" "/>
+        <text property="input.siebel.myStoreUser" displayText="User Id authorized to access my store" defaultValue="" />
+        <password property="input.siebel.myStorePassword" displayText="Password of my store authorized user"  defaultValue="" textMask="true" sendToAnt="false"  regex=".+"/>
+        <password-confirm property="input.siebel.myStorePassword.pw" origField="input.siebel.myStorePassword" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+           <comment displayText=" " explanatoryText=" "/>
+        <text property="input.siebel.globalUser" displayText="User Id authorized to access all stores" defaultValue="" />
+        <password property="input.siebel.globalPassword" displayText="Password of all stores authorized user"  defaultValue="" textMask="true" sendToAnt="false"  regex=".+"/>
+        <password-confirm property="input.siebel.globalPassword.pw" origField="input.siebel.globalPassword" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+    <!--  End Siebel Configuration -->
+
+    <!-- Lat Webservice Configuration -->
+    <page ifProperty="(${input.enable.lat.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="Labels and Tags Webservice over SSL" displayText="Enable Labels and Tags WebService over SSL" >
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates webservice communication will happen over HTTPS.  A value of &quot;No&quot; indicates webservice communication will happen over HTTP" />
+        <select property="input.poslat.protocol" defaultValue="https"
+                displayText="Enable Secure Communication &#63;">
+            <option text="Yes" value="https" />
+            <option text="No" value="http" />
+        </select>
+        <text property="input.poslat.webservices.host" displayText="Labels and Tags Webservice hostname" defaultValue="" />
+        <validated property="input.poslat.webservices.port" displayText="Labels and Tags Webservice port" defaultValue="7002" regex="^[0-9]{1,}$" />
+    </page>
+
+    <page ifProperty="(${input.enable.lat.integration}=true) AND (${input.install.type}=SERVER)" type="input" name="ORLAT Integration Properties" displayText="Labels and Tags Integration Properties">
+        <comment displayText="" explanatoryText="Enter User ID and Password for Labels and Tags Webservice" />
+        <text property="input.LAT.webservice.uid" displayText="Labels and Tags Webservice User ID" defaultValue=""/>
+        <password property="input.LAT.webservice.passwd" displayText="Webservice Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.LAT.webservice.passwd.pw" origField="input.LAT.webservice.passwd" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+    <!-- End Lat Webservice Configuration -->
+
+   <page ifProperty="(${input.enable.rm}=true) AND (${input.message.rm}=JMS) AND (${input.appserver.type}=WAS)" type="input" name="OracleRMconfig" displayText="Oracle Returns Management JMS configuration">
+        <comment displayText="" explanatoryText="Please enter configuration details for the Oracle Returns Management instance. If BackOffice is integrated with ReturnsManagement, use the BackOffice server information on this screen" />
+        <text property="input.was.mq.hostname" displayText="Websphere MQ hostname" defaultValue="${input.store.server.hostname}"  />
+        <text property="input.was.mq.manager" displayText="Websphere MQ queue manager name" defaultValue="bo.queue.manager" />
+        <validated property="input.was.mq.port" displayText="Websphere MQ listener port"  defaultValue="1414"  regex="^[0-9]{1,}$" />
+        <text property="input.rm.mq.userid" displayText="User Id authorized to access queue manager" defaultValue="mqm" />
+        <password property="input.rm.mq.password" displayText="Password of authorized user"  defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.rm.mq.password.pw" origField="input.rm.mq.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <!-- page ifProperty="(${input.enable.rm}=true) AND (${input.message.rm}=JMS) AND (${input.appserver.type}=OAS)" type="input" name="OracleRMconfig" displayText="Oracle Returns Management JMS configuration">
+        <comment displayText="" explanatoryText="Please enter configuration details for the Oracle Returns Management instance" />
+        <text property="input.rm.server.hostname" displayText="Returns Management server hostname" defaultValue="" />
+        <text property="input.oas.jndi.port" displayText="OAS Application Server JNDI port" defaultValue="" />
+    </page -->
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.enable.rm}=true) AND (${input.message.rm}=JMS) AND (${input.appserver.type}=WL)" type="input" name="RM_SecureDetails" displayText="Returns Management Security">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that secure JMS communications will be used.  A value of &quot;No&quot; indicates that secure JMS communication will not be used for Returns Management" />
+        <select property="input.rm.wl.secure.jms" defaultValue="true" displayText=""
+                explanatoryText="Enable Secure JMS Communication for ReturnsManagement&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.enable.rm}=true) AND (${input.message.rm}=JMS) AND (${input.appserver.type}=WL) AND (${input.rm.wl.secure.jms}=true)" type="input" name="OracleRMconfig" displayText="Oracle Returns Management JMS configuration">
+        <comment displayText="" explanatoryText="Please enter configuration details for the Oracle Returns Management instance. If BackOffice is integrated with ReturnsManagement, use the BackOffice server information on this screen" />
+        <text property="input.rm.jms.hostname" displayText="JMS Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.rm.wl.jndi.port" displayText="Weblogic Application Server JMS port" defaultValue="7002" regex="^[0-9]{1,}$" />
+        <text property="input.rm.mq.userid" displayText="User Id authorized to access JMS Server" defaultValue="pospos" />
+        <password property="input.rm.mq.password" displayText="Password of authorized user"  defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.rm.mq.password.pw" origField="input.rm.mq.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.enable.rm}=true) AND (${input.message.rm}=JMS) AND (${input.appserver.type}=WL) AND (${input.rm.wl.secure.jms}=false)" type="input" name="OracleRMconfig" displayText="Oracle Returns Management JMS configuration">
+        <comment displayText="" explanatoryText="Please enter configuration details for the Oracle Returns Management instance. If BackOffice is integrated with ReturnsManagement, use the BackOffice server information on this screen" />
+        <text property="input.rm.jms.hostname" displayText="JMS Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.rm.wl.jndi.port" displayText="Weblogic Application Server JMS port" defaultValue="7001" regex="^[0-9]{1,}$" />
+        <text property="input.rm.mq.userid" displayText="User Id authorized to access JMS Server" defaultValue="pospos" />
+        <password property="input.rm.mq.password" displayText="Password of authorized user"  defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.rm.mq.password.pw" origField="input.rm.mq.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.enable.rm}=true) AND (${input.install.type}=SERVER)" type="input" name="RMWebServiceDetails" displayText="RM-POS WebService Details">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates webservice communication will happen over HTTPS.  A value of &quot;No&quot; indicates webservice communication will happen over HTTP" />
+        <text property="input.rm.server.hostname" displayText="Returns Management server hostname" defaultValue="" />
+        <text property="input.rm.admin.username" displayText="User Id authorized to access webservice" defaultValue="" />
+        <password property="input.rm.admin.password" displayText="Password of authorized user" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.rm.admin.password.pw" origField="input.rm.admin.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+        <select property="input.rmpos.protocol" defaultValue="https"
+                displayText="Enable Secure Communication &#63;">
+            <option text="Yes" value="https" />
+            <option text="No" value="http" />
+        </select>
+        <comment displayText="" explanatoryText="Please enter the port for the selected protocol" />
+        <validated property="input.rm.application.port" displayText="Returns Management Webservice port" defaultValue="" regex="^[0-9]{1,}$" />
+    </page>
+
+    <!-- GENERIC PANEL  -->
+    <page ifProperty="${input.install.type}=CLIENT" type="input" name="EnableEReceipt" displayText="Enable eReceipt">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that eReceipt will be enabled.  A value of &quot;No&quot; indicates that eReceipt will not be used" />
+        <select property="input.enable.ereceipt" defaultValue="true"
+                displayText="Enable eReceipt&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+   <page type="input" ifProperty="(${input.enable.ereceipt}=true) AND (${input.install.type}=CLIENT)" name="eReceipt" displayText="eReceipt Properties">
+        <comment displayText="" explanatoryText="Please enter eReceipt values" />
+        <text property="input.mail.smtp.host" displayText="SMTP Host" defaultValue=""/>
+        <validated property="input.mail.smtp.port" displayText="SMTP Port" defaultValue="" regex="^[0-9]{1,}$" />
+        <text property="input.mail.smtp.timeout" displayText="SMTP Timeout (milliseconds)" defaultValue=""/>
+        <text property="input.mail.ereceipt.sender" displayText="SMTP Sender Email" defaultValue=""/>
+   </page>
+
+    <page type="input" name="EnableVAT" displayText="Enable Value-Added Tax (VAT)">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that taxation will be VAT.  A value of &quot;No&quot; indicates that taxation will not be VAT." />
+        <select property="input.vat.enabled" defaultValue="false"
+                displayText="Enable Value-Added Tax?">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page type="input" ifProperty="${input.install.type}=SERVER" name="EnableRTLog" displayText="Enable RTLog Export">
+        <comment displayText="" explanatoryText="Please select the RTLog export options:" />
+        <select property="input.rtlog.export" displayText="" defaultValue="NONE">
+            <option text="Do not export RTLog" value="NONE"/>
+            <option text="Export RTLog" value="EXPORT_RTLOG"/>
+        </select>
+    </page>
+
+    <page type="input" name="KeyStoreDetails" displayText="Security Setup: Key Store Settings">
+    <comment displayText="" explanatoryText="WARNING: The simulated key management package bundled with Oracle Retail applications is not PA-DSS nor PCI-DSS compliant.  It is made available as a convenience for Oracle Retail consultants, integrators, and customers. If you use the simulated key manager you will not be PCI-DSS compliant; therefore, the simulated key manager should be replaced with a compliant key manager.&#x000A;&#x000D;&#x000A;&#x000D;Enter the following information to configure the Java Key Store (JKS) for POS:" />
+        <conditional ifProperty="${input.jre.vendor}=IBM">
+            <hidden property="internal.keystore.algorithm-default" value="IBMJCE"/>
+        </conditional>
+        <conditional ifProperty="${input.jre.vendor}=ORACLE">
+            <hidden property="internal.keystore.algorithm-default" value="SunJCE"/>
+        </conditional>
+
+        <text property="input.keystore.algorithm"
+            displayText="Key Store Hash Algorithm"
+            defaultValue="SHA-256"/>
+
+
+        <select property="input.keystore.provider.internal" displayText="Select Key Store Provider" defaultValue="RSA">
+            <option text="RSA Key Manager v3.1" value="RSA"/>
+            <option text="Simulator" value="IBMJCE" ifProperty="${input.jre.vendor}=IBM"/>
+            <option text="Simulator" value="SunJCE" ifProperty="${input.jre.vendor}=ORACLE"/>
+            <option text="Other" value="OTHER"/>
+        </select>
+
+        <pause displayText="Press enter to continue..." />
+    </page>
+
+    <page type="input" ifProperty="${input.keystore.provider.internal}=RSA" name="RSA Key Manager Requirements" displayText="RSA Key Manager Requirements" overflow="true">
+        <comment displayText="Important note about RSA Key Manager:."/>
+        <comment explanatoryText="To use RSA Key Manager v3.1 you must have installed the Java Cryptography &#x000A; Extension Unlimited Strength Jurisdiction Policy Files for Java 6.0" />
+        <comment displayText=" " />
+        <comment displayText="Click the 'Next' button to proceed to the next screen."/>
+
+        <pause displayText="Press enter to continue" />
+    </page>
+
+    <page  type="input" ifProperty="${input.keystore.provider.internal}=RSA" name="KeyStoreDetails" displayText="Key Store Details">
+        <comment displayText="Please enter the details for your key store provider" />
+        <conditional ifProperty="${input.keystore.provider.internal}==RSA">
+            <hidden property="input.keystore.class" value="oracle.retail.stores.rsakeystore.rsainterface.RSAKeyStoreEncryptionService"/>
+            <hidden property="input.keystore.provider" value="RSA"/>
+        </conditional>
+        <text property="input.keystore.class"
+            displayText="Key Store Implementation Class"
+            defaultValue="${input.keystore.class}"/>
+    </page>
+
+    <page  type="input" ifProperty="(${input.keystore.provider.internal}=SunJCE) OR (${input.keystore.provider.internal}=IBMJCE)" name="KeyStorePassPhrase" displayText="Key Store Pass Phrase">
+        <comment displayText="Please enter a pass phrase to use with the key store simulator." />
+        <comment displayText="The pass phrase must satisfy the following criteria:"/>
+        <comment displayText="    - Contain at least one alphabetic character" />
+        <comment displayText="    - Contain at least one numeric character" />
+        <comment displayText="    - At least seven characters in length" />
+        <comment displayText="" />
+
+        <password property="input.keystore.install.phrase" defaultValue="" displayText="Pass Phrase" textMask="true" sendToAnt="false"
+            regex="(?=.*[a-zA-z])(?=.*[0-9]).{7,}"/>
+        <password-confirm property="input.keystore.install.phrase.pw" origField="input.keystore.install.phrase" displayText="Confirm Pass Phrase"
+                  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+         <conditional ifProperty="${input.keystore.provider.internal}==SunJCE">
+            <hidden property="input.keystore.provider" value="SunJCE"/>
+        </conditional>
+        <conditional ifProperty="${input.keystore.provider.internal}==IBMJCE">
+            <hidden property="input.keystore.provider" value="IBMJCE"/>
+        </conditional>
+        <hidden property="input.keystore.class" displayText="Key Store Implementation Class" defaultValue="oracle.retail.stores.simkeystore.siminterface.SimKeyStoreEncryptionService" sendToAnt="true"/>
+    </page>
+
+    <page  type="input" ifProperty="${input.keystore.provider.internal}=OTHER" name="KeyStoreDetails" displayText="Key Store Details">
+        <comment displayText="Please enter the details for your key store provider" />
+          <conditional ifProperty="${input.keystore.provider.internal}==OTHER">
+            <hidden property="input.keystore.provider" value="OTHER"/>
+          </conditional>
+        <text property="input.keystore.class"
+            displayText="Key Store Implementation Class"
+            defaultValue=""/>
+        <text property="input.keystore.provider"
+            displayText="Key Store Provider"
+            defaultValue="" />
+    </page>
+
+    <page ifProperty="${input.keystore.provider}==RSA"  type="input" name="RSAKeyStoreDetails" displayText="Security Setup: Key Store RSA JAR Files">
+        <comment displayText="" explanatoryText="Provide the directory location of key store JAR files (kmsclient.jar,cryptoj.jar,sslj.jar)" />
+        <directory property="input.keystore.rsa.jars.dir" displayText="RSA Key Store JAR Directory:"
+            defaultValue="/opt"
+            defaultValueWin="C:\"
+            checkExists="true"/>
+    </page>
+
+    <page ifProperty="${input.keystore.provider}==RSA"  type="hidden" name="KeyStoreDetails" displayText="Security Destination Setup: Key Store RSA JAR Files">
+        <comment displayText="" explanatoryText="Verify the location of key store JAR files (kmsclient.jar,cryptoj.jar,sslj.jar)" />
+        <file property="input.keystore.rsa.jar1.check" displayText="kmsclient.jar location:" checkExists="true" defaultValueWin="${input.keystore.rsa.jars.dir}\kmsclient.jar"  defaultValue="${input.keystore.rsa.jars.dir}/kmsclient.jar"/>
+        <file property="input.keystore.rsa.jar2.check" displayText="cryptoj.jar location:" checkExists="true" defaultValueWin="${input.keystore.rsa.jars.dir}\cryptoj.jar"  defaultValue="${input.keystore.rsa.jars.dir}/cryptoj.jar"/>
+        <file property="input.keystore.rsa.jar3.check" displayText="sslj.jar location:" checkExists="true" defaultValueWin="${input.keystore.rsa.jars.dir}\sslj.jar"  defaultValue="${input.keystore.rsa.jars.dir}/sslj.jar"/>
+        <directory property="input.keystore.jars.dir" displayText="RSA Key Store JAR Destination Directory"
+            defaultValue="${input.install.directory}/common/lib"
+            defaultValueWin="${input.install.directory}\common\lib"
+            checkExists="false"/>
+        <hidden property="input.keystore.jar1" value="oracle.stores.rsakeystore.jar"/>
+        <hidden property="input.keystore.jar2" value="kmsclient.jar"/>
+        <hidden property="input.keystore.jar3" value="cryptoj.jar"/>
+        <hidden property="input.keystore.jar4" value="sslj.jar"/>
+        <hidden property="input.keystore.jar5" value=""/>
+    </page>
+
+     <page ifProperty="${input.keystore.provider.internal}==OTHER"  type="input" name="KeyStoreDetails" displayText="Security Setup: Key Store JAR Files">
+        <comment displayText="" explanatoryText="Provide one or more key store JAR files" />
+        <directory property="input.keystore.jars.dir" displayText="Key Store JAR Directory"
+            defaultValue="/opt"
+            defaultValueWin="C:\"
+            checkExists="true"/>
+        <text property="input.keystore.jar1" displayText="Key Store JAR 1" defaultValue=""/>
+        <text property="input.keystore.jar2" displayText="Key Store JAR 2" defaultValue=""/>
+        <text property="input.keystore.jar3" displayText="Key Store JAR 3" defaultValue=""/>
+        <text property="input.keystore.jar4" displayText="Key Store JAR 4" defaultValue=""/>
+        <text property="input.keystore.jar5" displayText="Key Store JAR 5" defaultValue=""/>
+    </page>
+
+
+    <page ifProperty="${input.keystore.provider}=RSA"  type="input" name="KeyStoreConfig" displayText="RSA Key Store Configuration">
+        <comment displayText="" explanatoryText="Please provide the following RSA configuration values" />
+        <text property="input.rsa.server.host" displayText="Server Host Address" defaultValue=""/>
+        <validated property="input.rsa.server.port" displayText="Server Host Port" defaultValue="443" regex="^[0-9]{1,}$" />
+        <text property="input.rsa.cipher.key.class" displayText="Cipher Key Class" defaultValue=""/>
+        <file property="input.rsa.server.keystore.file" displayText="RSA Server SSL Certificate" defaultValue="/opt" defaultValueWin="C:\"/>
+        <password property="input.rsa.cache.keystore.password" displayText="Cache Key Store Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.rsa.cache.keystore.password.pw" origField="input.rsa.cache.keystore.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page type="input" name="LoggingDetail" displayText="Logging Detail Options">
+        <comment displayText="Please select the logging detail:" />
+        <comment displayText=" " />
+        <select property="input.logging.detail" displayText="" defaultValue="WARN">
+            <option text="Standard logging" value="WARN"/>
+            <option text="Verbose logging" value="DEBUG"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT)" type="input" name="PlatformComponents" displayText="POS Platform Components">
+        <comment displayText="Select the POS Platform Components you wish to install:"/>
+        <comment displayText=" " />
+        <select property="input.install.device.platform" defaultValue="IBMUS">
+            <option text="IBM (United States)" value= "IBMUS"/>
+            <option text="IBM" value= "IBM"/>
+            <option text="HP (United States)" value= "HPUS"/>
+            <option text="HP" value= "HP"/>
+            <option text="Simulated" value= "SIM"/>
+        </select>
+    </page>
+
+    <page ifProperty="${input.install.type}=CLIENT" type="input" name="JPOSDeviceSetup" displayText="JPOS Device Setup: Library files">
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files to setup the JPOS classpath." />
+        <file property="input.jpos.jpos113" displayText="jpos113.jar" 
+        defaultValueWin="C:\pos\jars\jpos113.jar" defaultValue="/opt/pos/jars/jpos113.jar" checkExists="true"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.platform}!=SIM)" type="input" name="Devices" displayText="POS Devices">
+        <comment displayText="Select the supported POS devices:"/>
+        <comment displayText=" " />
+        <checkbox property="input.install.device.Barcode-Scanner.enabled" defaultValue="false" displayText="Barcode Scanner"/>
+        <checkbox property="input.install.device.Cash-Drawer.enabled" defaultValue="false" displayText="Cash Drawer"/>
+        <checkbox property="input.install.device.Line-Display.enabled" defaultValue="false" displayText="Line Display"/>
+        <checkbox property="input.install.device.Hard-Totals.enabled" defaultValue="false" displayText="Hard Totals"/>
+        <checkbox property="input.install.device.MICR.enabled" defaultValue="false" displayText="MICR"/>
+        <checkbox property="input.install.device.MSR.enabled" defaultValue="false" displayText="MSR"/>
+    </page>
+
+    <!-- configure libraries for HP Windows -->
+    <page ifProperty="(${env.IS_UNIX}!=true) AND (${input.install.type}=CLIENT) AND (${input.install.device.platform}!=IBM) AND (${input.install.device.platform}!=IBMUS) AND (${input.install.device.platform}!=SIM)" type="input" name="HPEnvironmentClasspath" displayText="HP Environment Libraries">
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files to setup the HP device environment." />
+        <file property="input.hp.cherrykeyboard" displayText="ChySOAPKeyb.jar" checkExists="true" defaultValue="C:\pos\jars\ChySOAPKeyb.jar"/>
+        <file property="input.jpos.tpgjavapos" displayText="TPGJavaPOS.jar" defaultValue="C:\pos\jars\TPGJavaPOS.jar"/>
+        <file property="input.hpjpos.jsr80" displayText="jsr80.jar" defaultValue="C:\pos\jars\jsr80.jar"/>
+        <file property="input.hpjpos.jsr80_ri" displayText="jsr80_ri.jar" defaultValue="C:\pos\jars\jsr80_ri.jar"/>
+        <file property="input.hpjpos.jsr80_ri_windows" displayText="jsr80_windows.jar" defaultValue="C:\pos\jars\jsr80_windows.jar"/>
+    </page>
+
+    <!-- configure libraries for HP Unix -->
+    <page ifProperty="(${env.IS_UNIX}=true) AND (${input.install.type}=CLIENT) AND (${input.install.device.platform}!=IBM) AND (${input.install.device.platform}!=IBMUS) AND (${input.install.device.platform}!=SIM)" type="input" name="HPEnvironmentClasspath" displayText="HP Environment Libraries">
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files to setup the HP device environment." />
+        <file property="input.hp.cherrykeyboard" displayText="ChySOAPKeyb.jar" checkExists="true" defaultValue="/opt/pos/jars/ChySOAPKeyb.jar"/>
+        <file property="input.jpos.tpgjavapos" displayText="TPGJavaPOS.jar" defaultValue="/opt/pos/jars/TPGJavaPOS.jar"/>
+    </page>
+
+    <!-- configure libraries for IBM Windows -->
+    <page ifProperty="(${env.IS_UNIX}!=true) AND (${input.install.type}=CLIENT) AND (${input.install.device.platform}!=SIM) AND (${input.install.device.platform}!=HP) AND (${input.install.device.platform}!=HPUS)" type="input" name="IBMWINJPOSDeviceSetup" displayText="IBM Environment Libraries">
+
+        <comment displayText="" explanatoryText="Please provide the locations of the following library directories." />
+        <app-root property="input.ibmjpos.config.dir" displayText="dir for IBMJPOS/config" defaultValue="C:\POS\IBMJPOS\config"/>
+        <app-root property="input.ibmjpos.dir" displayText="dir for IBMJPOS" defaultValue="C:\POS\IBMJPOS"/>
+
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files." />
+        <file property="input.ibmjpos.ibmjavapos" displayText="ibmjavapos.jar" defaultValue="C:\POS\IBMJPOS\Lib\ibmjavapos.jar"/>
+        <file property="input.ibmjpos.jpos1122" displayText="jpos1122.jar" defaultValue="C:\POS\IBMJPOS\Lib\jpos1122.jar"/>
+        <file property="input.ibmjpos.jsr80" displayText="jsr80.jar" defaultValue="C:\POS\IBMJPOS\Lib\jsr80.jar"/>
+        <file property="input.ibmjpos.jsr80_ri" displayText="jsr80_ri.jar" defaultValue="C:\POS\IBMJPOS\Lib\jsr80_ri.jar"/>
+        <file property="input.ibmjpos.jsr80_ri_windows" displayText="jsr80_ri_windows.jar" defaultValue="C:\POS\IBMJPOS\Lib\jsr80_ri_windows.jar"/>
+        <file property="input.ibmjpos.jpos_sysmgmt" displayText="jpos_sysmgmt.jar" defaultValue="C:\POS\IBMJPOS\Lib\jpos_sysmgmt.jar"/>
+        <file property="input.ibmjpos.ibmjpos" displayText="ibmjpos.jar" defaultValue="C:\POS\IBMJPOS\Lib\ibmjpos.jar"/>
+        <file property="input.ibmjpos.ibmuposst" displayText="ibmuposstjar" defaultValue="C:\POS\IBMJPOS\Lib\ibmuposst.jar"/>
+        <file property="input.ibmjpos.xmlParserAPIs" displayText="xmlParserAPIs.jar" defaultValue="C:\POS\IBMJPOS\Lib\xmlParserAPIs.jar"/>
+        <file property="input.ibmjpos.xercesImpl" displayText="xercesImpl.jar" defaultValue="C:\POS\IBMJPOS\Lib\xercesImpl.jar"/>
+        <file property="input.ibmjpos.comm" displayText="comm.jar" defaultValue="C:\POS\IBMJRE\jre\lib\ext\comm.jar"/>
+    </page>
+
+    <!-- configure libraries for IBM Linux  -->
+    <page ifProperty="(${env.IS_UNIX}=true) AND (${input.install.type}=CLIENT) AND (${input.install.device.platform}!=SIM) AND (${input.install.device.platform}!=HP) AND (${input.install.device.platform}!=HPUS)" type="input" name="IBMLinuxJPOSDeviceSetup" displayText="IBM Environment Libraries">
+
+        <comment displayText="" explanatoryText="Please provide the locations of the following library directories." />
+        <app-root property="input.ibmjpos.javax-usb_etc.dir" displayText="dir for javax-usb/etc" defaultValue="/opt/javax-usb/etc"/>
+        <app-root property="input.ibmjpos.dir" displayText="dir for IBMJPOS" defaultValue="/opt/ibm/javapos"/>
+        <app-root property="input.ibmjpos_etc.dir" displayText="dir for IBMJPOS/etc" defaultValue="/opt/ibm/javapos/etc"/>
+
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files." />
+        <file property="input.ibmjpos.jsr80" displayText="jsr80.jar" defaultValue="/opt/javax-usb/lib/jsr80.jar"/>
+        <file property="input.ibmjpos.jsr80_ri" displayText="jsr80_ri.jar" defaultValue="/opt/javax-usb/lib/jsr80_ri.jar"/>
+        <file property="input.ibmjpos.jsr80_linux" displayText="jsr80_linux.jar" defaultValue="/opt/javax-usb/lib/jsr80_linux.jar"/>
+        <file property="input.ibmjpos.IBMTouchMon" displayText="IBMTouchMon.jar" defaultValue="/opt/ibm/javapos/lib/IBMTouchMon.jar"/>
+        <file property="input.ibmjpos.IBMTouchUtil" displayText="IBMTouchUtil.jar" defaultValue="/opt/ibm/javapos/lib/IBMTouchUtil.jar"/>
+        <file property="input.ibmjpos.ibmjavapos" displayText="ibmjavapos.jar" defaultValue="/opt/ibm/javapos/lib/ibmjavapos.jar"/>
+        <file property="input.ibmjpos.ibmjpos" displayText="ibmjpos.jar" defaultValue="/opt/ibm/javapos/lib/ibmjpos.jar"/>
+        <file property="input.ibmjpos.ibmuposst" displayText="ibmuposst" defaultValue="/opt/ibm/javapos/lib/ibmuposst.jar"/>
+        <file property="input.ibmjpos.jpos1122" displayText="jpos1122.jar" defaultValue="/opt/ibm/javapos/lib/jpos1122.jar"/>
+        <file property="input.ibmjpos.jpos_sysmgmt" displayText="jpos_sysmgmt.jar" defaultValue="/opt/ibm/javapos/lib/jpos_sysmgmt.jar"/>
+        <file property="input.ibmjpos.xercesImpl" displayText="xercesImpl.jar" defaultValue="/opt/ibm/javapos/lib/xercesImpl.jar"/>
+        <file property="input.ibmjpos.xmlParserAPIs" displayText="xmlParserAPIs.jar" defaultValue="/opt/ibm/javapos/lib/xmlParserAPIs.jar"/>
+    </page>
+
+   <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.platform}!=SIM)" type="input" name="JPOSDeviceSetup" displayText="JPOS Device Setup: jpos.xml directory">
+        <comment displayText="" explanatoryText="Please provide the directory where the jpos.xml file is located" />
+        <app-root property="input.jpos.xml.dir" displayText="dir for jpos.xml" defaultValueWin="C:\" defaultValue="/" checkFile1="jpos.xml"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.platform}!=SIM)" type="input" name="PrinterSupport" displayText="POS Printer Support">
+        <comment displayText="Select POS printer support:"/>
+        <comment displayText=" " />
+        <select property="input.install.device.printer.support" displayText="" defaultValue="NONE">
+            <option text="No printer" value="NONE"/>
+            <option text="JPOS Printer with check franking" value="FRANKING"/>
+            <option text="JPOS Printer without check franking" value="NO_FRANKING"/>
+            <option text="Network Printer without check franking" value="IPP"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.platform}==SIM)" type="input" name="PrinterSupport" displayText="Network Printer Support">
+        <comment displayText=" " explanatoryText="A value of &quot;Yes&quot; indicates that Network Printing will be enabled.  A value of &quot;No&quot; indicates that Network Printing will not be used" />
+        <comment displayText=" " />
+        <select property="input.install.device.printer.support" displayText="Enable Support For Network Printing:" defaultValue="NONE">
+            <option text="Yes" value="IPP"/>
+            <option text="No" value="NONE"/>
+        </select>
+    </page>
+
+     <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.printer.support}=IPP)" type="input" name="IppPrinterSupport" displayText="Network Printer Support">
+        <comment displayText="Configure Network Printer Support:"/>
+        <comment displayText=" " />
+        <text property="input.ipp.name" displayText="Printer Name" defaultValue=""/>
+        <large-select property="input.ipp.language" displayText="Print Language" defaultValue="postscript">
+            <option text="PostScript" value="postscript"/>
+            <option text="Printer Command Language (PCL)" value="pcl"/>
+            <option text="Portable Document Format (PDF)" value="pdf"/>
+        </large-select>
+        <hidden property="input.ipp.name.locale" defaultValue="en_US"/>
+        <hidden property="input.ipp.media" defaultValue="NA_LETTER"/>
+        <hidden property="input.ipp.orientation" defaultValue="PORTRAIT"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.install.device.platform}!=IBM) AND (${input.install.device.platform}!=IBMUS) AND (${input.install.device.platform}!=SIM)" type="input" name="fingerPrintDevices" displayText="FingerPrint Devices">
+        <comment displayText="" explanatoryText="Do you want to enable support for Digital Persona fingerprint device?" />
+        <select property="input.client.device.dpfingerprint" defaultValue="false"
+                displayText="Enable support for fingerprint device&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>/>
+    </page>
+
+    <page ifProperty="(${input.client.device.dpfingerprint}=true)" type="input" name="DPEnvironmentClasspath" displayText="Digital Persona Libraries">
+        <comment displayText="" explanatoryText="Please provide the locations of the following library files to setup the DigitalPersona fingerprint device environment." />
+        <file property="input.dpfingerprint.dpjavapos" displayText="dpjavapos.jar" checkExists="true" defaultValueWin="C:\DigitalPersona\Bin\JavaPOS\dpjavapos.jar"  defaultValue="/opt/pos/jars/dpjavapos.jar"/>
+        <file property="input.dpfingerprint.jpos" displayText="jpos111.jar" checkExists="true" defaultValueWin="C:\DigitalPersona\Bin\JavaPOS\jpos111.jar" defaultValue="/opt/pos/jars/jpos111.jar"/>
+        <file property="input.dpfingerprint.dpenrollment" displayText="dpfpenrollment.jar" checkExists="true" defaultValueWin="C:\DigitalPersona\Bin\Java\dpfpenrollment.jar" defaultValue="/opt/pos/jars/dpfpenrollment.jar"/>
+        <file property="input.dpfingerprint.dpverification" displayText="dpfpverification.jar" checkExists="true" defaultValueWin="C:\DigitalPersona\Bin\Java\dpfpverification.jar" defaultValue="/opt/pos/jars/dpfpverification.jar"/>
+        <file property="input.dpfingerprint.dpotjni" displayText="dpotjni.jar" checkExists="true" defaultValueWin="C:\DigitalPersona\Bin\Java\dpotjni.jar" defaultValue="/opt/pos/jars/dpotjni.jar"/>
+    </page>
+
+
+    <page type="input" name="LoggingExport" displayText="Logging Export Options"
+          ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=SERVER)">
+        <comment displayText="Please select the log export options:"/>
+        <comment displayText=" "/>
+        <select property="input.logging.export" displayText="" defaultValue="NONE">
+            <option text="Do not export POSLogs" value="NONE"/>
+            <option text="Export POSLogs to a file" value="FILE"/>
+            <option text="Data Replication Export" value="DATA_REPLICATION"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=SERVER) AND (${input.logging.export}=DATA_REPLICATION) AND (${input.enable.co.webservices}=true)" type="input" name="Data Replication Options" displayText="Data Replication Options">
+        <comment displayText="Select transport mode for Data Replication:" />
+        <comment displayText=" " />
+        <select property="input.data.replication.option" displayText="Data Replication options:" defaultValue="Webservice">
+            <option text="Send Through JMS" value="JMS"/>
+            <option text="Send Through Webservice" value="Webservice"/>
+        </select>
+    </page>
+
+    <page type="input" ifProperty="(${input.data.replication.option}=Webservice)" name="E-Mail notification for Communication Failures" displayText="E-Mail notification for Communication Failures">
+        <comment displayText="" explanatoryText="Please provide mail server details" />
+        <text property="input.enterprise.mail.smtp.host" displayText="SMTP Host" defaultValue=""/>
+        <validated property="input.enterprise.mail.smtp.port" displayText="SMTP Port" defaultValue="25" regex="^[0-9]{1,}$" />
+        <text property="input.enterprise.mail.from" displayText="From Address" defaultValue="orpos@example.com"/>
+        <text property="input.enterprise.mail.to" displayText="To Addresses (Comma separated addresses)" defaultValue=""/>
+    </page>
+
+    <page type="hidden" name="Data Replication Options" displayText="Data Replication Options">
+      <conditional ifProperty="(${input.logging.export}=DATA_REPLICATION) AND (${input.enable.co.webservices}=false)">
+        <hidden property="input.data.replication.option" value="JMS"/>
+      </conditional>
+      <conditional ifProperty="(${input.logging.export}!=DATA_REPLICATION)">
+        <hidden property="input.data.replication.option" value="NOTHING"/>
+      </conditional>
+    </page>
+    
+    <page ifProperty="(${input.data.replication.option}=JMS) " type="input" name="DTM_JMS_Options" displayText="Data Replication Transport JMS Options">
+        <comment displayText="" explanatoryText="Do you want to use local queues configured on the BackOffice server?" />
+        <select property="input.data.replication.jms.local.option" defaultValue="true"
+                displayText="Use Local Queues&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>/>
+    </page>    
+    
+    <page type="hidden" name="Promprt for CentralOffice Server info" displayText="Promprt for CentralOffice Server info">
+      <hidden property="prompt.for.co.server.info" value="false"/>
+      <conditional ifProperty="(${input.enable.co.webservices}=false) OR (${input.data.replication.jms.local.option}=false)">
+        <hidden property="prompt.for.co.server.info" value="true"/>
+      </conditional>
+    </page>    
+
+    <page ifProperty="${input.install.type}=CLIENT" type="input" name="ClientEJournalOptions" displayText="EJournal Options">
+        <comment displayText="Select the location for the storage of EJournal entries:" />
+        <comment displayText=" " />
+        <select property="input.client.journal.ejournal.option" displayText="EJournal options:" defaultValue="DATABASE">
+            <option text="Write Journal Entries to local file" value="LOCAL_FILE"/>
+            <option text="Write Journal Entries to a database" value="DATABASE"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.bo.co.integrate}=true) AND (${input.install.type}=CLIENT)" type="input" name="ClientJournalQueue" displayText="JMS/Webservice Queue Journal Support">
+        <comment displayText="Journal Entries written to JMS Queue or Webservice will be sent to the Corporate Office." />
+        <comment displayText=" " />
+        <select property="input.client.co.journal.options" displayText="EJournal options:" defaultValue="WEBSERVICE">
+            <option text="Write Journal Entries to JMS Queue" value="JMS"/>
+            <option text="Write Journal Entries to a Webservice" value="WEBSERVICE"/>
+            <option text="Do not Write Journal Entries to CentralOffice" value="NONE"/>
+        </select>
+        <comment displayText=" " />
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.appserver.type}=WAS) AND (${input.bo.co.integrate}=true)" type="input" name="ParameterDistribution" displayText="Parameter Distribution Information">
+        <comment displayText=" " />
+        <text property="input.jms.client-id" displayText="JMS Client ID" defaultValue="reg${input.register.number}"/>
+        <text property="input.jms.username" displayText="JMS Server Username" defaultValue="reg${input.register.number}"/>
+        <password property="input.jms.password" displayText="JMS Server Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.jms.password.pw" origField="input.jms.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <!-- page ifProperty="(${input.install.type}=CLIENT) AND (${input.appserver.type}=OAS)" type="input" name="ParameterDistribution" displayText="Parameter Distribution Information">
+        <comment displayText=" " />
+        <text property="input.jms.client-id" displayText="JMS Client ID" defaultValue="reg${input.register.number}"/>
+        <text property="input.jms.username" displayText="JMS Server Username" defaultValue="oc4jadmin"/>
+        <password property="input.jms.password" displayText="JMS Server Password" defaultValue="" textMask="true"  sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.jms.password.pw" origField="input.jms.password" displayText="Confirm password"
+                  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page -->
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND(${input.appserver.type}=WL) AND (${input.bo.co.integrate}=true)" type="input" name="BO_SecureDetails" displayText="Back Office Security">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that secure BackOffice communications will be used.  A value of &quot;No&quot; indicates that secure communications will not be used for BackOffice" />
+        <select property="input.client.wl.secure.bo" defaultValue="true"
+                displayText="Enable Secure BackOffice Communications&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND(${input.appserver.type}=WL) AND (${input.bo.co.integrate}=true)" type="input" name="BO_SecureDetails" displayText="Back Office Security">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that secure BackOffice communications will be used.  A value of &quot;No&quot; indicates that secure communications will not be used for BackOffice" />
+        <select property="input.server.wl.secure.bo" defaultValue="true"
+                displayText="Enable Secure BackOffice Communications&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.appserver.type}=WL) AND (${input.client.wl.secure.bo}=true) AND (${input.bo.co.integrate}=true)" type="input" name="ParameterDistribution" displayText="Parameter Distribution Information">
+        <comment displayText=" " />
+        <text property="input.jms.client-id" displayText="JMS Client ID" defaultValue="reg${input.register.number}"/>
+        <text property="input.jms.username" displayText="JMS Server Username" defaultValue="posadmin"/>
+        <password property="input.jms.password" displayText="JMS Server Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.jms.password.pw" origField="input.jms.password" displayText="Confirm password"
+                  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=CLIENT) AND (${input.appserver.type}=WL) AND (${input.client.wl.secure.bo}=false) AND (${input.bo.co.integrate}=true)" type="input" name="ParameterDistribution" displayText="Parameter Distribution Information">
+        <comment displayText=" " />
+        <text property="input.jms.client-id" displayText="JMS Client ID" defaultValue="reg${input.register.number}"/>
+    </page>
+
+    <!-- page ifProperty="(${input.appserver.type}=OAS) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true)" type="input" name="CO_Details" displayText="Central Office Server Information">
+        <comment displayText=" " explanatoryText=" " />
+        <text property="input.co.hostname" displayText="Central Office Server Hostname" defaultValue=""/>
+        <text property="input.co.app.name" displayText="Central Office Server Application Name" defaultValue="CentralOffice"/>
+        <text property="input.co.jndi-port" displayText="Central Office Server JNDI Port" defaultValue="12401"/>
+        <text property="input.co.admin.username" displayText="Central Office Administrator User" defaultValue="pos"/>
+        <password property="input.co.admin.password" displayText="Central Office Administrator Password" defaultValue="" regex=".+"/>
+    </page -->
+
+   <page ifProperty="(${input.appserver.type}=WAS) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true) AND (${prompt.for.co.server.info}=true)" type="input" name="CO_Details" displayText="Central Office Server Information">
+        <comment displayText=" " explanatoryText="Please enter configuration details for the CentralOffice instance." />
+        <text property="input.co.hostname" displayText="CentralOffice Server Hostname" defaultValue=""/>
+        <validated property="input.co.jndi-port" displayText="CentralOffice Server JNDI Port" defaultValue="2809" regex="^[0-9]{1,}$" />
+        <text property="input.co.admin.username" displayText="CentralOffice Administrator User" defaultValue="pos"/>
+        <password property="input.co.admin.password" displayText="CentralOffice Administrator Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.co.admin.password.pw" origField="input.co.admin.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true)" type="input" name="CO_SecurityDetails" displayText="Central Office Security Information">
+        <comment displayText="" explanatoryText="A value of &quot;Yes&quot; indicates that secure CentralOffice communications will be used.  A value of &quot;No&quot; indicates that secure CentralOffice Communications will not be used" />
+        <select property="input.wl.secure.co" defaultValue="true"
+                displayText="Enable Secure CentralOffice Communications&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.install.type}=SERVER) AND (${input.wl.secure.co}=false) AND (${input.bo.co.integrate}=true) AND (${prompt.for.co.server.info}=true)" type="input" name="CO_Details" displayText="Central Office Server Information">
+        <comment displayText=" " explanatoryText="Please enter configuration details for the CentralOffice instance" />
+        <text property="input.co.hostname" displayText="CentralOffice Server Hostname" defaultValue=""/>
+        <validated property="input.co.jndi-port" displayText="CentralOffice Server JNDI Port" defaultValue="7001" regex="^[0-9]{1,}$"/>
+        <text property="input.co.admin.username" displayText="CentralOffice Administrator User" defaultValue="pos"/>
+        <password property="input.co.admin.password" displayText="CentralOffice Administrator Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.co.admin.password.pw" origField="input.co.admin.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.install.type}=SERVER) AND (${input.wl.secure.co}=true) AND (${input.bo.co.integrate}=true) AND (${prompt.for.co.server.info}=true)" type="input" name="CO_Details" displayText="Central Office Server Information">
+        <comment displayText=" " explanatoryText="Please enter configuration details for the CentralOffice instance" />
+        <text property="input.co.hostname" displayText="CentralOffice Server Hostname" defaultValue=""/>
+        <validated property="input.co.jndi-port" displayText="CentralOffice Server Secure JNDI Port" defaultValue="7002" regex="^[0-9]{1,}$"/>
+        <text property="input.co.admin.username" displayText="CentralOffice Administrator User" defaultValue="pos"/>
+        <password property="input.co.admin.password" displayText="CentralOffice Administrator Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm property="input.co.admin.password.pw" origField="input.co.admin.password" displayText="Confirm password"  defaultValue="" textMask="true"  sendToAnt="false"  regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.install.type}=SERVER) AND (${input.appserver.type}=WAS) AND (${input.transaction.retrieval.location}^=CENTRAL) AND (${input.enable.co.webservices}=false)" type="input" name="TXRetrievalJars" displayText="Transaction Retrieval Jar Locations">
+        <comment displayText="Please select the locations of the transaction retrieval jars:" />
+        <comment displayText="" />
+        <file property="input.transaction.retrieval.transaction-jar.location" displayText="Location of transaction-retrieval-ejb.jar"
+            defaultValue="/transaction-retrieval-ejb.jar"
+            defaultValueWin="C:\transaction-retrieval-ejb.jar"
+            checkExists="true"/>
+        <file property="input.transaction.retrieval.customer-jar.location" displayText="Location of customer-retrieval-ejb.jar"
+            defaultValue="/customer-retrieval-ejb.jar"
+            defaultValueWin="C:\customer-retrieval-ejb.jar"
+            checkExists="true"/>
+    </page>
+
+    <!-- page ifProperty="(${input.appserver.type}=OAS) AND (${input.install.type}=CLIENT)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <text property="input.bo.app.name" displayText="Back Office Application Name" defaultValue="BackOffice"/>
+        <text property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="12401"/>
+        <text property="input.bo.admin.username" displayText="Back Office ServerAdministrator User" defaultValue="oc4jadmin"/>
+        <password property="input.bo.admin.password" displayText="Back Office Server Administrator Password" defaultValue="" regex=".+"/>
+    </page -->
+
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.client.wl.secure.bo}=false) AND (${input.install.type}=CLIENT) AND (${input.bo.co.integrate}=true)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="7001" regex="^[0-9]{1,}$"/>
+    </page>
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.client.wl.secure.bo}=true) AND (${input.install.type}=CLIENT) AND (${input.bo.co.integrate}=true)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.bo.jndi-port" displayText="Back Office Server JNDI Secure Port" defaultValue="7002" regex="^[0-9]{1,}$" />
+    </page>
+
+    <page ifProperty="(${input.appserver.type}=WAS) AND (${input.install.type}=CLIENT)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <text property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="2809" regex="^[0-9]{1,}$"/>
+    </page>
+
+    <!-- page ifProperty="(${input.appserver.type}=OAS) AND (${input.install.type}=SERVER)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <text property="input.bo.app.name" displayText="Back Office Application Name" defaultValue="BackOffice"/>
+        <text property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="12401"/ -->
+        <!-- <text property="input.bo.admin.username" displayText="Back Office Administrator User" defaultValue=""/> -->
+        <!-- <password property="input.bo.admin.password" displayText="Back Office Administrator Password" defaultValue="" regex=".+"/> -->
+    <!-- /page -->
+
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.server.wl.secure.bo}=false) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="7001" regex="^[0-9]{1,}$"/>
+    </page>
+    <page ifProperty="(${input.appserver.type}=WL) AND (${input.server.wl.secure.bo}=true) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <validated property="input.bo.jndi-port" displayText="Back Office Server JNDI Secure Port" defaultValue="7002" regex="^[0-9]{1,}$"/>
+    </page>
+
+    <page ifProperty="(${input.appserver.type}=WAS) AND (${input.install.type}=SERVER) AND (${input.bo.co.integrate}=true)" type="input" name="BO_Details" displayText="Back Office Server Information">
+        <comment displayText=" " />
+        <text property="input.bo.hostname" displayText="Back Office Server Name" defaultValue="${input.store.server.hostname}"/>
+        <text property="input.bo.app.name" displayText="Back Office Application Name" defaultValue="BackOffice"/>
+        <validated property="input.bo.jndi-port" displayText="Back Office Server JNDI Port" defaultValue="2809" regex="^[0-9]{1,}$"/>
+        <!-- <text property="input.bo.admin.username" displayText="Back Office Administrator User" defaultValue=""/> -->
+        <!-- <password property="input.bo.admin.password" displayText="Back Office Administrator Password" defaultValue="" regex=".+"/> -->
+    </page>
+
+    <page type="input" name="TenderAuthorization" displayText="Tender Authorization">
+        <comment displayText="Please select the Tender Authorization method:"/>
+        <comment displayText=" " />
+        <select property="input.tender.authorization.type" displayText="" defaultValue="SIMULATED">
+            <option text="Simulated" value="SIMULATED"/>
+            <option text="ACI PIN Comm" value="ISD"/>
+            <option text="Servebase PC-EFT POS" value="SERVEBASE"/>
+        </select>
+    </page>
+
+    <page ifProperty="(${input.tender.authorization.type}=ISD) AND (${input.install.type}=CLIENT)" type="input" name="TenderAuthorizationData" displayText="Tender Authorization: ISD PIN Comm">
+        <comment displayText="Please enter the following for the PIN Comm application:"/>
+        <comment displayText=" " />
+
+        <!-- PIN Comm Libraries -->
+        <directory property="input.tender.authorization.pincomm.jar.directory" displayText="ISD ToolKit JAR location"
+            defaultValue="/opt/isd-jars"
+            defaultValueWin="C:\isd-jars"
+            checkExists="true"/>
+
+        <text property="input.tender.authorization.pincomm.jar.mspcommapi" displayText="MSPCommAPI JAR" defaultValue="MSPCommAPI.jar"/>
+    </page>
+
+
+    <page ifProperty="(${input.tender.authorization.type}=ISD) AND (${input.install.type}=SERVER)" type="input" name="TenderAuthorizationData" displayText="Tender Authorization: ISD PIN Comm">
+        <comment displayText="Please enter the following for the PIN Comm application:"/>
+        <comment displayText=" " />
+
+        <!-- PIN Comm Libraries -->
+        <directory property="input.tender.authorization.pincomm.jar.directory" displayText="ISD ToolKit JAR location"
+            defaultValue="/opt/isd-jars"
+            defaultValueWin="C:\isd-jars"
+            checkExists="true"/>
+
+        <text property="input.tender.authorization.pincomm.jar.imsrtribspecsdk" displayText="IMSRTRIBSpecSDK JAR" defaultValue="IMSRTRIBSpecSDK-305.jar"/>
+        <text property="input.tender.authorization.pincomm.jar.isdcrypt" displayText="isdcrypt JAR" defaultValue="isdcrypt-6.3.0.008.jar"/>
+        <text property="input.tender.authorization.pincomm.jar.mspcommapi" displayText="MSPCommAPI JAR" defaultValue="MSPCommAPI.jar"/>
+
+        <comment displayText=" " />
+
+        <!-- The Location value mapped to this store in PIN Comm-->
+        <validated property="input.tender.authorization.pincomm.location" defaultValue="4241" displayText="Location (4-digit numeric value)" regex="^[0-9]{4}$" />
+
+        <!-- The IP address for the ISD PIN Comm application host  -->
+        <text property="input.tender.authorization.pincomm.primaryIpAddress" displayText="Primary IP Address" defaultValue=""/>
+        <!-- The port the ISD PIN Comm application host is listening on-->
+        <text property="input.tender.authorization.pincomm.primaryPort" displayText="Primary Port" defaultValue=""/>
+
+        <!-- IP address for the Secondary ISD PIN Comm application host - used only when Primary host fails to respond   -->
+        <text property="input.tender.authorization.pincomm.secondaryIpAddress" displayText="Secondary IP Address" defaultValue=""/>
+        <!-- The port the Secondary ISD PIN Comm application host is listening on-->
+        <text property="input.tender.authorization.pincomm.secondaryPort" displayText="Secondary Port" defaultValue=""/>
+
+        <!-- IP address for the Third ISD PIN Comm application host - used only when Secondary host fails to respond   -->
+        <text property="input.tender.authorization.pincomm.tertiaryIpAddress" displayText="Tertiary IP Address" defaultValue=""/>
+        <!-- The port the Third ISD PIN Comm application host is listening on-->
+        <text property="input.tender.authorization.pincomm.tertiaryPort" displayText="Tertiary Port" defaultValue=""/>
+
+        <!-- URI for the ISD Image Capture Web Service handling the Universal Image (UI) message type -->
+        <text property="input.tender.authorization.pincomm.imageCaptureUri" displayText="Image Capture Web Service URI" defaultValue="http://HOST:PORT/PATH_TO_WEBSERVICE"/>
+
+        <comment displayText=" " />
+
+        <!--  SSL enabled -->
+        <select property="input.tender.authorization.pincomm.sslEnabled" defaultValue="true"
+                displayText="Enable Secure Communication with PIN Comm&#63;">
+            <option text="Yes" value="true" />
+            <option text="No" value="false" />
+        </select>
+    </page>
+
+    <page ifProperty="(${input.tender.authorization.type}=SERVEBASE) AND (${input.install.type}=CLIENT)" type="input" name="TenderAuthorizationData" displayText="Tender Authorization: Servebase PC-EFT">
+        <comment displayText="Please enter the following for the Servebase PC-EFT application:"/>
+        <comment displayText=" " />
+        <text property="input.tender.authorization.servebase.hostname" displayText="Hostname" defaultValue=""/>
+        <text property="input.tender.authorization.servebase.port" displayText="Port" defaultValue=""/>
+        <text property="input.tender.authorization.servebase.merchantId" displayText="Merchant ID" defaultValue=""/>
+        <text property="input.tender.authorization.servebase.customerCode" displayText="Customer Code" defaultValue=""/>
+        <text property="input.tender.authorization.servebase.site" displayText="Site" defaultValue=""/>
+        <text property="input.tender.authorization.servebase.username" displayText="User Name" defaultValue=""/>
+        <password property="input.tender.authorization.servebase.password" displayText="Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm origField="input.tender.authorization.servebase.password" property="input.tender.authorization.servebase.password.pw"  displayText="Confirm password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+    </page>
+
+    <page ifProperty="(${input.server.secure.rmi}=true) OR (${input.jms.ssl.level}=US) OR (${input.jms.ssl.level}=EXPORT) OR (${input.keystore.provider}=RSA) OR (${input.tender.authorization.pincomm.sslEnabled}=true)" type="input" name="SSLKeystoreDetails" displayText="SSL Key Store Details">
+         <comment displayText="" explanatoryText="Provide the details for the SSL Key store for secure configuration" />
+         <comment displayText=" "/>
+         <file property="input.ssl.keystore.location" displayText="SSL Key Store Location and File" defaultValue=""/>
+         <password property="input.ssl.keystore.password" displayText="SSL Key Store Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+         <password-confirm origField="input.ssl.keystore.password" property="input.ssl.keystore.password.pw"  displayText="Confirm password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+    </page>
+
+    <page type="hidden" name="PreSSLTrustStoreDetails">
+      <conditional ifProperty="(${input.secure.jdbc}=true) AND (${input.db.type}=ibm)">
+        <hidden property="needs.jdbc.keystore" value="true"/>
+      </conditional>
+      <conditional ifProperty="(${input.secure.jdbc}!=true) OR (${input.db.type}!=ibm)">
+        <hidden property="needs.jdbc.keystore" value="false"/>
+      </conditional>
+    </page>
+
+    <page ifProperty="(${input.possiebel.protocol}=https)
+                  OR (${input.rmpos.protocol}=https)
+                  OR (${input.posco.protocol}=https)
+                  OR (${input.jms.ssl.level}=US)
+                  OR (${input.jms.ssl.level}=EXPORT)
+                  OR (${needs.jdbc.keystore}=true)
+                  OR (${input.server.wl.secure.bo}=true)
+                  OR (${input.client.secure.rmi}=true)
+                  OR (${input.client.wl.secure.bo}=true)
+                  OR (${input.tender.authorization.pincomm.sslEnabled}=true)" type="input" name="SSLTrustStoreDetails" displayText="SSL Trust Store Details">
+        <comment displayText="" explanatoryText="Provide the details for the SSL Truststore" />
+        <comment displayText=" "/>
+        <file property="input.ssl.truststore.location" displayText="SSL Truststore Location and File"
+            defaultValue="${input.jre.directory}/lib/security/cacerts"
+            defaultValueWin="${input.jre.directory}\lib\security\cacerts"/>
+        <password property="input.ssl.truststore.password" displayText="SSL Trust Store Password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+        <password-confirm origField="input.ssl.truststore.password" property="input.ssl.truststore.password.pw" displayText="Confirm password" defaultValue="" textMask="true" sendToAnt="false" regex=".+"/>
+    </page>
+
+    <page ifProperty="${input.install.type}=CLIENT" type="input" name="UserInterfaceType" displayText="User Interface Type" >
+        <comment displayText="Select the user interface type:"/>
+        <comment displayText=" " />
+        <select property="input.ui.type" displayText="" defaultValue="SWING">
+            <option text="Swing-based" value="SWING"/>
+            <option text="Image-based" value="IMAGE"/>
+        </select>
+    </page>
+
+    <page type="progress" name="progress" showTargets="true" displayText="Installation progress" target="install"/>
+
+</installer>

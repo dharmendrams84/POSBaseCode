@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/context/ApplicationContext.xml /rgbustores_13.4x_generic_branch/10 2011/09/23 16:54:20 ohorne Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    09/23/11 - SSL PinComm support
+ *    asinton   07/27/11 - fixed package location of SequenceNumberGenerator
+ *    ohorne    06/30/11 - spring loaded PinCommFormatUtils
+ *    ohorne    06/20/11 - fix for PinComm Comments
+ *    ohorne    06/17/11 - added application_ISDTK
+ *    ohorne    06/16/11 - installer now uncomments PINComm-specific objects
+ *    ohorne    05/09/11 - added application_SequenceNumberGenerator
+ *    sgu       05/05/11 - remove Pincomm formatter spring loading
+ *    asinton   04/29/11 - Adding gift card for APF.
+ *    cgreene   11/04/10 - move creation of resourcebundle to context
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    cgreene   04/08/10 - initial server version
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+This is for Application type objects being managed by Spring Framework.
+These could be like Utility or UI related objects that we use at the Application layer level directly.
+Beans should be named starting with prefix application_ so that in Java code it is easier
+to identify which context file is being used for the Bean.
+-->
+
+<beans>
+
+    <!-- This is used to load configurations from the application.properties -->
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config/application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The fallback resource loader. Must implement oracle.retail.stores.common.utility.LanguageResourceBundleIfc -->
+    <bean id="application_LanguageResourceBundle" class="oracle.retail.stores.common.utility.LanguageResourceBundle"
+        singleton="false"/>
+
+    <!-- A reference to the constant LocaleConstantsIfc#DEFAULT_LOCALE -->
+    <bean id="oracle.retail.stores.domain.utility.LocaleConstantsIfc.DEFAULT_LOCALE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- The value of the default locale from the LocaleMap -->
+    <bean id="defaultLocale" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"><value>oracle.retail.stores.common.utility.LocaleMap</value></property>
+        <property name="targetMethod"><value>getLocale</value></property>
+        <property name="arguments">
+            <list>
+                <ref bean="oracle.retail.stores.domain.utility.LocaleConstantsIfc.DEFAULT_LOCALE"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The value of the receipt locale from the LocaleMap -->
+    <bean id="receiptLocale" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"><value>oracle.retail.stores.common.utility.LocaleMap</value></property>
+        <property name="targetMethod"><value>getLocale</value></property>
+        <property name="arguments">
+            <list>
+                <ref local="oracle.retail.stores.domain.utility.LocaleConstantsIfc.RECEIPT"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- A reference to the constant LocaleConstantsIfc#RECEIPT -->
+    <bean id="oracle.retail.stores.domain.utility.LocaleConstantsIfc.RECEIPT"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- PasswordPolicyTDO TDOFactory create method functionality -->
+    <bean id="application_PasswordPolicyTDO" class="oracle.retail.stores.pos.ado.utility.tdo.PasswordPolicyTDO"
+          singleton="false"/>
+    <!-- Main TDO -->
+    <bean id="application_MainTDO" class="oracle.retail.stores.pos.services.main.tdo.MainTDO"
+          singleton="false"/>
+    <!-- Locale Map Loader -->
+    <bean id="application_LocaleMapLoader" class="oracle.retail.stores.commerceservices.common.utility.LocaleMapLoader"
+          lazy-init="true"/>
+
+    <!-- Parameter bean used for sorting financial tender items.  Class must extend oracle.retail.stores.pos.reports.FinancialCountTenderItemComparator -->
+    <bean id="application_FinancialCountTenderItemComparator" class="oracle.retail.stores.pos.reports.FinancialCountTenderItemComparator"
+          singleton="false" />
+
+    <!-- SaleReturnTransactionJournalFormatter -->
+    <bean id="application_SaleReturnTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.SaleReturnTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATSaleReturnTransactionJournalFormatter -->
+    <bean id="application_VATSaleReturnTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VATSaleReturnTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- SaleReturnLineItemJournalFormatter -->
+    <bean id="application_SaleReturnLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.SaleReturnLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATSaleReturnLineItemJournalFormatter -->
+    <bean id="application_VATSaleReturnLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATSaleReturnLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- KitHeaderLineItemJournalFormatter -->
+    <bean id="application_KitHeaderLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.KitHeaderLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATKitHeaderLineItemJournalFormatter -->
+    <bean id="application_VATKitHeaderLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATKitHeaderLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- KitComponentLineItemJournalFormatter -->
+    <bean id="application_KitComponentLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.KitComponentLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATKitComponentLineItemJournalFormatter -->
+    <bean id="application_VATKitComponentLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATKitComponentLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VoidTransactionJournalFormatter -->
+    <bean id="application_VoidTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VoidTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATVoidTransactionJournalFormatter -->
+    <bean id="application_VATVoidTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VATVoidTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- RedeemTransactionJournalFormatter -->
+    <bean id="application_redeemTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.RedeemTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- application_PinCommFormatUtils: Format Utility bean for format/translation of data communication with PinComm.  Class must implement oracle.retail.stores.domain.manager.payment.pincomm.PinCommFormatUtilsIfc -->
+    <!-- application_SequenceNumberGenerator: Sequence Number generation bean used for creation of unique journal keys for pincomm.  Class must extend oracle.retail.stores.domain.manager.payment.pincomm.SequenceNumberGenerator -->
+    <!-- application_ISDTK: ISD Java Toolkit used to communicate with PIN Comm.  Class must extend oracle.retail.stores.domain.manager.payment.pincomm.IsdToolkitAdapter -->
+    <!-- BEGIN application objects for PINComm integration
+    <bean id="application_PinCommFormatUtils" class="oracle.retail.stores.domain.manager.payment.pincomm.PinCommFormatUtils" /> 
+    <bean id="application_SequenceNumberGenerator" class="oracle.retail.stores.domain.manager.payment.pincomm.SequenceNumberGenerator" 
+          lazy-init="true" singleton="true">
+          <constructor-arg type="int" value="9999"/>
+          <constructor-arg type="java.lang.String" value="./sequenceNumbers.ser"/>
+    </bean>
+    <bean id="application_ISDTK" class="oracle.retail.stores.domain.manager.payment.pincomm.IsdToolkitAdapter" 
+        lazy-init="false" singleton="true">
+        <property name="primaryIpAddress" value="$PINCOMM_PRIMARY_IP"/>
+        <property name="primaryPort" value="$PINCOMM_PRIMARY_PORT"/>
+        <property name="secondaryIpAddress" value="$PINCOMM_SECONDARY_IP"/>
+        <property name="secondaryPort" value="$PINCOMM_SECONDARY_PORT"/>
+        <property name="tertiaryIpAddress" value="$PINCOMM_TERTIARY_IP"/>
+        <property name="tertiaryPort" value="$PINCOMM_TERTIARY_PORT"/>
+        <property name="logFile" value="../logs/isd.log"/>
+        <property name="logLevel" value="ERROR"/>
+        <property name="imageCaptureUri" value="$PINCOMM_IMAGE_CAPTURE_URI"/>
+        <property name="applicationName" value="Oracle Retail Point-of-Service"/>
+        <property name="newUnpaddingEnabled" value="false"/>
+        <property name="keepAliveIntervalInSeconds" value="60"/>
+        <property name="sslEnabled" value="$PINCOMM_SSL_ENABLED"/>
+        <property name="keyStoreFile" value="$PINCOMM_SSL_KEY_STORE"/>
+        <property name="keyStorePassword" value="SSLKeyStore"/>
+        <property name="trustStoreFile" value="$PINCOMM_SSL_TRUST_STORE"/>
+        <property name="trustStorePassword" value="SSLTrustStore"/>
+    </bean>
+    END application objects for PINComm integration -->
+</beans>

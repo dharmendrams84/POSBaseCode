@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/SummaryReport_ru.bpt /rgbustores_13.4x_generic_branch/1 2011/10/12 06:16:07 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rrkohli   03/11/11 - added fix for displaying alternate currency till
+ *                         pickup in receipt
+ *    rsnayak   11/30/10 - foreign currency fix
+ *    nkgautam  08/03/10 - check-in after merge
+ *    abhayg    08/02/10 - REPORTS PRINTED IN TRAINING MODE SHOULD DISPLAY
+ *                         TRAINING MODE
+ *    nkgautam  07/28/10 - Bill Payment Report changes
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    yiqzhao   03/12/10 - store close status is 2 not 0.
+ *    mchellap  02/25/10 - Fixed till summary report no of cash in/out
+ *    cgreene   02/18/10 - added blank entry for Till status when status=2
+ *                         RECONCILED
+ *    abondala  01/02/10 - Update Header date
+ *    ohorne    09/22/09 - now prints non-reconciled status (CLOSED, OPEN,
+ *                         SUSPENDED) instead of OPEN for non-reconciled till
+                           (Merged ohorne_bug-8917685 from rgbustores_13.1x_branch)
+ *    spurkaya  04/09/09 - Updated the report to display correct tender type
+ *                         description
+ *    cgreene   03/31/09 - hide safe open and closing lines if is not a store
+ *                         summary
+ *    cgreene   03/14/09 - set to cut report now that queued txn report is gone
+ *    djenning  03/09/09 - removing QueuedTransactionReport link
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/26/09 - merged with TillSummaryReport
+ *    djenning  02/24/09 - merged
+ *    blarsen   02/21/09 - fixing section headers and tax authority section to
+ *                         work w/ printers with widths other than 42 (using
+ *                         stretch, etc)
+ *    ddbaker   01/16/09 - Repaired damaged receipts - linked to non-existent
+ *                         receipt blueprints.
+ *    atirkey   01/15/09 - Modified to include proper display
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="SummaryReport" copies="1">
+    <report name="SummaryReportReport" id="1">
+        <group id="1">
+            <line id="24833256">
+                <element text="Сводный отчет" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="22514347" />
+            <line id="5313146">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text=" " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="9708927">
+                <element text="Маг.:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Касса:" id="26203554" justified="2" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2737550">
+                <element text="Код ксср:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Не отчет, режим обуч *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="19658898" />
+            <line id="6888942">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="30167145">
+                <element text="Начальн. дата:" id="7676992" />
+                <methodElement formatter="Date.SHORT" id="5735716">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="11742932" />
+            <line id="29857804" />
+            <line id="13594894">
+                <element text="Сводка смены для №:" id="19331015" dependsOnPresenceOf="264702" justified="2" stretch="true" />
+                <methodElement fixedWidth="11" printedWhenLengthZero="false" id="264702">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="String" name="getTillID" class="oracle.retail.stores.domain.financial.Till" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="13594895">
+                <element text="Сводка по кассе для №:" id="19331016" dependsOnPresenceOf="264703" justified="2" stretch="true" />
+                <methodElement fixedWidth="11" printedWhenLengthZero="false" id="264703">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="WorkstationIfc" name="getWorkstation" class="oracle.retail.stores.domain.financial.RegisterIfc">
+                            <method returns="String" name="getWorkstationID" class="oracle.retail.stores.domain.store.WorkstationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="13594896">
+                <element text="Сводка по маг для №:" id="19331017" dependsOnPresenceOf="264704" justified="2" stretch="true" />
+                <methodElement fixedWidth="11" printedWhenLengthZero="false" id="264704">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="StoreIfc" name="getStore" class="oracle.retail.stores.domain.financial.StoreStatusAndTotalsIfc">
+                            <method returns="String" name="getStoreID" class="oracle.retail.stores.domain.store.StoreIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22450101" />
+            <line id="17268681">
+                <element text="" id="8773657" fillChar="_" stretch="true" />
+            </line>
+            <line id="32816375" dependsOnPresenceOf="264704">
+                <element text="Откр.сейф" id="5524037" stretch="true" />
+                <methodElement id="3628626">
+                    <method returns="CurrencyIfc" name="getSafeOpen" class="oracle.retail.stores.pos.reports.SummaryReport" />
+                </methodElement>
+            </line>
+            <line id="10625551" dependsOnPresenceOf="264704">
+                <element text="Закр. сейфа" id="13091158" stretch="true" />
+                <methodElement id="8275958">
+                    <method returns="CurrencyIfc" name="getSafeClose" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="abs" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#CLOSED|1#OPEN|2#CLOSED|3#SUSPENDED" id="26051839">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6961504" dependsOnPresenceOf="264704">
+                <element text="Изл/нед" id="2641578" stretch="true" />
+                <methodElement id="3175412">
+                    <method returns="CurrencyIfc" name="getSafeOverShort" class="oracle.retail.stores.pos.reports.SummaryReport" />
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#CLOSED|1#OPEN|2#CLOSED|3#SUSPENDED" id="1716880">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31248093" dependsOnPresenceOf="264704" />
+            <line id="26285376">
+                <element text="Отк. зап.ден" id="22383868" stretch="true" />
+                <methodElement id="29903819">
+                    <method returns="CurrencyIfc" name="getFloatOpen" class="oracle.retail.stores.pos.reports.SummaryReport" />
+                </methodElement>
+            </line>
+            <line id="672904">
+                <element text="Зап. ден. при зкр" id="12941641" stretch="true" />
+                <methodElement id="18437392">
+                    <method returns="CurrencyIfc" name="getFloatClose" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="abs" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#CLOSED|1#OPEN|2#|3#SUSPENDED" printedWhenLengthZero="false" id="20409731">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1668655">
+                <element text="Изл/нед" id="9658033" stretch="true" />
+                <methodElement id="18589900">
+                    <method returns="CurrencyIfc" name="getFloatOverShort" class="oracle.retail.stores.pos.reports.SummaryReport" />
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#CLOSED|1#OPEN|2#|3#SUSPENDED" printedWhenLengthZero="false" id="27542095">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27140443" />
+            <line id="10481832">
+                <element text="Сводка по опл" id="8800236" stretch="true" />
+                <element text="Кол-во         Сумма" id="12893203" />
+            </line>
+            <line id="7388808" />
+        </group>
+        <group id="2">
+            <line id="1677625">
+                <methodElement precededBySpace="false" formatter="0#Нал|1#Кредитн.карты|2#Чеки|3#Дорожн.чеки|4#Подар.серт|5#Чек д/пер.по пчт|6#Дебет.карты|7#Купоны|8#Подар.карты|9#Кредит маг.|10#Серт.торг.ц.|11#Заказ на пок|12#Плат.поруч.|13#Эл.чеки|AmEx#AmEx|Diners#Diners|Discover#Discover|ФирмКарт#ФирмКарт|JCB#JCB|MasterCard#MasterCard|Visa#Visa" id="17231894">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="String" name="getTenderType" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+           		<methodElement prefix="(" suffix=")" formatter="CA#CAD|MX#MXN|GB#GBP|EU#EUR|JP#JPY" id="27394758" printedWhenLengthZero="false">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="com.extendyourstore.pos.reports.SummaryReport">
+                        <method returns="String" name="getTenderLabel" class="com.extendyourstore.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10132325">
+                <element text="Пр" id="1244264" stretch="true" />
+                <methodElement id="29762417">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getNumberItemsIn" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="14" id="30896150" justified="2">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountIn" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5253145">
+                <element text="Ух." id="20732548" stretch="true" />
+                <methodElement id="9460096">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                         <method returns="int" name="getNumberItemsOut" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="14" id="8686889" justified="right">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountOut" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7907968">
+                <element text="Чист" id="5990742" stretch="true" />
+                <methodElement id="13656883">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="121226">
+                <element text="Подсч." id="18431798" stretch="true" />
+                <methodElement id="1792428">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountCounted" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24192593" />
+            <line id="25865024">
+                <element text="Изл/нед" id="20806595" stretch="true" />
+                <methodElement id="6350145">
+                    <method returns="SummaryReportTender[]" name="getTenders" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountOverShort" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15794899" />
+            <line id="15758165" />
+        </group>
+        <group id="3">
+            <line id="30620267">
+                <element text="Итого" id="11686189" />
+                <methodElement prefix="(" suffix=")" id="27394757">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialCountTenderItemIfc" name="getExpectedTender" class="oracle.retail.stores.pos.reports.SummaryReportTender">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc">
+                                <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                    <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10520143">
+                <element text="Пр" id="4668014" stretch="true" />
+                <methodElement id="3825401">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialCountTenderItemIfc" name="getExpectedTender" class="oracle.retail.stores.pos.reports.SummaryReportTender">
+                            <method returns="CurrencyIfc" name="getAmountIn" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="13754931">
+                <element text="Ух." id="16287771" stretch="true" />
+                <methodElement id="6007148">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialCountTenderItemIfc" name="getExpectedTender" class="oracle.retail.stores.pos.reports.SummaryReportTender">
+                            <method returns="CurrencyIfc" name="getAmountOut" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22643639">
+                <element text="Чист" id="21995762" stretch="true" />
+                <methodElement id="2867903">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialCountTenderItemIfc" name="getExpectedTender" class="oracle.retail.stores.pos.reports.SummaryReportTender">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="30831739">
+                <element text="Подсч." id="12586973" stretch="true" />
+                <methodElement id="21800024">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountCounted" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#ЗАКР|1#ОТКР|3#ОТЛОЖЕНО" id="30261803">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7960257" />
+            <line id="6526955">
+                <element text="Изл/нед" id="6348054" stretch="true" />
+                <methodElement id="18140584">
+                    <method returns="SummaryReportTender[]" name="getTenderTotals" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="CurrencyIfc" name="getAmountOverShort" class="oracle.retail.stores.pos.reports.SummaryReportTender" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="0#ЗАКР|1#ОТКР|3#ОТЛОЖЕНО" id="1689061">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="int" name="getStatus" class="oracle.retail.stores.domain.financial.AbstractStatusEntityIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9104244" />
+        </group>
+        <group id="4">
+            <line id="28318458">
+                <element text="" id="1911924" fillChar="_" stretch="true" />
+            </line>
+            <line id="12273995">
+                <element text="" id="19677095" fillChar="_" stretch="true" />
+            </line>
+            <line id="29945809" />
+            <line id="16290468">
+                <element text="Сводка по транзакц." id="22557480" stretch="true" />
+                <element text="Сумма" id="25433075" />
+            </line>
+            <line id="23293518" />
+            <line id="14615608">
+                <element text="Чст. нлгобл. перев" id="32710486" stretch="true" />
+                <methodElement id="21819332">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountNetTaxableTransactionSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26093085">
+                <element text="Чист перев, налога нет" id="21636156" stretch="true" />
+                <methodElement id="22920156">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountNetNonTaxableTransactionSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="23611142">
+                <element text="Налог с продаж" id="15920717" stretch="true" />
+                <methodElement id="26867373">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTaxTransactions" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17759612" />
+            <line id="19141351">
+                <element text="Выем смены" id="30109728" stretch="true" />
+                <methodElement id="8638732">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTillPickups" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+         </group>
+         <group id="5">
+            <line id="2136649">
+    	        <methodElement prefix="Till Pickup (" suffix=")" formatter="CA#CAD|MX#MXN|GB#GBP|EU#EUR|JP#JPY" id="2136650" printedWhenLengthZero="false" stretch="true">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="String[]" name="getPickupsCurrencyLabel" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                    </method>
+                  </method>
+                </methodElement>
+                <methodElement id="2136651">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc[]" name="getAmountTillPickupsAltCurrency" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+         </group>  
+      <group id="6">      
+            <line id="22358902">
+                <element text="Разм смен" id="7323936" stretch="true" />
+                <methodElement id="14296140">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTillLoans" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9996039">
+                <element text="Внес. в см" id="3376136" stretch="true" />
+                <methodElement id="18181855">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTillPayIns" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29945686">
+                <element text="Выпл. из см" id="18508339" stretch="true" />
+                <methodElement id="7674656">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTillPayOuts" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14222419">
+                <element text="Плат. по фирм.счету" id="23740918" stretch="true" />
+                <methodElement id="32452499">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountHousePayments" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27988400">
+                <element text="Нов. резерв" id="23453805" stretch="true" />
+                <methodElement id="22309646">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayNew" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1465214">
+                <element text="Выем резерва" id="12792157" stretch="true" />
+                <methodElement id="11355342">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayPickup" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="30462244">
+                <element text="Оплата резерв" id="21096410" stretch="true" />
+                <methodElement id="16095778">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayPayments" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5424820">
+                <element text="Удаление резерв" id="32587734" stretch="true" />
+                <methodElement id="15518111">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayDeletions" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7572744">
+                <element text="Новый спец. заказ" id="7614340" stretch="true" />
+                <methodElement id="7550472">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountSpecialOrderNew" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3157607">
+                <element text="Спец. заказ выполнен" id="18360674" stretch="true" />
+                <methodElement id="2649358">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountOrderPayments" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20357537">
+                <element text="Спец. заказ отменен" id="21074620" stretch="true" />
+                <methodElement id="28659501">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountOrderCancels" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28142411">
+                <element text="Спец. зак част. вып." id="2620407" stretch="true" />
+                <methodElement id="32283963">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountSpecialOrderPartial" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28142679">
+                <element text="Оплата счета" id="2620470" stretch="true" />
+                <methodElement id="32283928">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountBillPayments" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6237616" />
+            <line id="11576309">
+                <element text="" id="8347703" fillChar="_" stretch="true" />
+            </line>
+            <line id="14434757">
+                <element text="" id="5658913" fillChar="_" stretch="true" />
+            </line>
+            <line id="6427893" />
+            <line id="21893435">
+                <element text="Свод. по зачисл. для фирм.счета" id="9341090" stretch="true" />
+            </line>
+            <line id="5076660" />
+            <line id="28073747">
+                <element text="Заявления по фирм.счетам" id="17941079" stretch="true" />
+                <element text="Подсчет" id="1852116" />
+            </line>
+            <line id="26598747">
+                <element text="Утвержд." id="6425716" stretch="true" />
+                <methodElement id="130625">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="int" name="getHouseCardEnrollmentsApproved" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="  " id="12236432" />
+            </line>
+            <line id="33000296">
+                <element text="Отклон." id="28725700" stretch="true" />
+                <methodElement id="3653359">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="int" name="getHouseCardEnrollmentsDeclined" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="  " id="33161828" />
+            </line>
+            <line id="14779369" />
+            <line id="26953436">
+                <element text="" id="30491066" fillChar="_" stretch="true" />
+            </line>
+            <line id="21573890">
+                <element text="" id="32513656" fillChar="_" stretch="true" />
+            </line>
+            <line id="3190337" />
+            <line id="16900">
+                <element text="Стат. сводка" id="14823791" stretch="true" />
+                <element text="Сумма" id="15923087" />
+            </line>
+            <line id="15605470" />
+            <line id="19697576">
+                <element text="Выданы подар.кар." id="14668532" stretch="true" />
+                <methodElement id="22374103">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountGrossGiftCardItem" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9144903">
+                <element text="Перез. подар. карты" id="17351291" stretch="true" />
+                <methodElement id="27684061">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountGiftCardItemReloaded" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19098837">
+                <element text="Выд. кредит по п.к." id="32514556" stretch="true" />
+                <methodElement id="11832914">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountGiftCardItemCredit" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12470752">
+                <element text="Погаш. подар. карты" id="8831402" stretch="true" />
+                <methodElement id="13883907">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountGiftCardItemRedeemed" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14949315">
+                <element text="Выд. подар. серт." id="31779574" stretch="true" />
+                <methodElement id="15466280">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountGrossGiftCertificates" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31116492">
+                <element text="Погаш. подар. серт." id="13734355" stretch="true" />
+                <methodElement id="18837618">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountGiftCertificatesRedeemed" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29071960">
+                <element text="Выданы кредиты маг." id="27343100" stretch="true" />
+                <methodElement id="30169219">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountStoreCreditsIssued" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26357574">
+                <element text="Погаш. кредиты маг." id="20907591" stretch="true" />
+                <methodElement id="5810436">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountStoreCreditsRedeemed" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6146452">
+                <element text="Скид. на тов.сотр" id="12412392" stretch="true" />
+                <methodElement id="18067275">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountItemEmployeeDiscount" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22885256">
+                <element text="Скид. транз. сотр." id="4788989" stretch="true" />
+                <methodElement id="11778780">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getNetAmountTransactionEmployeeDiscount" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31614731">
+                <element text="Скид. транз." id="13381246" stretch="true" />
+                <methodElement id="2222531">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTransactionDiscounts" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14361585">
+                <element text="Скид. тов." id="30756964" stretch="true" />
+                <methodElement id="15614144">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountItemDiscounts" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18135083">
+                <element text="Сн. цены тов." id="30385539" stretch="true" />
+                <methodElement id="17389681">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountItemMarkdowns" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21443983">
+                <element text="Впос.стр. транз." id="3918599" stretch="true" />
+                <methodElement id="7824786">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountPostVoids" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="876215">
+                <element text="Не к реал." id="5714741" stretch="true" />
+                <methodElement id="8944604">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountGrossNonMerchandise" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29706134">
+                <element text="Удал. эл. строки" id="7491480" stretch="true" />
+                <methodElement id="11775279">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLineVoids" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14602480">
+                <element text="Сбор з/рез." id="31512133" stretch="true" />
+                <methodElement id="18741743">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayInitiationFees" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6778431">
+                <element text="Сбор за удал. рез." id="19841459" stretch="true" />
+                <methodElement id="12931147">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountLayawayDeletionFees" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7802158">
+                <element text="Сбор/возврат" id="24719404" stretch="true" />
+                <methodElement id="12609655">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountRestockingFees" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="162178">
+                <element text="Сбор/возврат не обл. нал." id="23421541" stretch="true" />
+                <methodElement fixedWidth="10" id="9601796" justified="right">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountRestockingFeesFromNonTaxableItems" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7832149">
+                <element text="Расходы по погр." id="25255526" stretch="true" />
+                <methodElement id="2329057">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountShippingCharges" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="895244" />
+            <line id="13994297">
+                <element text="" id="4205978" fillChar="_" stretch="true" />
+            </line>
+            <line id="14600371" />
+            <line id="19140890">
+                <element text="" id="30484783" fillChar="_" stretch="true" />
+            </line>
+            <line id="4881910">
+                <element text="Подсч. сводки" id="28151127" stretch="true" />
+                <element text="Подсчет" id="29345396" />
+            </line>
+            <line id="9690924" />
+            <line id="2159683">
+                <element text="Замена цены" id="32750159" stretch="true" />
+                <methodElement formatter="INTEGER" id="4623333">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="BigDecimal" name="getUnitsPriceOverrides" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25463023">
+                <element text="Корректир. цены" id="22555518" stretch="true" />
+                <methodElement formatter="INTEGER" id="1917700">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="BigDecimal" name="getUnitsPriceAdjustments" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3807284">
+                <element text="Отмененн. транз." id="2714838" stretch="true" />
+                <methodElement id="18799508">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="int" name="getNumberCancelledTransactions" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="728272">
+                <element text="Б/прод." id="21005925" stretch="true" />
+                <methodElement id="30841431">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="int" name="getNumberNoSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26255574">
+                <element text="Аннулир." id="5000114" stretch="true" />
+                <methodElement id="20361494">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="int" name="getNumberPostVoids" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3109534" />
+            <line id="17689439">
+                <element text="" id="17697920" fillChar="_" stretch="true" />
+            </line>
+            <line id="14137305">
+                <element text="" id="32251109" fillChar="_" stretch="true" />
+            </line>
+            <line id="6758293" />
+            <line id="4889213">
+                <element text="Сводка нал." id="25759872" stretch="true" />
+                <element text="Сумма" id="5892264" />
+            </line>
+            <line id="31761534" />
+            <line id="32200294">
+                <element text="Обл.нал.прод." id="22380840" stretch="true" />
+                <methodElement id="2853492">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountGrossTaxableSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24463001">
+                <element text="Не обл.нал.прод." id="28101633" stretch="true" />
+                <methodElement id="29841290">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountGrossNonTaxableSales" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="2034028">
+            <line id="24027753">
+                <methodElement precededBySpace="false" id="30738115">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="TaxTotalsContainerIfc" name="getTaxes" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc">
+                                <method returns="TaxTotalsIfc[]" name="getTaxTotals" class="oracle.retail.stores.domain.financial.TaxTotalsContainerIfc">
+                                    <method returns="String" name="getTaxAuthorityName" class="oracle.retail.stores.domain.financial.TaxTotalsIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6867819">
+                <element text=" " id="27511016" />
+                <methodElement id="4859760" stretch="true">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="TaxTotalsContainerIfc" name="getTaxes" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc">
+                                <method returns="TaxTotalsIfc[]" name="getTaxTotals" class="oracle.retail.stores.domain.financial.TaxTotalsContainerIfc">
+                                    <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.financial.TaxTotalsIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="16" id="10259606" justified="2">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="TaxTotalsContainerIfc" name="getTaxes" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc">
+                                <method returns="TaxTotalsIfc[]" name="getTaxTotals" class="oracle.retail.stores.domain.financial.TaxTotalsContainerIfc">
+                                    <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.financial.TaxTotalsIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="18050958">
+            <line id="26100519">
+                <element text="Общ. нал. с прд" id="16843877" stretch="true" />
+                <methodElement id="19446482">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTaxTransactions" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14342692">
+                <element text="Общий нал. на дост" id="19811545" dependsOnPresenceOf="10512954" stretch="true" />
+                <methodElement printedWhenValueZero="false" id="10512954">
+                    <method returns="AbstractFinancialEntityIfc" name="getFinancialEntity" class="oracle.retail.stores.pos.reports.SummaryReport">
+                        <method returns="FinancialTotalsIfc" name="getTotals" class="oracle.retail.stores.domain.financial.AbstractFinancialEntityIfc">
+                            <method returns="CurrencyIfc" name="getAmountTaxShippingCharges" class="oracle.retail.stores.domain.financial.FinancialTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2595047">
+                <element text=" КОНЕЦ ОТЧЕТА " id="1080952" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Не отчет, режим обуч *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="1647704" />
+        </group>
+    </report>
+</blueprint>
+
+

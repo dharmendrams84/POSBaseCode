@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/DebitSlipReceipt_it.bpt /rgbustores_13.4x_generic_branch/2 2011/11/14 00:41:11 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    08/19/11 - added Manual and Micr entry method
+ *    cgreene   08/15/11 - updated entry method for new enum
+ *    cgreene   10/27/10 - update idePath
+ *    npoola    09/10/10 - turned Stretch ON to avoid word wrap of the names
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    blarsen   05/05/09 - added customer name
+ *    cgreene   04/21/09 - add line for Legal Statement
+ *    cgreene   04/16/09 - added Audit Trace Num
+ *    cgreene   04/07/09 - rearrange credit and debit slips to be more like
+ *                         tender.bpt and add line for printing Entry:
+ *    djenning  03/30/09 - updating Debit Slip Receitpt removing items and tax
+ *                         related info.
+ *    cgreene   03/20/09 - set Damaged Discount as the reason code text to
+ *                         display on receipts when printing
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    cgreene   03/16/09 - fixed stretch on Total Tender and Change Due line
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - fixed some formatting to allow card info to show and
+ *                         aligned tenders
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/22/09 - Test Automation Changes for DebitSlipReceipt
+ *    ddbaker   01/22/09 - Test Automation Changes for DebitSlipReceipt
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   12/08/08 - add getReasonCode method to taxcontainer for bpts to
+ *                         query when there are no taxinfos
+ *    sgu       11/20/08 - replace isVATCodePrinting with isVATEnabled
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="DebitSlipReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="SubtotalReport" id="16879916" cutPaper="false">
+        <group id="474487880">
+            <line id="17777129">
+                <element text="Totale" id="1184712349" stretch="true" />
+                <methodElement id="25860324" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="10751977" />
+            </line>
+            <line id="11557581" />
+            <line id="27875541">
+                <element text="  Debito" id="5458031" stretch="true" />
+                <methodElement id="13086384">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAmountTender" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="21509710" />
+            </line>
+            <line id="32526445">
+                <element text="   Carta:" id="31625187" />
+                <methodElement printedWhenLengthZero="false" id="17798819">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getCardType" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18407933">
+                <element text="   Conto:" id="15077275" />
+                <methodElement printedWhenLengthZero="false" id="7504438">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.tender.TenderChargeIfc">
+                            <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4404782">
+                <element text="   Aut.:" id="6734485" />
+                <methodElement printedWhenLengthZero="false" id="1959987">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuthorizationCode" class="oracle.retail.stores.domain.tender.AuthorizableTenderIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15908322">
+                <element text="   N. traccia contr:" id="26538946" dependsOnPresenceOf="447392" />
+                <methodElement printedWhenLengthZero="false" id="447392">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAuditTraceNumber" class="oracle.retail.stores.domain.tender.TenderChargeIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11943540" dependsOnPresenceOf="11862635">
+                <element text="   Metodo di acquisizione:" id="28016009" />
+                <methodElement formatter="0#Manual|2#Micr|3#Swipe|4#ICC|7#ICC Fallback" printedWhenLengthZero="false" printedWhenValueZero="true" id="11862635">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EntryMethod" name="getEntryMethod" class="oracle.retail.stores.domain.tender.EnterableTenderIfc">
+                            <method returns="int" name="getLegacyCode" class="oracle.retail.stores.domain.utility.EntryMethod" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="19252724" />
+            <line id="25896456">
+                <methodElement formatter="1#Vend.|2#Reso|5#Cambio|18#Pagam. conto negozio|19#Deposito|36#Rimborso" id="31782456">
+                    <method returns="int" name="getTransactionType" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <element text=" Dichiar. leg. responsabilità" id="29789630" />
+            </line>
+            <line id="5758089" dependsOnPresenceOf="9386257" />
+            <line id="27418745" dependsOnPresenceOf="9386257">
+                <element text="  Cliente:" id="30186730" />
+                <methodElement id="9386257" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="PersonNameIfc" name="getBearerName" class="oracle.retail.stores.domain.tender.TenderCharge">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.utility.PersonName" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12832441" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="736613" />
+            <line id="31034430">
+                <element text="Copia neg." id="20784700" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

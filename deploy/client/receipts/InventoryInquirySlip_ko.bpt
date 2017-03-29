@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/InventoryInquirySlip_ko.bpt /main/11 2010/09/06 14:05:56 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   04/16/09 - changed the address form one line to multiple lines
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/20/09 - set cutPaper to false on main report body
+ *    ddbaker   01/28/09 - set blueprint id= InventoryInquirySlip
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="InventoryInquirySlip" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="32915800">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8439983" />
+                <element text=" " id="511877" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="29350564" />
+            </line>
+            <line id="3941240">
+                <element text="레지스터:" id="1980528140" />
+                <methodElement fixedWidth="5" id="13055632">
+                    <method returns="RegisterIfc" name="getRegister" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="WorkstationIfc" name="getWorkstation" class="oracle.retail.stores.domain.financial.RegisterIfc">
+                            <method returns="String" name="formatWorkstationID" class="oracle.retail.stores.domain.store.WorkstationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="점포:" id="1220036792" justified="2" stretch="true" />
+                <methodElement fixedWidth="5" id="9558483">
+                    <method returns="RegisterIfc" name="getRegister" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="WorkstationIfc" name="getWorkstation" class="oracle.retail.stores.domain.financial.RegisterIfc">
+                            <method returns="String" name="getStoreID" class="oracle.retail.stores.domain.store.WorkstationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3981922">
+                <element text="계산원:" id="1260931880" />
+                <methodElement id="6105163">
+                    <method returns="EmployeeIfc" name="getCashier" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.employee.EmployeeIfc" />
+                    </method>
+                </methodElement>
+                <element text="돈서랍:" id="802697176" justified="2" stretch="true" />
+                <methodElement id="20062501">
+                    <method returns="RegisterIfc" name="getRegister" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getCurrentTillID" class="oracle.retail.stores.domain.financial.RegisterIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16625677" />
+            <line id="8018457">
+                <element text="재고 조회" id="1786276472" justified="1" stretch="true" />
+            </line>
+            <line id="4426366" />
+            <line id="5670411" />
+            <line id="5283099">
+                <element text="*** 아래 표시된 가용 수량은" id="2528880" justified="1" stretch="true" />
+            </line>
+            <line id="13321136">
+                <element text="보장되지 않습니다. ***" id="16518667" justified="1" stretch="true" />
+            </line>
+            <line id="19352564" />
+            <line id="26652655">
+                <element text="아이템:" id="11262687" />
+                <methodElement id="17281564">
+                    <method returns="ItemInfoIfc" name="getItem" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getItemID" class="oracle.retail.stores.domain.stock.ItemInfoIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11608737">
+                <element text=" " id="31496428" />
+                <methodElement id="13192760">
+                    <method returns="ItemInfoIfc" name="getItem" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getItemDescription" class="oracle.retail.stores.domain.stock.ItemInfoIfc" param="Locale" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31629484" />
+            <line id="16988783" />
+        </group>
+        <group id="15057050">
+            <line id="29878785" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" id="13001534">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getStoreID" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem" />
+                    </method>
+                </methodElement>
+                <element text=" " id="17977856" />
+                <methodElement id="32255999">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="String" name="getLocationName" class="oracle.retail.stores.domain.store.StoreIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27258048" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="19001594">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getLine1" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24658682" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="23594703">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getLine2" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5874115" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="22883083">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getLine3" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16409459" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="11800355">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="," id="4430915" dependsOnPresenceOf="11800355" />
+                <methodElement printedWhenLengthZero="false" id="18155886">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement printedWhenLengthZero="false" id="5977125">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25027090" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="12060166">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="AddressIfc" name="getAddress" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="getCountry" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4315096" dependsOnPresenceOf="14033013">
+                <methodElement precededBySpace="false" id="9114644">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="StoreIfc" name="getStoreInfo" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem">
+                            <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.store.StoreIfc">
+                                <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21582778">
+                <element text="가용 수량= " id="25754845" justified="2" stretch="true" />
+                <methodElement id="4262341">
+                    <method returns="InventoryResultsListItem[]" name="getItemList" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip">
+                        <method returns="String" name="getAvailableQty" class="oracle.retail.stores.domain.inventoryinquiry.InventoryResultsListItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="10675213">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse=" " valuePrintedWhenTrue="" id="14033013">
+                    <method returns="boolean" name="isHomeStoreLookup" class="oracle.retail.stores.pos.receipt.InventoryInquirySlip" />
+                </methodElement>
+            </line>
+        </group>
+        <group id="29276167">
+            <line id="15259512" />
+            <line id="28210920">
+                <element text="*수취증이 아님*" id="561914238" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="5294983" />
+</blueprint>
+
+

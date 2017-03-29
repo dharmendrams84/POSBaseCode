@@ -1,0 +1,360 @@
+<?xml version='1.0' ?>
+<!--
+/* =============================================================================
+* Copyright (c) 2001, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * =============================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/conduit/ClientConduit.xml /rgbustores_13.4x_generic_branch/9 2012/01/20 13:24:58 icole Exp $
+ * =============================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    icole     01/19/12 - Add additonal queuing of CPOI requests for perceived
+ *                         performance.
+ *    icole     01/10/12 - Added wait time property for PaymentManager queue
+ *                         thread.
+ *    abondala  09/23/11 - use wallet for jms passwords instead of using rsa
+ *                         keystore
+ *    cgreene   09/19/11 - move ExternalOrderManager to domain
+ *    asinton   06/29/11 - removed FinancialNetworkManager from client conduit
+ *                         scripts
+ *    sgu       04/11/11 - add payment technician for pimcomm
+ *    asinton   09/01/10 - Moved the DebitBinRangeTechnician configuration from
+ *                         the StoreServerConduit.xml to the ClientConduit.xml.
+ *    mchellap  06/28/10 - Deprecate PSI Manager/Technician
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    djenning  05/25/10 - corrected
+ *    djenning  05/25/10 - remove parameter technician for standalone POS and
+ *                         remove jms credentials for weblogic POS
+ *    sgu       05/11/10 - add external order manager
+ *    cgreene   05/05/10 - remove deprecated log manager and technician
+ *    cgreene   05/05/10 - remove deprecated log amanger and technician
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    cgreene   03/26/10 - added common service to tier technician
+ *    abondala  01/02/10 - Update Header date
+ *    mszekely  07/16/09 - XbranchMerge mszekely_bug-8545716 from
+ *                         rgbustores_13.1x_branch
+ *    mdecama   02/06/09 - Added LookAndFeel support by Locale
+ *    aariyer   02/05/09 - Item Basket Fixes
+ *    aariyer   02/04/09 - Files for Item Basket Feature
+ *    vikini    02/03/09 - Fixing Error in commenting
+ *    aariyer   02/02/09 - Added files for Item Basket feature
+ *    rkar      12/11/08 - Commented-out ReturnsManager block. Installer will
+ *                         un-comment if POS-RM chosen
+ *    rkar      11/12/08 - POS-RM integration: Added ReturnsManager
+ *
+ * =============================================================================
+ */
+ -->
+<!DOCTYPE DISPATCHER SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/dispatch.dtd">
+<DISPATCHER name="CLIENT">
+    <APPLICATION name="APPLICATION"
+                 class="TierTechnician"
+                 package="oracle.retail.stores.foundation.manager.tier"
+                 commonservice="classpath://oracle/retail/stores/pos/services/common/common.xml"
+                 startservice="classpath://oracle/retail/stores/pos/services/main/main.xml">
+        <PROPERTY propname="managerData"
+                  propvalue="name=UIManager,managerpropname=className,managerpropvalue=oracle.retail.stores.pos.ui.POSUIManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=DeviceManager,managerpropname=className,managerpropvalue=oracle.retail.stores.foundation.manager.device.DeviceManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=ParameterManager,managerpropname=className,managerpropvalue=oracle.retail.stores.foundation.manager.parameter.ParameterManager"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=ParameterManager,managerpropname=useDefaults,managerpropvalue=Y"/>
+        <PROPERTY propname="managerData"
+                  propvalue="name=UtilityManager,managerpropname=className,managerpropvalue=oracle.retail.stores.pos.manager.utility.UtilityManager"/>
+        <PROPERTY propname="preloadTourDirectory"
+                  propvalue="config\preloadTourDirectory.dat" />
+    </APPLICATION>
+
+    <MANAGER name="DataSetManager"
+             class="DataSetManager"
+             package="oracle.retail.stores.foundation.manager.iddi"
+             export="N">
+    </MANAGER>
+
+    <!-- Deprecated POS SIM Integration Manager
+    <MANAGER name="PSIInventoryManager"
+             class="PSIInventoryManager"
+             package="oracle.retail.stores.integration.psi.manager"
+             export="N">
+    </MANAGER>
+    -->
+
+    <MANAGER name="DataManager"
+             class="DataManager"
+             package="oracle.retail.stores.foundation.manager.data">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/PosDataManager.xml" />
+    </MANAGER>
+
+    <TECHNICIAN name="LocalDT"
+                class="DataTechnician"
+                package="oracle.retail.stores.foundation.manager.data"
+                export="Y">
+        <PROPERTY propname="dataScript"
+                  propvalue="classpath://config/technician/PosLDBDataTechnician.xml"/>
+    </TECHNICIAN>
+
+    <TECHNICIAN name="UITechnician"
+                class="UITechnician"
+                package="oracle.retail.stores.foundation.manager.gui"
+                export="Y">
+        <CLASS
+            name="UISubsystem"
+            package="oracle.retail.stores.pos.ui"
+            class="POSJFCUISubsystem">
+            <CLASSPROPERTY
+                    propname="configFilename"
+                    propvalue="classpath://oracle/retail/stores/pos/config/defaults/defaultuicfg.xml"
+                    proptype="STRING"/>
+            <CLASSPROPERTY
+                    propname="loaderClassName"
+                    propvalue="oracle.retail.stores.foundation.manager.gui.loader.UIXMLLoader"
+                    proptype="STRING"/>
+            <CLASSPROPERTY
+                    propname="displayClassName"
+                    propvalue="oracle.retail.stores.pos.ui.beans.ApplicationFrame"
+                    proptype="STRING"/>
+            <CLASSPROPERTY
+                    propname="applicationPLAF"
+                    propvalue="oracle.retail.stores.pos.ui.plaf.eys.EYSLookAndFeel"
+                    proptype="STRING"/>
+            <CLASSPROPERTY
+                    propname="factoryClassName"
+                    propvalue="oracle.retail.stores.pos.ui.plaf.eys.EYSUIFactory"
+                    proptype="STRING"/>
+            <!-- LAF File is by Locale (swanplaf_en.properties). Here we only define the prefix -->
+            <CLASSPROPERTY
+                    propname="uiPropertyFile"
+                    propvalue="classpath://config/ui/swanplaf"
+                    proptype="STRING"/>
+        </CLASS>
+    </TECHNICIAN>
+
+    <TECHNICIAN name="DeviceTechnician"
+                class="DeviceTechnician"
+                package="oracle.retail.stores.foundation.manager.device"
+                export="Y">
+        <COMMENT>
+            The Technician that provides access to the devices.
+        </COMMENT>
+        <PROPERTY propname="deviceScript"
+                  propvalue="classpath://config/technician/PosDeviceTechnician.xml"/>
+    </TECHNICIAN>
+
+    <MANAGER name="ThreadManager"
+             class="ThreadManager"
+             package="oracle.retail.stores.foundation.manager.thread">
+        <PROPERTY propname="threadPool" propvalue="StaticCache"/>
+        <PROPERTY propname="threadPoolProperty" propvalue="maxSize=4"/>
+    </MANAGER>
+
+    <MANAGER name="UtilityManager"
+             class="UtilityManager"
+             package="oracle.retail.stores.pos.manager.utility">
+        <PROPERTY propname="cardTypeRulesFile"
+                  propvalue="classpath://config/cardtyperules.xml"/>
+    </MANAGER>
+
+    <MANAGER name="PrintableDocumentManager"
+             class="BlueprintedDocumentManager"
+             package="oracle.retail.stores.pos.receipt.blueprint">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/BlueprintedDocumentManager.xml" />
+    </MANAGER>
+
+    <MANAGER name="JournalFormatterManager"
+             class="JournalFormatterManager"
+             package="oracle.retail.stores.pos.journal">
+    </MANAGER>
+
+    <MANAGER name="ResourceManager"
+             class="ResourceManager"
+             package="oracle.retail.stores.foundation.manager.resource"
+             export="N">
+        <PROPERTY propname="path"
+                  propvalue="config/ui;config/ui/bundles;config/ui/images;oracle/retail/stores/pos/config;config/device/bundles" />
+        <PROPERTY propname="imageExtensions"
+                  propvalue="" />
+    </MANAGER>
+
+    <TECHNICIAN name="ResourceTechnician"
+                class="ResourceTechnician"
+                package="oracle.retail.stores.foundation.manager.resource"
+                export="Y">
+        <PROPERTY propname="path"
+                  propvalue="config/ui;config/ui/bundles;config/ui/images;oracle/retail/stores/pos/config;config/device/bundles" />
+    </TECHNICIAN>
+
+    <!-- Begin_IA_Default_Journal_Man -->
+    <MANAGER name="JournalManager"
+             class="JournalManager"
+             package="oracle.retail.stores.foundation.manager.journal"
+             export="N">
+    </MANAGER>
+    <!-- End_IA_Default_Journal_Man -->
+
+    <!-- Begin_IA_QueuedJournalManager
+    <MANAGER name="JournalManager"
+             class="QueuedJournalManager"
+             package="oracle.retail.stores.foundation.manager.journal"
+             export="N">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/PosJournalManager.xml" />
+    </MANAGER>
+    End_IA_QueuedJournalManager -->
+
+    <!-- Begin_IA_Default_Journal_Tech -->
+    <TECHNICIAN name="LocalJournalTechnician"
+                class="JournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y">
+    </TECHNICIAN>
+    <!-- End_IA_Default_Journal_Tech -->
+
+    <!-- Begin_IA_DBJournalTech
+    <TECHNICIAN name="JournalTechnician"
+                class="DBJournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y">
+        <PROPERTY propname="consolePrintable" propvalue="N"/>
+    </TECHNICIAN>
+    End_IA_DBJournalTech -->
+
+    <!-- ParameterTechnician : this is never commented out, when not in use, just set the "listen" property to 'N' -->
+    <TECHNICIAN name="ParameterTechnician"
+                class="ParameterTechnician"
+                package="oracle.retail.stores.foundation.manager.parameter"
+                export="Y" >
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/PosParameterTechnician.xml"/>
+        <PROPERTY propname="topicName" propvalue="jms/parameters"/>
+        <PROPERTY propname="listenForUpdates" propvalue="$LISTENFORUPDATES"/>
+        <PROPERTY propname="clientID" propvalue="$IA_CLIENT_ID$"/>
+        <!-- BPT USERNAME --><PROPERTY propname="jmsID" propvalue="$IA_JMS_ID$"/><!-- EPT USERNAME -->
+        <!-- BPT PASSWORD --><PROPERTY propname="jmsPassword" propvalue="$IA_JMS_PASSWORD$"/><!-- EPT PASSWORD -->
+        <PROPERTY propname="durableSubscriber" propvalue="Y"/>
+    </TECHNICIAN>
+
+    <!-- BEGIN FileTransferTechnician -->
+    <TECHNICIAN name="FileTransferTechnician"
+                class="FileTransferTechnician"
+                package="oracle.retail.stores.foundation.manager.filetransfer"
+                export="Y" >
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/FileTransferTechnician.xml"/>
+        <PROPERTY propname="topicName" propvalue="jms/files"/>
+        <PROPERTY propname="listenForUpdates" propvalue="Y"/>
+        <PROPERTY propname="clientID" propvalue="$IA_CLIENT_ID$"/>
+        <!-- BFT USERNAME --><PROPERTY propname="jmsID" propvalue="$IA_JMS_ID$"/><!-- EFT USERNAME -->
+        <!-- BFT PASSWORD --><PROPERTY propname="jmsPassword" propvalue="$IA_JMS_PASSWORD$"/><!-- EFT PASSWORD -->
+        <PROPERTY propname="durableSubscriber" propvalue="Y"/>
+    </TECHNICIAN>
+    <!-- END FileTransferTechnician -->
+
+    <!-- Security Manager/Technician -->
+    <MANAGER name="SecurityManager"
+             class="SecurityManager"
+             package="oracle.retail.stores.domain.manager.security"
+             export="N"/>
+
+    <TECHNICIAN name="SecurityTechnician"
+                class="SecurityTechnician"
+                package="oracle.retail.stores.domain.manager.security"
+                export="Y">
+        <PROPERTY propname="securityConfig" propvalue="PointOfSaleSecurity"/>
+    </TECHNICIAN>
+
+    <MANAGER name="DLFormatManager"
+             class="ValidationManager"
+             package="oracle.retail.stores.domain.manager.validation"
+             export="N">
+        <PROPERTY propname="techName" propvalue="DLFormatTechnician"/>
+    </MANAGER>
+
+    <TECHNICIAN name="DLFormatTechnician"
+                class="ValidationTechnician"
+                package="oracle.retail.stores.domain.manager.validation"
+                export="Y">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/validation/dlvalidationscript.xml"/>
+    </TECHNICIAN>
+
+    <!-- DebitBinRange Manager -->
+    <MANAGER name="DebitBinRangeManager"
+             class="DebitBinRangeManager"
+             package="oracle.retail.stores.domain.manager.debit">
+    </MANAGER>
+
+    <!-- DebitBinRange Technician -->
+    <TECHNICIAN name="DebitBinRangeTechnician"
+                class="DebitBinRangeTechnician"
+                package="oracle.retail.stores.domain.manager.debit"
+                export="Y">
+        <PROPERTY propname="debitBinFilename"
+                  propvalue="../config/debitbin.dat" proptype="STRING"/>
+    </TECHNICIAN>
+
+    <!--  Encryption -->
+    <MANAGER name="KeyStoreEncryptionManager"
+             class="KeyStoreEncryptionManager"
+             package="oracle.retail.stores.foundation.manager.encryption"
+             export="N">
+    </MANAGER>
+
+    <TECHNICIAN name="KeyStoreEncryptionTechnician"
+                class="KeyStoreEncryptionTechnician"
+                package="oracle.retail.stores.foundation.manager.encryption"
+                export="Y">
+    </TECHNICIAN>
+
+    <!-- CodeList/ReasonCodes Manager -->
+    <MANAGER name="CodeListManager"
+             class="CodeListManager"
+             package="oracle.retail.stores.pos.manager.codelist">
+    </MANAGER>
+
+    <!-- POS to Returns Management Integration Manager -->
+    <!-- Begin ReturnsManager
+    <MANAGER name="ReturnsManager"
+             class="RPIManager"
+             package="oracle.retail.stores.domain.manager.rm"
+             export="N" saveValets="N" singleton="N">
+    </MANAGER>
+    End ReturnsManager -->
+
+    <!-- POS to Siebel Integration Manager -->
+    <!-- Begin ExternalOrderManager
+    <MANAGER name="ExternalOrderManager"
+             class="ExternalOrderManager"
+             package="oracle.retail.stores.domain.manager.externalorder"
+             export="N" saveValets="N" singleton="N">
+    </MANAGER>
+    End ExternalOrderManager -->
+
+    <MANAGER name="ConnectorManager"
+             class="ConnectorManager"
+             package="oracle.retail.stores.commext.manager"
+             saveValets="N" singleton="N" export="N" >
+    </MANAGER>
+
+    <MANAGER name="PaymentManager"
+             class="PaymentManager"
+             package="oracle.retail.stores.domain.manager.payment"
+             export="N" saveValets="N" singleton="N">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/manager/PaymentManager.xml"/>
+        <!-- This property determines how long the queue thread waits for
+             a request to complete in seconds.  The minimum value is 5 seconds, if a smaller 
+             value is specified 5 seconds will be used.  The default is 10 seconds.  This
+             value should be large enough that there will not be a time out if
+             the payment operations are functioning properly and is intended to 
+             prevent a hang forever!  If this value is set too low there can 
+             be some conflicts between the CPOI and Authorization functions resulting
+             in the failure of the CPOI device functions. -->
+        <PROPERTY propname="waitForCompletionTimeSeconds"
+                  propvalue="10" proptype="INTEGER"/>
+    </MANAGER>
+
+</DISPATCHER>

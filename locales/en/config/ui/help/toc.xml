@@ -1,0 +1,387 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/locales/en/config/ui/help/toc.xml /rgbustores_13.4x_generic_branch/3 2011/11/15 16:28:08 mchellap Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    mchellap 11/14/11 - Added scan sheet help files
+ *    sgu      11/02/11 - add the new entries in alphanumerical order
+ *    yiqzhao  09/27/11 - add print preview, instant credit payment account,
+ *                        instant credit inquiry criteria online helps
+ *    mkutiana 02/25/11 - Added help files for fingerprint login pages
+ *    jkoppolu 10/20/10 - Added missing RETURN_TRANSACTIOIN_SEARCH and
+ *                        RETURN_BY_UIN, bug# 963.
+ *    nkgautam 08/31/10 - added bill pay help screens
+ *    nkgautam 06/22/10 - bill pay changes
+ *    abondala 06/15/10 - help screens for Siebel new screens
+ *    bgoodman	01/15/10 - Add Serial Search and Serialized Item for 13.2.
+ *    abondala  01/02/10 - Update Header date
+ *    mchellap  03/17/09 - Help screen configuration for new 13.1 screens
+ * Added new help files for Release 13.1. 03/11/2009 bgoodman
+ * Added Return Response scree            03/12/2009 bgoodman
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc xml:lang="en">
+  <tocitem target="DEFAULT_HELP_SCREEN"  text="No Help For This" />
+
+  <tocitem target="ACCOUNT_INFORMATION"    text="Account Info" />
+  <tocitem target="ADD_BUSINESS" text="Add Business Customer"/>
+  <tocitem target="ADD_CUSTOMER"    text="Add Customer" />
+  <tocitem target="ADD_ROLE"    text="Add Role" />
+  <tocitem target="ADMIN_OPTIONS"    text="Admin Options" />
+  <tocitem target="ADV_SEARCH" text="Advanced Search" />
+  <tocitem target="ALTERATION_TYPE" text="Alteration Type"/>
+  <tocitem target="ALT_CURRENCY"    text="Alternate Currency" />
+  <tocitem target="GET_AMOUNT_FOR_GIFT_CARD" text="Amount for Gift Card" />
+  <tocitem target="AUTHORIZATION"    text="Authorization Check" />
+
+  <tocitem target="BILLPAY_LIST"            text="Bill Payment List"/>
+  <tocitem target="BILLPAY_MULTI_CUSTOMER"  text="Select Customer"/>
+  <tocitem target="BILLPAY_OFFLINE"         text="Bill Payment Offline"/>
+  <tocitem target="BILLPAY_PAYMENT_DETAILS" text="Bill Payment Details"/>
+  <tocitem target="BILLPAY_SEARCH_OPTIONS"  text="Bill Payment Search"/>
+  <tocitem target="BUSINESS_CUSTOMER" text="Business Customer"/>
+  <tocitem target="BUSINESS_SEARCH" text="Business Search"/>
+
+  <tocitem target="CANCEL_ORDER"    text="Cancel Order" />
+  <tocitem target="CAPTURE_CUSTOMER_INFO_DEFAULT" text="Capture Customer" />
+  <tocitem target="CAPTURE_CUSTOMER_INFO_BANK_CHECK" text="Capture Customer Bank Check" />
+  <tocitem target="CAPTURE_CUSTOMER_INFO_SEND" text="Capture Customer Send" />
+  <tocitem target="CAPTURE_IRS_CUSTOMER" text="Capture IRS Customer" />
+  <tocitem target="CHANGE_PASSWORD" text="Change Password" />
+  <tocitem target="EMPLOYEE_NUMBER" text="Capture Employee Number"/>
+  <tocitem target="CASHIER_IDENTIFICATION"    text="Cashier Identification" />
+  <tocitem target="CHANGE_DUE_OPTIONS" text="Change Due Options" />
+  <tocitem target="CHECK_ENTRY"    text="Check Entry" />
+  <tocitem target="CHECK_REFERRAL"  text="Check Referal" />
+  <tocitem target="COAT_ALTERATION" text="Coat Alteration"/>
+  <tocitem target="COMPONENT_OPTIONS"    text="Component Options" />
+  <tocitem target="CONFIRM_SELECTION" text="Confirm Selection"/>
+  <tocitem target="COUNTRY_CODE" text="Country Code"/>
+  <tocitem target="COUPON_AMOUNT" text="Coupon Amount" />
+  <tocitem target="COUPON_ENTRY"      text="Coupon Entry" />
+  <tocitem target="CREDIT_CARD"  text="Credit Card" />
+  <tocitem target="CREDIT_DEBIT_CARD" text="Credit/Debit Card"/>
+  <tocitem target="CREDIT_EXP_DATE" text="Credit Expiration Date"/>
+  <tocitem target="CREDIT_REFERRAL"  text="Credit Referral" />
+  <tocitem target="CURRENCY_DETAIL_LOAN" text="Currency Detail Loan"/>
+  <tocitem target="CURRENCY_DETAIL_PICKUP" text="Currency Detail Pickup"/>
+  <tocitem target="CUSTOMER_ADDRESS"    text="Customer Address" />
+  <tocitem target="CUSTOMER_ADDRESS_FIND"    text="Customer Address Find" />
+  <tocitem target="CUSTOMER_DELETE"    text="Customer Delete" />
+  <tocitem target="CUSTOMER_DETAILS" text="Customer Details"/>
+  <tocitem target="HISTORY_DETAIL"    text="Customer History Detail" />
+  <tocitem target="HISTORY_LIST"    text="Customer History List" />
+  <tocitem target="CUSTOMER_INFO"    text="Customer Info" />
+  <tocitem target="CUSTOMER_LAYAWAY"    text="Customer Layaway" />
+  <tocitem target="CUSTOMER_MASTER_FIND"    text="Customer Master Find" />
+  <tocitem target="CUSTOMER_OPTIONS"    text="Customer Options" />
+  <tocitem target="CUSTOMER_SEARCH_OPTIONS"    text="Customer Search Options" />
+  <tocitem target="CUSTOMER_SELECT_ADD"    text="Customer Select Add" />
+  <tocitem target="CUSTOMER_SELECT_DELETE"    text="Customer Select Delete" />
+  <tocitem target="CUSTOMER_SELECT_MODIFY"    text="Customer Select Modify" />
+  <tocitem target="CUSTOMER_SPECIAL_ORDER"    text="Customer Special Order" />
+
+  <tocitem target="CURRENCY_DETAIL"    text="Daily Ops Currency Detail" />
+  <tocitem target="DAILY_OPS_OPTIONS"    text="Daily Ops Options" />
+  <tocitem target="DAMAGE_AMOUNT"    text="Damage Amount" />
+  <tocitem target="DAMAGE_DISCOUNT_OPTIONS"    text="Damage Discount Options" />
+  <tocitem target="DAMAGE_PERCENT"    text="Damage Percent" />
+  <tocitem target="DATE_RANGE_REPORT"    text="Date Range Report" />
+  <tocitem target="DEBIT_CARD"  text="Debit Card" />
+  <tocitem target="DELETE_BUSINESS" text="Delete Business Customer"/>
+  <tocitem target="GET_DELIVERY_ADDRESS_SCREEN" text="Delivery Address"/>
+  <tocitem target="GET_DELIVERY_DATE_SCREEN" text="Delivery Date"/>
+  <tocitem target="DEVICE_STATUS"    text="Device Status" />
+  <tocitem target="DISCOUNT_OPTIONS"    text="Discount Options" />
+
+  <tocitem target="EDIT_ITEM_STATUS"    text="Edit Item Status" />
+  <tocitem target="EDIT_LOCATION"    text="Edit Location" />
+  <tocitem target="PARAMETER_LIST_EDIT"    text="Edit Parameter List" />
+  <tocitem target="REASON_CODE_EDIT"    text="Edit Reason Code" />
+  <tocitem target="EDIT_ROLE"    text="Edit Role" />
+  <tocitem target="ELECTRONIC_JOURNAL_FIND_RECEIPT"    text="EJournal Find Receipt" />
+  <tocitem target="ELECTRONIC_JOURNAL_OPTIONS"    text="EJournal Options" />
+  <tocitem target="ELECTRONIC_JOURNAL_SEARCH_CRITERIA"    text="EJournal Search Criteria" />
+  <tocitem target="EMPLOYEE_ADD_OPTIONS" text="Employee Add Options"/>
+  <tocitem target="EMPLOYEE_DISCOUNT_OPTIONS" text="Employee Discount Options"/>
+  <tocitem target="EMPLOYEE_MASTER"    text="Employee Master" />
+  <tocitem target="EMPLOYEE_OPTIONS"    text="Employee Options" />
+  <tocitem target="EMPLOYEE_SEARCH_OPTIONS"    text="Employee Search Options" />
+  <tocitem target="EMPLOYEE_SELECT_ADD"    text="Employee Select Add" />
+  <tocitem target="EMPLOYEE_SELECT_MODIFY"    text="Employee Select Modify" />
+  <tocitem target="EMPLOYEE_ENROLL_FINGERPRINT" text="Enroll Employee Fingerprint" />
+  <tocitem target="EMPLOYEE_VERIFY_FINGERPRINT" text="Verify Employee Fingerprint" />
+  <tocitem target="ENROLL_RESPONSE" text="Enroll Response" />
+  <tocitem target="ENTER_BUSINESS_DATE" text="Enter Business Date"/>
+  <tocitem target="ENTER_CHECK_NUMBER" text="Enter Check Number" />
+  <tocitem target="ENTER_CREDIT_INFO" text="Enter Credit Information" />
+  <tocitem target="ENTER_DOB" text="Enter Date of Birth" />
+  <tocitem target="ENTER_DOB_NO_SKIP" text="Enter Date of Birth without Skip" />
+  <tocitem target="ENTER_EMPLOYEE_AMOUNT_DISCOUNT" text="Enter Employee Amount Discount"/>
+  <tocitem target="ENTER_EMPLOYEE_PERCENT_DISCOUNT" text="Enter Employee Percent Discount"/>
+  <tocitem target="ENTER_ID" text="Enter Id" />
+  <tocitem target="ENTER_ID_NUMBER" text="Enter Id Number" />
+  <tocitem target="ENTER_ID_NUMBER_SWIPE" text="Enter Id or Swipe Card" />
+  <tocitem target="ENTER_LAYAWAY"    text="Enter Layaway" />
+  <tocitem target="ENTER_ORDER_NUMBER"    text="Enter Order Number" />
+  <tocitem target="ENTER_PHONE" text="Enter Phone" />
+  <tocitem target="ENTER_PRICE"    text="Enter Price" />
+  <tocitem target="ENTER_REFERENCE_NUMBER" text="Enter Reference Number" />
+  <tocitem target="ENTER_SSN" text="Enter SSN" />
+  <tocitem target="ENTER_STATE" text="Enter State" />
+  <tocitem target="ENTER_TILL_ID"    text="Enter Till Id" />
+  <tocitem target="ERECEIPT_EMAIL_SCREEN" text="eReceipt Email Address"/>
+  <tocitem target="EXT_ORDER_ADV_SEARCH" text="Extenal Order Advanced Search"/>
+  <tocitem target="EXTERNAL_ORDER_LIST" text="Extenal Orders List "/>
+
+  <tocitem target="ITEM_BASKET" text="Find Basket"/>
+  <tocitem target="FIND_CUSTOMER"    text="Find Customer" />
+  <tocitem target="FIND_CUSTOMER_EMPLOYEE_ID"    text="Find Customer Employee Id" />
+  <tocitem target="CUSTOMER_FIND_ID"    text="Find Customer Id" />
+  <tocitem target="FIND_CUSTOMER_INFO"    text="Find Customer Info" />
+  <tocitem target="EMPLOYEE_FIND_ID"    text="Find Employee Id" />
+  <tocitem target="EMPLOYEE_FIND_NAME"    text="Find Employee Name" />
+  <tocitem target="EMPLOYEE_FIND_ROLE" text="Find Employee Role" />
+
+  <tocitem target="FIND_LAYAWAY"    text="Find layaway" />
+  <tocitem target="FIND_ROLE"    text="Find Role" />
+  <tocitem target="FIND_TRANSACTION"    text="Find Transaction" />
+  <tocitem target="FOREIGN_CURRENCY" text="Foreign Currency" />
+  <tocitem target="FOREIGN_CURRENCY_COUNT" text="Foreign Currency Count"/>
+  <tocitem target="FOREIGN_TENDER_NUMBER" text="Foreign Tender Number" />
+
+  <tocitem target="GET_CUSTOMER_NAME_AND_ID" text="Get Customer Name And ID"/>
+  <tocitem target="GIFT_CARD"    text="Gift Card" />
+  <tocitem target="GIFT_CARD_INQUIRY"      text="Gift Card Inquiry" />
+  <tocitem target="GIFT_CARD_REDEEM" text="Gift Card Redeem" />
+  <tocitem target="GIFT_CARD_REDEEM_INQUIRY" text="Gift Card Redeem Inquiry" />
+  <tocitem target="GIFT_CARD_REFERRAL" text="Gift Card Referral" />
+  <tocitem target="GIFT_CERTIFICATE_AMOUNT" text="Gift Certificate Amount" />
+  <tocitem target="CERTIFICATE_ENTRY"     text="Gift Certificate Entry" />
+  <tocitem target="GIFT_CODE_INQUIRY" text="Gift Code Inquiry" />
+  <tocitem target="GIFT_OPTIONS" text="Gift Options" />
+  <tocitem target="GIFT_PRICE"    text="Gift Price" />
+  <tocitem target="GIFT_RECEIPT_ITEM"    text="Gift Receipt Item" />
+
+  <tocitem target="HOUSE_ACCOUNT"    text="House Account" />
+  <tocitem target="HOUSE_ACCOUNT_NUMBER" text="House Account Number" />
+
+  <tocitem target="IDENTIFICATION"    text="Identification" />
+  <tocitem target="INQUIRY_OPTIONS"    text="Inquiry Options" />
+  <tocitem target="INSTANT_CREDIT_CUSTOMER_INFO" text="Instant Credit Customer Information" />
+  <tocitem target="INSTANT_CREDIT_INQUIRY_CRITERIA"  text="Instant Credit Inquiry Criteria" />
+  <tocitem target="INSTANT_CREDIT_INQUIRY_INFO" text="Instant Credit Inquiry Information" />
+  <tocitem target="INSTANT_CREDIT_ITEM_SALES_ASSC" text="Instant Credit Item Sales Assoc"/>
+  <tocitem target="INSTANT_CREDIT_OPTIONS" text="Instant Credit Options"/>
+  <tocitem target="INSTANT_CREDIT_PAYMENT_ACCOUNT"   text="Instant Credit Payment Account" />
+  <tocitem target="INVENTORY_DETAIL"    text="Inventory Details" />
+  <tocitem target="INVENTORY_RESULTS_LIST_SCREEN"    text="Inventory Results" />
+  <tocitem target="HOME_STORE_INVENTORY_RESULTS_LIST_SCREEN"    text="Inventory Results for Home Store" />
+  <tocitem target="ISSUING_STORE_NUMBER" text="Issuing Store Number" />
+  <tocitem target="ITEM_DISC_AMT"    text="Item Discount Amount" />
+  <tocitem target="ITEM_DISC_PCNT"    text="Item Discount Percent" />
+  <tocitem target="ITEM_INFO"    text="Item Display" />
+  <tocitem target="INVENTORY_ITEM_INFO"    text="Item Display for Item Inquiry" />
+  <tocitem target="ITEM_GIFT_REGISTRY"    text="Item Gift Registry" />
+  <tocitem target="INVENTORY_ADV_SEARCH"    text="Item Inquiry" />
+  <tocitem target="INVENTORY_ITEMS_LIST"    text="Item List for Item Inquiry" />
+  <tocitem target="ITEM_NOT_FOUND" text="Item Not Found" />
+  <tocitem target="ITEM_OPTIONS"    text="Item Options" />
+  <tocitem target="ITEM_QUANTITY_UOM"    text="Item Qty Unit of Measure" />
+  <tocitem target="ITEM_QUANTITY"    text="Item Quantity" />
+  <tocitem target="ITEM_SALES_ASSC"    text="Item Sales Associate" />
+  <tocitem target="ITEM_SERIAL_INPUT"    text="Item Serial Input" />
+  <tocitem target="ITEM_SIZE" text="Item Size" />
+  <tocitem target="ITEM_TAX_ON_OFF"    text="Item Tax On Off" />
+  <tocitem target="ITEM_TAX_OPTIONS"    text="Item Tax Options" />
+  <tocitem target="ITEM_TAX_OVERRIDE_AMOUNT"    text="Item Tax Override Amount" />
+  <tocitem target="ITEM_TAX_OVERRIDE_OPTIONS"    text="Item Tax Override Options" />
+  <tocitem target="ITEM_TAX_OVERRIDE_RATE"    text="Item Tax Override Rate" />
+  <tocitem target="ITEMS_LIST"    text="Items List" />
+
+  <tocitem target="JOURNAL_DISPLAY"    text="Journal Display" />
+
+  <tocitem target="LAYAWAY_LIST"    text="Layaway List" />
+  <tocitem target="LAYAWAY_OFFLINE"    text="Layaway Offline" />
+  <tocitem target="LAYAWAY_OPTIONS"    text="Layaway Options" />
+  <tocitem target="PAYMENT_DETAIL"    text="Layaway Payment Detail" />
+  <tocitem target="REFUND_DETAIL"    text="Layaway Refund" />
+  <tocitem target="LOGIN"    text="Login" />
+  <tocitem target="OPERATOR_LOGIN"    text="Login" />
+
+  <tocitem target="MAIL_BANK_CHECK_INFO"    text="Mail Bank Check Info" />
+  <tocitem target="MAIN_OPTIONS" text="Main Options"/>
+  <tocitem target="MALL_GIFT_TENDER_OPTIONS" text="Mall Gift Certificate Tender Options" />
+  <tocitem target="MANAGER_OPTIONS"    text="Manager Options" />
+  <tocitem target="MARKDOWN_AMOUNT"    text="Markdown Amount" />
+  <tocitem target="MARKDOWN_OPTIONS"    text="Markdown Options" />
+  <tocitem target="MARKDOWN_PERCENT"    text="Markdown Percent" />
+  <tocitem target="MINIMUM_QTY_AVAIL_INPUT_SCREEN"    text="Minimum Qty Available" />
+
+  <tocitem target="NARROW_SEARCH"    text="Narrow Search" />
+  <tocitem target="NEW_PASSWORD" text="New Password"/>
+  <tocitem target="NON_MERCHANDISE"    text="Non Merchandise" />
+  <tocitem target="NOSALE_COMPLETE"    text="Nosale Complete" />
+
+  <tocitem target="OPERATOR_IDENTIFICATION"    text="Operator Identification" />
+  <tocitem target="OPERATOR_PASSWORD"    text="Operator Password" />
+  <tocitem target="ORDER_DETAILS"    text="Order Details" />
+  <tocitem target="ORDER_LIST"    text="Order List" />
+  <tocitem target="ORDER_LOCATION"    text="Order Location" />
+  <tocitem target="ORDER_OPTIONS"    text="Order Options" />
+  <tocitem target="ORDER_PRINTING"    text="Order Printing" />
+  <tocitem target="ORDER_REPORT"    text="Order Report" />
+  <tocitem target="ORDER_SEARCH_OPTIONS"    text="Order Search Options" />
+  <tocitem target="ORDER_SUM_RPT"    text="Order Sum Rpt" />
+  <tocitem target="OTHER_TENDER_DETAIL"    text="Other Tender Detail" />
+
+  <tocitem target="PANTS_ALTERATION" text="Pants Alteration"/>
+  <tocitem target="PARAM_EDIT_CURRENCY"    text="Param Edit Currency" />
+  <tocitem target="PARAM_EDIT_DECIMAL"    text="Param Edit Decimal" />
+  <tocitem target="PARAM_EDIT_STRING"    text="Param Edit String" />
+  <tocitem target="PARAM_EDIT_WHOLE"    text="Param Edit Whole" />
+  <tocitem target="PARAM_SELECT_GROUP"    text="Param Select Group" />
+  <tocitem target="PARAM_EDIT_DISCRETE" text="Parameter Edit Discrete"/>
+  <tocitem target="PARAM_EDIT_INTEGER" text="Parameter Edit Integer"/>
+  <tocitem target="PARAM_EDIT_LIST_FROM_LIST" text="Parameter Edit List From List"/>
+  <tocitem target="PARAM_EDIT_MULTILINE_STRING" text="Parameter Edit Multiline String"/>
+  <tocitem target="PARAM_SELECT_LEVEL"    text="Parameter Select Level" />
+  <tocitem target="PARAM_SELECT_PARAMETER"    text="Parameter Select Parameter" />
+  <tocitem target="PARAM_SELECT_STORE"    text="Parameter Select Store" />
+  <tocitem target="PASSWORD"    text="Password" />
+  <tocitem target="PAY_IN" text="Pay In" />
+  <tocitem target="PAY_OUT" text="Pay Out" />
+  <tocitem target="PAYROLL_PAY_OUT" text="Payroll Pay Out" />
+  <tocitem target="PERSONALID_ENTRY"    text="Personal ID Entry" />
+  <tocitem target="PICK_ONE_RELATED_ITEM" text="Pick One Related Item" />
+  <tocitem target="GET_PICKUP_DATE_SCREEN" text="Pickup Date"/>
+  <tocitem target="PIN_ENTRY" text="PIN Entry"/>
+  <tocitem target="PRICE_INQUIRY" text="Price Inquiry"/>
+  <tocitem target="PRICE_OVERRIDE"    text="Price Override" />
+  <tocitem target="PRICING_OPTIONS"    text="Pricing Options" />
+  <tocitem target="PRINT_PREVIEW"                    text="Print Preview" />
+  <tocitem target="PRINT_ORDER"    text="Print Order" />
+  <tocitem target="PROMPT_CUSTOMER_INFO"    text="Prompt Customer Info" />
+  <tocitem target="PROMPT_RETRIEVE_TRANSACTION"    text="Prompt Retrieve Trans" />
+  <tocitem target="PURCHASE_DATE"    text="Purchase Date" />
+  <tocitem target="PURCHASE_ORDER_AGENCY_LIST" text="Purchase Order Agency" />
+  <tocitem target="PURCHASE_ORDER_AGENCY_NAME" text="Purchase Order Agency Name"/>
+  <tocitem target="PURCHASE_ORDER_AGENCY_NAME_360" text="Purchase Order Agency Name 360"/>
+  <tocitem target="PURCHASE_ORDER_AMOUNT"    text="Purchase Order Amount" />
+  <tocitem target="PURCHASE_ORDER_NUMBER"    text="Purchase Order Number Tender" />
+
+  <tocitem target="QUEUE_OPTIONS"    text="Queue Options" />
+
+  <tocitem target="REASON_CODE_CONFIRM_DELETE"    text="Reason Code Confirm Delete" />
+  <tocitem target="REASON_CODE_EDIT_ALPHA"    text="Reason Code Edit Alpha " />
+  <tocitem target="REASON_CODE_LIST" text="Reason Code List" />
+  <tocitem target="REASON_CODE_NO_DELETE"    text="Reason Code No Delete" />
+  <tocitem target="REASON_CODE_SELECT_GROUP"    text="Reason Code Select Group" />
+  <tocitem target="REASON_CODE_SELECT_LEVEL"    text="Reason Code Select Level" />
+  <tocitem target="REASON_CODE_SELECT_STORE"    text="Reason Code Select Store" />
+  <tocitem target="RECEIPT_OPTIONS_SCREEN" text="Receipt Options" />
+  <tocitem target="REDEEM_AMOUNT" text="Redeem Amount" />
+  <tocitem target="REDEEM_NUMBER" text="Redeem Number" />
+  <tocitem target="REDEEM_OPTIONS" text="Redeem Options" />
+  <tocitem target="REDEEM_REFUND_OPTIONS" text="Redeem Refund Options" />
+  <tocitem target="REFUND_OPTIONS"    text="Refund Options" />
+  <tocitem target="REGISTER_OPTIONS"    text="Register Options" />
+  <tocitem target="REGISTER_STATUS" text="Register Status" />
+  <tocitem target="RELATED_ITEMS"   text="Related Items" />
+  <tocitem target="REPAIRS_ALTERATION" text="Repairs Alteration"/>
+  <tocitem target="CR_REPORT_OPTIONS" text="Report Options"/>
+  <tocitem target="REPORT_OPTIONS"    text="Report Options" />
+  <tocitem target="REPORT_PRINTING"    text="Report Printing" />
+  <tocitem target="REPRINT_RECEIPT_OPTIONS"    text="Reprint Receipt" />
+  <tocitem target="REPRINT_RECEIPT_TRANSACTION_SEARCH"    text="Reprint Receipt Transaction Search" />
+  <tocitem target="REPRINT_SELECT" text="Reprint Select"/>
+  <tocitem target="REQUEST_CUSTOMER_VERIFY" text="Request Customer Verification" />
+  <tocitem target="RESETTING_HARDTOTALS"    text="Reset HardTotals" />
+  <tocitem target="RETRIEVE_TRANSACTION" text="Retrieve Transaction" />
+  <tocitem target="RETURN_BY_CHECK" text="Return by Check" />
+  <tocitem target="RETURN_BY_CREDIT" text="Return by Credit" />
+  <tocitem target="RETURN_BY_UIN" text="Return by Serial" />
+  <tocitem target="RETURN_ITEM"    text="Return Item" />
+  <tocitem target="RETURN_ITEM_INFO"    text="Return Item Info" />
+  <tocitem target="RETURN_ITEM_NO_RECEIPT" text="Return Item with no Receipt" />
+  <tocitem target="RETURN_LINKED_TRANS"    text="Return Linked Trans" />
+  <tocitem target="RETURN_NO_RECEIPT"    text="Return No Receipt" />
+  <tocitem target="RETURN_RECEIPT"    text="Return Number Help" />
+  <tocitem target="RETURN_OPTIONS"    text="Return Options" />
+  <tocitem target="RETURN_RECEIPT_NO_TRANS_DATE" text="Return Receipt with no Transaction Date" />
+  <tocitem target="RETURN_RESPONSE_ITEM"    text="Return Response" />
+  <tocitem target="RETURN_SELECT_ITEM"    text="Return Select Item" />
+  <tocitem target="RETURN_TRANSACTION_DETAILS" text="Return Transaction Details" />
+  <tocitem target="RETURN_TRANSACTION_SEARCH" text="Return Transaction Search" />
+  <tocitem target="RETURN_ITEM_NON_RETRIEVED" text="Return with item not retrieved" />
+  <tocitem target="ROLE_OPTIONS"    text="Role Options" />
+
+  <tocitem target="SALES_ASSOCIATE_IDENTIFICATION"    text="Sales Associate Identification" />
+  <tocitem target="SCAN_SHEET"    text="Scan Sheet" />
+  <tocitem target="FIND_CUSTOMER_BY_TAX_ID" text="Search by Tax ID"/>
+  <tocitem target="SECURITY_OPTIONS"   text="Security Options" />
+  <tocitem target="SELECT_CHARGE_TO_COUNT"    text="Select Charge To Count" />
+  <tocitem target="SELECT_CURRENCY_TYPE"    text="Select Currency Type" />
+  <tocitem target="SELECT_NO_SALE_REASON_CODE"    text="Select No Sale Reason Code" />
+  <tocitem target="SELECT_SUSPEND_REASON_CODE"    text="Select Suspend Reason Code" />
+  <tocitem target="SELECT_TENDER_TO_COUNT"    text="Select Tender to Count" />
+  <tocitem target="SELL_GIFT_CARD"      text="Sell Gift Card" />
+  <tocitem target="SERIALIZED_ITEM"    text="Serialized Item" />
+  <tocitem target="SELL_ITEM"    text="Sell Item" />
+  <tocitem target="SERVICE_ALERT_LIST"    text="Service Alert" />
+  <tocitem target="SET_ACCESS"    text="Set Access" />
+  <tocitem target="SHIPPING_ADDRESS"    text="Shipping Address" />
+  <tocitem target="SHIPPING_METHOD"    text="Shipping Method" />
+  <tocitem target="SHIRT_ALTERATION" text="Shirt Alteration"/>
+  <tocitem target="SIGNATURE_CAPTURE" text="Signature Capture"/>
+  <tocitem target="SKIRT_ALTERATION" text="Skirt Alteration"/>
+  <tocitem target="SPECIAL_ORDER_DEPOSIT"    text="Special Order Deposit" />
+  <tocitem target="SPECIAL_ORDER_OPTIONS" text="Special Order Options"/>
+  <tocitem target="STATUS_SEARCH"    text="Status Search" />
+  <tocitem target="STORE_CREDIT_ID_ENTRY" text="Store Credit" />
+  <tocitem target="STORE_CREDIT_INFO"  text="Store Credit Info" />
+  <tocitem target="STORE_CREDIT_TENDER_NUMBER" text="Store Credit Tender Number" />
+  <tocitem target="STORE_FINANCIAL_TOTALS_SUMMARY" text="Store Financial Totals Summary"/>
+  <tocitem target="STORE_INFO"    text="Store Info" />
+  <tocitem target="STORE_NUMBER"    text="Store Number" />
+  <tocitem target="SUMMARY_COUNT"    text="Summary Count" />
+  <tocitem target="SUMMARY_COUNT_LOAN" text="Summary Loan Count" />
+  <tocitem target="SUMMARY_COUNT_PICKUP" text="Summary Pickup Count" />
+  <tocitem target="SUMMARY_REPORT"    text="Summary Report" />
+  <tocitem target="SUSPEND_LIST"    text="Suspend List" />
+
+  <tocitem target="TEMPORARY_EMPLOYEE_MASTER"    text="Temporary Employee Master" />
+  <tocitem target="TENDER_OPTIONS"    text="Tender Options" />
+  <tocitem target="TENDER_OPTIONS2" text="Tender Options" />
+  <tocitem target="TILL_FUNCTIONS"    text="Till Functions" />
+  <tocitem target="TILL_OPTIONS"    text="Till Options" />
+  <tocitem target="TILL_STATUS" text="Till Status" />
+  <tocitem target="TRANS_DISC_AMT"    text="Trans Discount Amt" />
+  <tocitem target="TRANS_DISC_PCNT"    text="Trans Discount Percent" />
+  <tocitem target="TRANSACTION_TAX_EXEMPT"    text="Trans Tax Exempt" />
+  <tocitem target="TRANSACTION_TAX_OVERRIDE_AMOUNT"    text="Trans Tax Override Amt" />
+  <tocitem target="TRANSACTION_TAX_OVERRIDE_RATE"    text="Trans Tax Override Rate" />
+  <tocitem target="TRANSACTION_GIFT_REGISTRY"    text="Transaction Gift Registry" />
+  <tocitem target="TRANS_OPTIONS"    text="Transaction Options" />
+  <tocitem target="TRANSACTION_SALES_ASSOCIATE"    text="Transaction Sales Assoc." />
+  <tocitem target="TRANSACTION_TAX_OPTIONS"    text="Transaction Tax Options" />
+  <tocitem target="TRAVELERS_CHECK" text="Travelers Check" />
+
+  <tocitem target="UNIT_OF_MEASURE"    text="Unit of Measure" />
+
+  <tocitem target="VOID_CONFIRM" text="Void Confirm" />
+  <tocitem target="VOID_TRANSACTION"    text="Void Transaction" />
+
+</toc>
+

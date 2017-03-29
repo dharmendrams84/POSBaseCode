@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Survey_zh_TW.bpt /main/5 2010/06/30 00:23:20 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/23/09 - Test Automation Changes for Survey section.
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *    cgreene   11/13/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Survey" copies="1">
+    <report name="SurveyReport" id="1" cutPaper="false">
+        <group id="2">
+            <line id="5249460">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="3051384" />
+            <line id="26612952">
+                <element text="向我們提供您的寶貴意見，即可於您下次" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="26058267">
+                <element text="採購時獲得 10% 的折扣。請撥打" id="2" justified="1" stretch="true" />
+            </line>
+            <line id="1927586">
+                <element text="1-800-555-5555 (9am - 9pm EST)" id="3" justified="1" stretch="true" />
+            </line>
+            <line id="11121774">
+                <element text="以完成客戶服務調查，" id="4" justified="1" stretch="true" />
+            </line>
+            <line id="19528370">
+                <element text="並獲取下次採購時可享10%" id="5" justified="1" stretch="true" />
+            </line>
+            <line id="33499184">
+                <element text="的折扣代碼。本優惠僅限美國地區" id="6" justified="1" stretch="true" />
+            </line>
+            <line id="18851795">
+                <element text="商店適用。10% 折扣僅" id="7" justified="1" stretch="true" />
+            </line>
+            <line id="1114328">
+                <element text="適用於貨品。不適用於" id="8" justified="1" stretch="true" />
+            </line>
+            <line id="19661409">
+                <element text="調整先前採購價格。" id="9" justified="1" stretch="true" />
+            </line>
+            <line id="7302560">
+                <element text="不能與任何其他優惠組合使用。" id="10" justified="1" stretch="true" />
+            </line>
+            <line id="16434455">
+                <element text="折扣優惠將於採購後 30 日後失效。" id="11" justified="1" stretch="true" />
+            </line>
+            <line id="3">
+                <element text="商店折扣代碼： _____" id="12" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

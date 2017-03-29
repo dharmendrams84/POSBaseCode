@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Survey_el.bpt /main/1 2010/06/18 07:06:39 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/23/09 - Test Automation Changes for Survey section.
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *    cgreene   11/13/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Survey" copies="1">
+    <report name="SurveyReport" id="1" cutPaper="false">
+        <group id="2">
+            <line id="5249460">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="3051384" />
+            <line id="26612952">
+                <element text="Κάντε τα σχόλιά σας και κερδίστε έκπτωση 10%" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="26058267">
+                <element text="για την επόμενη αγορά σας. Καλέστε" id="2" justified="1" stretch="true" />
+            </line>
+            <line id="1927586">
+                <element text="στο 1-800-555-5555, 9π.μ. - 9μ.μ. ΕΚΤ, για να" id="3" justified="1" stretch="true" />
+            </line>
+            <line id="11121774">
+                <element text="συμπληρώσετε μια Έρευνα Εξυπ. Πελατών" id="4" justified="1" stretch="true" />
+            </line>
+            <line id="19528370">
+                <element text="και θα λάβετε κωδικό έκπτωσης 10%" id="5" justified="1" stretch="true" />
+            </line>
+            <line id="33499184">
+                <element text="για την επόμενη αγορά σας. Η προσφορά ισχύει" id="6" justified="1" stretch="true" />
+            </line>
+            <line id="18851795">
+                <element text="για καταστήματα στις Η.Π.Α. Το 10% ισχύει" id="7" justified="1" stretch="true" />
+            </line>
+            <line id="1114328">
+                <element text="μόνο για εμπορεύματα. Δεν γίνονται προσαρμογές" id="8" justified="1" stretch="true" />
+            </line>
+            <line id="19661409">
+                <element text="τιμών για προηγούμενες αγορές." id="9" justified="1" stretch="true" />
+            </line>
+            <line id="7302560">
+                <element text="Δεν συνδυάζεται με άλλες" id="10" justified="1" stretch="true" />
+            </line>
+            <line id="16434455">
+                <element text="προσφορές. Η έκπτωση λήγει 30 ημέρες" id="11" justified="1" stretch="true" />
+            </line>
+            <line id="3">
+                <element text="μετά την αγορά. Κωδ. έκπτωσης καταστ.: _____" id="12" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

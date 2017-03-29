@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/context/ApplicationContext.xml /rgbustores_13.4x_generic_branch/1 2011/04/05 12:57:30 asinton Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   03/31/11 - adding authorization builder utility.
+ *    mkutiana  02/22/11 - Add fingerprint policy bean
+ *    cgreene   11/04/10 - move creation of resourcebundle to context
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    jswan     03/06/09 - Fix the tender ordering for the Till Count and
+ *                         Summary Reports.
+ *    cgreene   02/26/09 - change implementaion of TillSummaryReport to
+ *                         SummaryReport
+ *    cgreene   02/20/09 - added direct injection for local values for a
+ *                         receipt parameter bean
+ *    atirkey   01/13/09 - Modified Till summary bean
+ *    atirkey   01/07/09 - Till reconcile
+ *    cgreene   11/13/08 - configure print beans into Spring context
+ *    cgreene   11/13/08 - add receipt parameter bean
+ *    cgreene   11/07/08 - remove old receipts from context and
+ *                         blueprintsDisabled option
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+This is for Application type objects being managed by Spring Framework.
+These could be like Utility or UI related objects that we use at the Application layer level directly.
+Beans should be named starting with prefix application_ so that in Java code it is easier
+to identify which context file is being used for the Bean.
+-->
+
+<beans>
+
+    <!-- This is used to load configurations from the application.properties -->
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config/application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The fallback resource loader. Must implement oracle.retail.stores.common.utility.LanguageResourceBundleIfc -->
+    <bean id="application_LanguageResourceBundle" class="oracle.retail.stores.common.utility.LanguageResourceBundle"
+        singleton="false"/>
+
+    <!-- A reference to the constant LocaleConstantsIfc#DEFAULT_LOCALE -->
+    <bean id="oracle.retail.stores.domain.utility.LocaleConstantsIfc.DEFAULT_LOCALE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- The value of the default locale from the LocaleMap -->
+    <bean id="defaultLocale" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"><value>oracle.retail.stores.common.utility.LocaleMap</value></property>
+        <property name="targetMethod"><value>getLocale</value></property>
+        <property name="arguments">
+            <list>
+                <ref bean="oracle.retail.stores.domain.utility.LocaleConstantsIfc.DEFAULT_LOCALE"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The value of the receipt locale from the LocaleMap -->
+    <bean id="receiptLocale" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"><value>oracle.retail.stores.common.utility.LocaleMap</value></property>
+        <property name="targetMethod"><value>getLocale</value></property>
+        <property name="arguments">
+            <list>
+                <ref local="oracle.retail.stores.domain.utility.LocaleConstantsIfc.RECEIPT"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- A reference to the constant LocaleConstantsIfc#RECEIPT -->
+    <bean id="oracle.retail.stores.domain.utility.LocaleConstantsIfc.RECEIPT"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+
+    <!-- PasswordPolicyTDO TDOFactory create method functionality -->
+    <bean id="application_PasswordPolicyTDO" class="oracle.retail.stores.pos.ado.utility.tdo.PasswordPolicyTDO"
+          singleton="false"/>
+          
+    <!-- Password policy TDO used for fingerprint based logins -->
+    <bean id="application_FingerprintPasswordPolicyTDO" class="oracle.retail.stores.pos.ado.utility.tdo.FingerprintPasswordPolicyTDO"
+          singleton="false"/>
+          
+    <!-- Main TDO -->
+    <bean id="application_MainTDO" class="oracle.retail.stores.pos.services.main.tdo.MainTDO"
+          singleton="false"/>
+    <!-- Locale Map Loader -->
+    <bean id="application_LocaleMapLoader" class="oracle.retail.stores.commerceservices.common.utility.LocaleMapLoader"
+          lazy-init="true"/>
+
+    <!-- Parameter bean used for printing AlterationReceipt blueprint.  Class must extend oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc -->
+    <bean id="application_AlterationReceipt" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBean"
+          lazy-init="true"/>
+
+    <!-- Blueprint receipt printing. Class must extend oracle.retail.stores.pos.receipt.blueprint.BlueprintedReceipt -->
+    <bean id="application_BlueprintedReceipt" class="oracle.retail.stores.pos.receipt.blueprint.BlueprintedReceipt"
+          lazy-init="true"/>
+
+    <!-- Parameter bean used for printing GiftCardInquirySlip blueprint.  Class must extend oracle.retail.stores.pos.receipt.GiftCardInquirySlip -->
+    <bean id="application_GiftCardInquirySlip" class="oracle.retail.stores.pos.receipt.GiftCardInquirySlip"
+          singleton="false" />
+
+    <!-- Parameter bean used for printing InstantCreditInquiryInfoSlip blueprint.  Class must extend oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip -->
+    <bean id="application_InstantCreditInquiryInfoSlip" class="oracle.retail.stores.pos.receipt.InstantCreditInquiryInfoSlip"
+          singleton="false" />
+
+    <!-- Parameter bean used for printing NameVerificationSlip blueprint.  Class must extend oracle.retail.stores.pos.receipt.NameVerificationSlip -->
+    <bean id="application_NameVerificationSlip" class="oracle.retail.stores.pos.receipt.NameVerificationSlip"
+          singleton="false" />
+
+    <!-- Parameter bean used for printing NoSaleSlip blueprint.  Class must extend oracle.retail.stores.pos.receipt.NoSaleSlip -->
+    <bean id="application_NoSaleSlip" class="oracle.retail.stores.pos.receipt.NoSaleSlip"
+          singleton="false" />
+
+    <!-- Parameter bean used for printing SummaryReport blueprint.  Class must extend oracle.retail.stores.pos.reports.SummaryReport -->
+    <bean id="application_SummaryReport" class="oracle.retail.stores.pos.reports.SummaryReport" singleton="false">
+       <property name="tenderItemComparator" ref="application_FinancialCountTenderItemComparator"/>
+    </bean>
+
+      <!-- Parameter bean used for printing TillSummaryReport blueprint.  Class must extend oracle.retail.stores.pos.reports.SummaryReport -->
+    <bean id="application_TillSummaryReport" class="oracle.retail.stores.pos.reports.SummaryReport" singleton="false">
+       <property name="tenderItemComparator" ref="application_FinancialCountTenderItemComparator"/>
+    </bean>
+
+    <!-- Parameter bean used for printing TempShoppingPass blueprint.  Class must extend oracle.retail.stores.pos.receipt.TempShoppingPass -->
+    <bean id="application_TempShoppingPass" class="oracle.retail.stores.pos.receipt.TempShoppingPass"
+          singleton="false" />
+
+    <!-- Parameter bean used for printing TillCountReport blueprint.  Class must extend oracle.retail.stores.pos.reports.TillCountReport -->
+    <bean id="application_TillCountReport" class="oracle.retail.stores.pos.reports.TillCountReport" singleton="false">
+       <property name="comparator" ref="application_FinancialCountTenderItemComparator"/>
+    </bean>
+
+    <!-- Parameter bean used for sorting financial tender items.  Class must extend oracle.retail.stores.pos.reports.FinancialCountTenderItemComparator -->
+    <bean id="application_FinancialCountTenderItemComparator" class="oracle.retail.stores.pos.reports.FinancialCountTenderItemComparator"
+          singleton="false" />
+
+    <!-- SaleReturnTransactionJournalFormatter -->
+    <bean id="application_SaleReturnTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.SaleReturnTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATSaleReturnTransactionJournalFormatter -->
+    <bean id="application_VATSaleReturnTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VATSaleReturnTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- SaleReturnLineItemJournalFormatter -->
+    <bean id="application_SaleReturnLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.SaleReturnLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATSaleReturnLineItemJournalFormatter -->
+    <bean id="application_VATSaleReturnLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATSaleReturnLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- KitHeaderLineItemJournalFormatter -->
+    <bean id="application_KitHeaderLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.KitHeaderLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATKitHeaderLineItemJournalFormatter -->
+    <bean id="application_VATKitHeaderLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATKitHeaderLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- KitComponentLineItemJournalFormatter -->
+    <bean id="application_KitComponentLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.KitComponentLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATKitComponentLineItemJournalFormatter -->
+    <bean id="application_VATKitComponentLineItemJournalFormatter" class="oracle.retail.stores.pos.journal.VATKitComponentLineItemJournalFormatter"
+          singleton="false"/>
+
+    <!-- VoidTransactionJournalFormatter -->
+    <bean id="application_VoidTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VoidTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- VATVoidTransactionJournalFormatter -->
+    <bean id="application_VATVoidTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.VATVoidTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- RedeemTransactionJournalFormatter -->
+    <bean id="application_redeemTransactionJournalFormatter" class="oracle.retail.stores.pos.journal.RedeemTransactionJournalFormatter"
+          singleton="false"/>
+
+    <!-- A receipt parameter bean use for blueprints. Must implement oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc -->
+    <bean id="application_ReceiptParameterBean" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean"
+            singleton="false">
+        <property name="locale"><ref local="receiptLocale"/></property>
+        <property name="defaultLocale"><ref local="defaultLocale"/></property>
+    </bean>
+
+    <!-- A manager to display popups like cash under warning. Must implement oracle.retail.stores.pos.ui.popup.PopupMessageManagerIfc -->
+    <bean id="application_PopupMessageManager" class="oracle.retail.stores.pos.ui.popup.PopupMessageManager">
+        <property name="animationDelay">
+            <value>${CashDrawerWarning.AnimationDelay}</value>
+        </property>
+       <property name="initialDelay">
+            <value>${CashDrawerWarning.InitialDelay}</value>
+        </property>
+       <property name="lifeTime">
+            <value>${CashDrawerWarning.LifeTime}</value>
+        </property>
+    </bean>
+
+    <!-- AuthorizedTenderADOBuilder - Builds TenderADO object. Class must implement oracle.retail.stores.pos.ado.tender.AuthorizedTenderADOBuilderIfc. -->
+    <bean id="application_AuthorizedTenderADOBuilder" class="oracle.retail.stores.pos.ado.tender.AuthorizedTenderADOBuilder"
+          singleton="false"/>
+
+</beans>

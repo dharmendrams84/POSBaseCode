@@ -1,0 +1,96 @@
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/databases/build.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:25 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/06/10 - install and delete db.xml into desired location for
+ *                         unittests
+ *    abondala  01/02/10 - Update Header date
+ *    ohorne    09/30/09 - db target description corrections
+ *
+ * ===========================================================================
+ */
+-->
+<!--
+    Contains ant scripts which:
+    (1) Execute built SQL, which pre-loads Back Office database with unittest data
+ -->
+<project name="sqlTask" default="load_unittest">
+
+    <property file="db.properties"/>
+	<property name="common.sql.dir" value="${project.dir}/assemble/assemble.working.dir/server/common/db"/>
+
+    <path id="build.classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="load_purge_procedures" description="Load the purge procedure SQL into the database.">
+        <ant antfile="db.xml" target="load_purge_procedures" inheritrefs="true"/>
+    </target>
+
+    <target name="load_empty" description="Load the database without any datasets">
+    	<antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_empty_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_minimum" description="Load the database with minimal dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_minimum_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_sample" description="Load the database with sample dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_sample_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_test" description="Load the database with basetest dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_basetest_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_unittest" description="Load the database with unittest dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_unittest_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_qa" description="Load the database with qatest dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_qatest_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="load_integration" description="Load the database with integration dataset">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="create_integration_db"/>
+        <antcall target="cleanup_db_xml"/>
+    </target>    
+
+    <target name="load_product_sql" description="Loads the product SQL into the database.">
+        <antcall target="install_db_xml"/>
+        <ant dir="${common.sql.dir}" antfile="db.xml" target="test_data" />
+        <antcall target="cleanup_db_xml"/>
+    </target>
+
+    <target name="install_db_xml">
+    	<copy failonerror="true" todir="${common.sql.dir}" file="${project.dir}/assemble/assemble.working.dir/server/bin/db.xml" overwrite="true" /> 
+        <copy failonerror="true" todir="${common.sql.dir}" file="${project.dir}/dist/db/db.properties" overwrite="true" /> 
+	</target>
+
+    <target name="cleanup_db_xml">
+        <delete failonerror="true" file="${common.sql.dir}/db.xml" /> 
+        <delete failonerror="true" file="${common.sql.dir}/db.properties" /> 
+    </target>
+
+</project>

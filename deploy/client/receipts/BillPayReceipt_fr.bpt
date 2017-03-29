@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    nkgautam  07/28/10 - removed linked report totals
+ *    nkgautam  07/27/10 - removed linked report totals
+ *    mchellap  07/08/10 - Fixed account number printing
+ *    nkgautam  06/24/10 - bill pay changes
+ *    nkgautam  06/21/10 - bpt creation for bill pay transaction
+
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="BillPayReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    
+    <!-- Can be uncommented out later to incorporate bill payment header
+    <linkReport documentType="BillPayHeader" idePath="/pos/deploy/receipts/BillPayHeader.bpt" id="16879915" cutPaper="false" />
+    -->
+    <report name="BillPaymentReport" id="16879914" cutPaper="false">
+        <group id="26460711">
+            <line id="11633621">
+                <element text="Nom du client :" id="20988920" />
+                <methodElement id="22216746" justified="left">
+                    <method returns="BillPayTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="BillPayIfc" name="getBillPayInfo" class="oracle.retail.stores.domain.transaction.BillPayTransactionIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.transaction.BillPayIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="18860423" />
+            </line>
+        </group>
+    </report>
+    <report name="BillsReport" id="16879914" cutPaper="false">
+    <group id="2019194970">
+            <line id="6859913">
+                <element text="Nº cpte :" id="20988921" />
+                <methodElement id="16944767" justified="left">
+                    <method returns="BillIfc[]" name="getBills" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getAccountNumber" class="oracle.retail.stores.domain.financial.BillIfc"/>
+                    </method>
+                </methodElement>
+                <element text="   " id="18860424" />
+            </line>
+            <line id="11643621">
+                <element text="N° facture :" id="20988920" />
+                <methodElement id="22216946" justified="left">
+                    <method returns="BillIfc[]" name="getBills" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getBillNumber" class="oracle.retail.stores.domain.financial.BillIfc"/>
+                    </method>
+                </methodElement>
+                <element text="   " id="18860489" />
+            </line>
+            <line id="11643622">
+                <element text="Date échéance :" id="20988921" />
+                <methodElement id="22216947" justified="left">
+                    <method returns="BillIfc[]" name="getBills" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EYSDate" name="getDueDate" class="oracle.retail.stores.domain.financial.BillIfc">
+                            <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.EYSDate"/>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="18860490" />
+            </line>
+            <line id="11643623">
+                <element text="Montant payé :" id="20988922" stretch="true" />
+                <methodElement id="22216948" justified="right">
+                    <method returns="BillIfc[]" name="getBills" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getBillAmountPaid" class="oracle.retail.stores.domain.financial.BillIfc"/>
+                    </method>
+                </methodElement>
+                <element text="   " id="18860490" />
+            </line>
+            <line id="16865315">
+                <element text="" id="23518907" fillChar="_" stretch="true" />
+            </line>
+        </group>
+      </report>
+    <linkReport documentType="Items" idePath="/pos/deploy/receipts/Items.bpt" id="16879915" cutPaper="false" />
+    <report name="BillPayTotalReport" id="16875518" cutPaper="false">
+        <group id="26460653">
+            <line id="20730876" />
+            <line id="24475637">
+                <element text="Total" id="1184712308" stretch="true" />
+                <methodElement id="2586425" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="23478683" />
+            </line>
+            <line id="16693798" />
+        </group>
+    </report>
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879917" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879918" cutPaper="false">
+        <group id="26460711">
+            <line id="18945918" />
+            <line id="26049230">
+                <element text="Total pmnt" id="20988917" stretch="true" />
+                <methodElement id="22216747" justified="right">
+                    <method returns="CurrencyIfc" name="getTotalTenderAmount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <element text="   " id="18860423" />
+            </line>
+            <line id="24745276" dependsOnPresenceOf="5855220">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse=" " valuePrintedWhenTrue="" id="5855220">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isSuspended" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20237898" dependsOnPresenceOf="5855220">
+                <element text="Monnaie due" id="5990634" stretch="true" />
+                <methodElement id="15260515" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="15951383" dependsOnPresenceOf="2172104" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="PAT" idePath="/pos/deploy/receipts/PAT.bpt" id="13926415" cutPaper="false">
+        <dependsOn returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+            <method returns="IRSCustomerIfc" name="getIRSCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+        </dependsOn>
+    </linkReport>
+    <linkReport documentType="MailBankCheck" idePath="/pos/deploy/receipts/MailBankCheck.bpt" id="13704629" cutPaper="false" />
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="1763596" />
+            <line id="12206609">
+                <element text="Copie client" id="20784700" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Survey" idePath="/pos/deploy/receipts/Survey.bpt" id="13926412" cutPaper="false">
+        <dependsOn returns="boolean" name="isSurveyShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="BillPayFooter" idePath="/pos/deploy/receipts/BillPayFooter.bpt" id="16879918" cutPaper="false" />
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>

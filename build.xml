@@ -1,0 +1,654 @@
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/build.xml /rgbustores_13.4x_generic_branch/15 2012/02/14 15:50:06 drbarber Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    drbarber  02/06/12 - BUG 13655676: removing automatedTesting files from
+ *                         packaging
+ *    cgreene   12/12/11 - update to ant 1.8.2
+ *    tzgarba   10/28/11 - Removed extra JARs from POS ARU
+ *    tzgarba   09/20/11 - Added closed source build scripts to sparse tree
+ *                         build
+ *    mszekely  07/20/11 - BUG 12747594: Remove emma from build
+ *    tzgarba   07/08/11 - Updated sparsetree targets to fix sparsetree build
+ *    tzgarba   06/29/11 - Added missing files to reduced POS ARU to support
+ *                         installation
+ *    tzgarba   06/27/11 - Fixed original ARU bundle build issues
+ *    tzgarba   06/24/11 - Fixed build issues with POS, CO, and RM ARU bundles
+ *    cgreene   06/07/11 - update to first pass of removing pospal project
+ *    tzgarba   05/06/11 - Updated to support generating two source bundles,
+ *                         the original and a reduced source set.
+ *    tzgarba   04/28/11 - Added reduced source ARU pre-bundle
+ *    hyin      04/13/11 - spring upgrade second round
+ *    hyin      04/01/11 - spring 3 upgrade
+ *    abondala  04/11/11 - XbranchMerge
+ *                         abondala_bug11827952-salting_passwords_phase1 from
+ *                         main
+ *    abondala  04/11/11 - XbranchMerge abondala_bug11827952-salting_passwords
+ *                         from main
+ *    abondala  03/29/11 - add encryptionclient jar to the classpath.
+ *    abondala  03/25/11 - merging
+ *    abondala  03/23/11 - Implemented salting for the passwords
+ *    rsnayak   03/10/11 - ade megre
+ *    rsnayak   03/10/11 - pos lat integration for label batch
+ *    cgreene   03/01/11 - rename project to simjpos
+ *    abondala  02/24/11 - create a seperate jar for independent util classes
+ *                         that can be deployed outside the ear in the
+ *                         application server.
+ *    sgu       02/08/11 - add ejb jars
+ *    sgu       02/01/11 - check in all
+ *    cgreene   01/24/11 - move DDL from utility to common
+ *    cgreene   01/07/11 - merge foundation projects back into one
+ *    tzgarba   10/20/10 - Removed unit tests, functional tests, and test data
+ *                         from ARU packages
+ *    tzgarba   09/20/10 - Filtered assemble working dir out of ARU package
+ *    tzgarba   09/07/10 - Updated aru.prebundle to no longer need a clean
+ *                         environment to package properly
+ *    npoola    08/27/10 - added the new target to override manifest generation
+ *                         used for PosVersion.java
+ *    mchellap  08/09/10 - POS ARU build fix
+ *    tzgarba   07/14/10 - Updated the unit test framework to populate a wallet
+ *                         with database credentials to support tests that
+ *                         start dispatchers.
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   05/18/10 - ugrade log4j version
+ *    cgreene   05/17/10 - upgrade to commons-httpclient 3.1
+ *    sgu       05/13/10 - add jars necessary to run external order manager
+ *    cgreene   05/13/10 - convert jgl libraries to java.util
+ *    cgreene   05/11/10 - remove axis.jar
+ *    cgreene   05/07/10 - convert to common dir
+ *    cgreene   04/14/10 - rename deployment jars oracle.stores
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    cgreene   04/06/10 - update apache-ant version and remove it from
+ *                         common
+ *    tzgarba   02/22/10 - Added dependency on quartz to support delayed start
+ *                         of IDDI jobs
+ *    abondala  01/31/10 - updated class path
+ *    abondala  01/30/10 - use commons-logging-1.1.1.jar in all applications to
+ *                         be consistent
+ *    abondala  01/02/10 - Update Header date
+ *    mchellap  12/23/09 - Code clean up: Removed psib.jar and psir.jar
+ *    djenning  12/23/09 - upgrading to latest oracle db
+ *    mchellap  11/30/09 - Retail Security API upgrade
+ *    tzgarba   11/13/09 - Fixed .classpath issues, removed empty thirdparty
+ *                         directories, and moved last outstanding directory to
+ *                         proper location.
+ *    jswan     10/20/09 - Add ${oracle.stores.exportxml.deploy.name}.jar to pos build.
+ *    mchellap  09/29/09 - Added CSF jars to classpath
+ *    tzgarba   09/23/09 - Updated database configuration for refactored third
+ *                         party jars
+ *    tzgarba   09/02/09 - Phase 2 of third party refactor. Refactored
+ *                         remaining libraries and removed 11 more unused
+ *                         libraries.
+ *    asinton   03/26/09 - Removed MPOS.
+ *    mszekely  03/12/09 - BUG 8275414 removing unneeded files from ARU
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    mszekely  02/02/09 - BUG 7698238 - updating POS ARU
+ *    ohorne    01/28/09 - added thirdparty/Sun/j2ee.jar to classpath
+ *    ohorne    01/22/09 - removed dependency on jboss-j2ee.jar
+ *    mchellap  12/04/08 - Added inventory reservation jar psir.jar
+ *    mpbarnet  11/18/08 - Updated.
+ *    mpbarnet  11/14/08 - Added rsakeystore for RSA key management
+ *
+ * ===========================================================================
+ */
+-->
+<project name="pos" default="build" basedir=".">
+
+    <import file="../../build/shared.xml"/>
+
+    <property name="jarfile.prefix" value="${oracle.stores.pos.deploy.name}"/>
+    <property name="contains.unit.tests" value="!"/>
+    <property name="contains.locales" value="!"/>
+    <property name="contains.sql" value="!"/>
+    <property name="manifest.name" value="oracle/retail/stores/pos/"/>
+    <property name="spec.title" value="Pos Root Package"/>
+    <property name="spec.version" value="pos"/>
+    <property name="impl.title" value="oracle.retail.stores.pos"/>
+    <property file="../../build/sparsetree.properties"/>
+
+    <target name="check.in.sparsetree">
+        <condition property="in.sparsetree">
+            <and>
+                <isset property="insparsetree"/>
+                <equals arg1="${insparsetree}" arg2="true" />
+            </and>
+        </condition>
+    </target>
+
+    <target name="check.in.base" depends="check.in.sparsetree" unless="in.sparsetree">
+        <condition property="baseandsparsetrees">
+            <and>
+                <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                <equals arg1="${base.enabled}" arg2="true" />
+            </and>
+        </condition>
+        <condition property="onlybase">
+            <and>
+                <equals arg1="${base.enabled}" arg2="true" />
+                <not>
+                    <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                </not>
+            </and>
+        </condition>
+        <condition property="onlysparsetrees">
+            <and>
+                <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                <not>
+                    <equals arg1="${base.enabled}" arg2="true" />
+                </not>
+            </and>
+        </condition>
+    </target>
+
+    <target name="build" depends="check.in.base">
+        <if>
+            <equals arg1="${in.sparsetree}" arg2="true" />
+            <then>
+                <property name="contains.epd.libraries.patternset" value="!"/>
+                <antcall target="base.build" />
+                <antcall target="update.epd.jars" />
+            </then>
+            <elseif>
+                <equals arg1="${baseandsparsetrees}" arg2="true" />
+                <then>
+                    <echo message="Base and Sparsetrees both enabled"/>
+                    <antcall target="base.build" />
+                    <antcall target="assemble" />
+                    <antcall target="create.db.install" />
+
+
+                    <antcall target="sparsetrees.build" />
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${onlybase}" arg2="true" />
+                <then>
+                    <echo message="Base Only enabled"/>
+                    <antcall target="base.build" />
+                    <antcall target="assemble" />
+                    <antcall target="create.db.install" />
+
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${onlysparsetrees}" arg2="true" />
+                <then>
+                    <echo message="Sparsetrees Only enabled"/>
+                    <antcall target="sparsetrees.build" />
+                </then>
+            </elseif>
+        </if>
+    </target>
+
+    <target name="base.build" depends="java.compile,java-test.compile,locales.compile"/>
+
+    <target name="sparsetrees.build">
+        <for list="${sparsetree.list}" param="sparsetree.name">
+            <sequential>
+                <echo message="building sparsetree/@{sparsetree.name}/applications/pos"/>
+                <ant dir="../../sparsetree/@{sparsetree.name}/applications/pos" inheritAll="false">
+                     <property name="insparsetree" value="true"/>
+                </ant>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="update.epd.jars" depends="-locales.list">
+        <property name="epd.audit.locale.prefix" value="auditlog_resource"/>
+        <property name="epd.audit.locale.all" value="auditlog_resource_all"/>
+
+        <jar destfile="../../../extract/${oracle.stores.pos.deploy.name}.jar"
+             basedir="classes"
+             includes="**"
+             update="true"
+             compress="false">
+        </jar>
+        <property file="${projects.dir}/build/locales.properties"/>
+        <for list="${trans.locales.list}" param="locale" >
+            <sequential>
+            <jar destfile="../../../extract/${epd.audit.locale.prefix}_@{locale}.jar"
+                basedir="locales/@{locale}"
+                includes="**"
+                excludes="**/*mock.properties"
+                update="true"
+                compress="false">
+            </jar>
+            <jar destfile="../../../extract/${epd.audit.locale.all}.jar"
+                basedir="locales/@{locale}"
+                includes="**"
+                excludes="**/*mock.properties"
+                update="true"
+                compress="false">
+            </jar>
+            </sequential>
+        </for>
+    </target>
+
+    <patternset id="libraries.patternset">
+        <include name="${lib.commons-lang}"/>
+        <include name="${lib.junit}"/>
+        <include name="${lib.oracle.stores.simkeystore}"/>
+        <include name="${lib.oracle.stores.common}"/>
+        <include name="${lib.oracle.stores.datareplication}"/>
+        <include name="${lib.oracle.stores.domain-test}"/>
+        <include name="${lib.oracle.stores.domain}"/>
+        <include name="${lib.oracle.stores.commext}"/>
+        <include name="${lib.oracle.stores.encryptionclient}"/>
+        <include name="${lib.oracle.stores.exportfile}"/>
+        <include name="${lib.oracle.stores.exportxml}"/>
+        <include name="${lib.oracle.stores.foundation-test}"/>
+        <include name="${lib.oracle.stores.foundation}"/>
+        <include name="${lib.oracle.stores.psi}"/>
+        <include name="${lib.oracle.stores.receipts}"/>
+        <include name="${lib.oracle.stores.utility}"/>
+    	<include name="${lib.oracle.stores.secure.utility}"/>
+    	<include name="${lib.oracle.stores.encryptionclient}"/>
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar2}" />
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar3}" />
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar}" />
+        <include name="${lib.javahelp}"/>
+        <include name="${lib.jai-codec}"/>
+        <include name="${lib.jai-core}"/>
+        <include name="${lib.jdic}" />
+        <include name="${lib.j2ee.ejb}"/>
+        <include name="${lib.j2ee.jms}"/>
+        <include name="${lib.commons-codec}"/>
+        <include name="${lib.commons-logging}"/>
+        <include name="${lib.log4j}"/>
+        <include name="${lib.xerces-impl}"/>
+        <include name="${lib.jpos-ibm}"/>
+        <include name="${lib.jpos}"/>
+        <include name="${lib.jdom}"/>
+        <include name="${lib.quartz}"/>
+        <include name="${lib.spring.core}"/>
+        <include name="${lib.spring.context}"/>
+        <include name="${lib.spring.beans}"/>
+        <include name="${lib.spring.context.support}"/>
+        <include name="${lib.spring.web}"/>
+        <include name="${lib.spring.jdbc}"/>
+        <include name="${lib.spring.transaction}"/>
+        <include name="${lib.spring.expression}"/>
+        <include name="${lib.spring.asm}"/>    
+        <include name="${lib.spring.aop}"/>
+        <include name="${lib.spring.aopalliance}"/>
+    	<include name="${lib.axis2-axiom}"/>
+    	<include name="${lib.axis2-kernel}"/>
+    	<include name="${lib.axis2-geronimo-stax}"/>
+    	<include name="${lib.axis2-neethi}"/>
+    	<include name="${lib.rampart}"/>
+    	<include name="${lib.axis2-adb}"/>
+    	<include name="webapp/webservices-webapp/dist/webservices-webapp-client.jar"/>
+        <include name="applications/pos/lib/${oracle.stores.pos.deploy.name}.closed.jar"/>
+    </patternset>
+
+    <patternset id="epd.libraries.patternset">
+        <include name="${lib.commons-lang}"/>
+        <include name="extract/${oracle.stores.common.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.datareplication.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.domain.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.commext.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.encryptionclient.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.exportfile.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.exportxml.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.foundation.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.pos.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.psi.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.receipts.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.simkeystore.deploy.name}.jar"/>
+        <include name="extract/${oracle.stores.utility.deploy.name}.jar"/>
+    	<include name="extract/${oracle.stores.encryptionclient.deploy.name}.jar"/>
+    	<include name="extract/${oracle.stores.secure.utility.deploy.name}.jar"/>
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar2}" />
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar3}" />
+        <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar}" />
+        <include name="${lib.javahelp}"/>
+        <include name="${lib.jai-codec}"/>
+        <include name="${lib.jai-core}"/>
+        <include name="${lib.jdic}" />
+        <include name="${lib.j2ee.ejb}"/>
+        <include name="${lib.j2ee.jms}"/>
+        <include name="${lib.commons-codec}"/>
+        <include name="${lib.commons-logging}"/>
+        <include name="${lib.log4j}"/>
+        <include name="${lib.xerces-impl}"/>
+        <include name="${lib.jpos-ibm}"/>
+        <include name="${lib.jpos}"/>
+        <include name="${lib.jdom}"/>
+        <include name="${lib.quartz}"/>
+        <include name="${lib.spring.core}"/>
+        <include name="${lib.spring.context}"/>
+        <include name="${lib.spring.beans}"/>
+        <include name="${lib.spring.context.support}"/>
+        <include name="${lib.spring.web}"/>
+        <include name="${lib.spring.jdbc}"/>
+        <include name="${lib.spring.transaction}"/>
+        <include name="${lib.spring.expression}"/>
+        <include name="${lib.spring.asm}"/>        
+        <include name="${lib.spring.aop}"/>
+        <include name="${lib.spring.aopalliance}"/>
+    	<include name="${lib.axis2-axiom}"/>
+    	<include name="${lib.axis2-kernel}"/>
+    	<include name="${lib.axis2-geronimo-stax}"/>
+    	<include name="${lib.axis2-neethi}"/>
+    	<include name="${lib.rampart}"/>
+    	<include name="${lib.axis2-adb}"/>
+    	<include name="webapp/webservices-webapp/dist/webservices-webapp-client.jar"/>
+    </patternset>
+
+    <!-- Assemble pos libraries and locales -->
+    <target name="assemble" depends="java.compile,locales.compile">
+        <copy flatten="true" todir="deploy/shared/lib">
+            <fileset dir="${depends.basedir}">
+                <include name="${lib.oracle.stores.pos}"/>
+                <include name="applications/pos/dist/locales"/>
+            </fileset>
+        </copy>
+        <copy flatten="true" todir="deploy/shared/lib/locales">
+            <fileset dir="${depends.basedir}">
+                <include name="applications/pos/dist/locales/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <target name="java.compile" description="Compile java classes" unless="dont.java.compile" depends="shared-xml.java.compile">
+        <!-- Perform the Jar of the 'closed' source classes. -->
+        <property name="prefix" value="oracle/retail/stores/pos"/>
+        <!-- Set of closed packages as well as all interface classes -->
+        <property name="jar.closed.classes.include"
+                  value="${prefix}/*,
+                         ${prefix}/**/*Ifc.class,
+                         oracle/retail/stores/commerceservices/**,
+                         ${prefix}/appmanager/**,
+                         ${prefix}/formatter/**,
+                         ${prefix}/journal/**,
+                         ${prefix}/manager/codelist/**,
+                         ${prefix}/manager/journal/**,
+                         ${prefix}/platform/**,
+                         ${prefix}/reports/**,
+                         ${prefix}/utility/**"/>
+
+        <!-- Check for the closed source JAR and do the appropriate build -->
+        <if>
+            <available file="${project.dir}/lib/${jarfile.prefix}.closed.jar"/> 
+            <then><!-- Implementer build: combine shared classes and closed classes into single JAR -->
+                <echo>jar: pos shared and closed classes </echo>
+                <jar jarfile="${project.dist.dir}/${jarfile.prefix}.jar" update="true" compress="${compress}">
+                    <zipfileset src="${project.dir}/lib/${jarfile.prefix}.closed.jar"/>
+                </jar>
+            </then>
+            <else><!-- Developer build: generate closed classes JAR for implementer use -->
+            <echo>jar: pos closed classes</echo>
+                <antcall target="-jar.impl">
+                    <param name="src.dir" value="${java.src.dir}"/>
+                    <param name="jarfile" value="${project.dist.dir}/${jarfile.prefix}.closed.jar"/>
+                    <param name="instjarfile" value="${project.name}"/>
+                    <param name="compress" value="${compress.java.jar}"/>
+                    <param name="basedir" value="${java.classes.dir}"/>
+                    <param name="instbasedir" value="${project.inst.dir}"/>
+                    <param name="includes" value="${jar.closed.classes.include}"/>
+                    <param name="excludes" value="${jar.classes.exclude},${module.classes.exclude}"/>
+                </antcall>
+            </else>
+        </if>
+    </target>
+
+
+    <!-- Clean up the 'temporary fix' from assemble target above -->
+    <target name="clean" depends="shared-xml.clean">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="deploy/shared/lib" includes="**/*.jar,locales"/>
+        </delete>
+    </target>
+
+    <target name="generate.sql" if="contains.sql">
+        <property name="db.product.list" value="mysql,db2"/>
+
+        <for list="${db.product.list}" param="db.product">
+            <sequential>
+                <antcall target="generate.sql.impl">
+                    <param name="db.product" value="@{db.product}"/>
+                </antcall>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="generate.sql.impl">
+
+        <property name="db.product" value="${db.product}"/>
+
+        <property file="${projects.dir}/applications/pos/databases/${db.vendor}/${db.product}/${db.product}.properties"/>
+        <property name="sql.out" value="${projects.dir}/applications/pos/dist/db/${db.vendor}/${db.product}"/>
+        <mkdir dir="${sql.out}"/>
+        <concat destfile="${sql.out}/RawSqlCreate.sql">
+            <fileset dir="${db.creates.dir}"
+                includes="Create*.sql"
+                excludes="Insert*.sql"/>
+        </concat>
+
+        <concat destfile="${sql.out}/RawSqlInsert.sql">
+             <fileset dir="${projects.dir}/modules/common/deploy/server/common/db/sql">
+                 <include name="Insert*.sql"/>
+                 <exclude name="Create*.sql"/>
+             </fileset>
+        </concat>
+
+        <echo>db.datafilter for ${db.product} = ${db.datafilter}</echo>
+
+        <java classname="${db.datafilter}"
+            fork="true"
+            failonerror="true"
+            maxmemory="128m">
+            <arg value="${sql.out}/RawSqlCreate.sql"/>
+            <arg value="${sql.out}/FinalCreate.sql"/>
+            <arg value="${sql.out}/FinalDrop.sql"/>
+            <classpath>
+                <pathelement location="${db.datafilter.classpath}"/>
+            </classpath>
+        </java>
+        <java classname="${db.datafilter}"
+            fork="true"
+            failonerror="true"
+            maxmemory="128m">
+            <arg value="${sql.out}/RawSqlInsert.sql"/>
+            <arg value="${sql.out}/FinalInsert.sql"/>
+            <classpath>
+                <pathelement location="${db.datafilter.classpath}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="create.db.install" depends="set.depends.basedir">
+        <copy flatten="true" todir="${projects.dir}/applications/pos/dist/db/lib">
+            <fileset dir="${depends.basedir}">
+                <include name="${lib.oracle-jdbc}"/>
+                <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar}" />
+                <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar2}" />
+                <include name="thirdparty/${db.vendor}/${db.product}/${db.version}/${db.jdbc-jar3}" />
+                <include name="${lib.log4j}"/>
+                <include name="commerceservices/parameter/dist/parameter.jar"/>
+                <include name="commerceservices/shared/dist/shared.jar"/>
+                <include name="commerceservices/label/dist/label.jar"/>
+                <include name="commerceservices/store/dist/store.jar"/>
+                <include name="webapp/label-webapp/dist/label-webapp-app.jar"/>
+                <include name="${lib.oracle.stores.utility}"/>
+                <include name="${lib.oracle.stores.secure.utility}"/>
+                <include name="${lib.oracle.stores.encryptionclient}"/>
+                <include name="${lib.oracle.stores.common}"/>
+                <include name="thirdparty/apache/ant/1.8.2/lib/ant-contrib-1.0b3.jar" />
+                <include name="${lib.commons-codec}"/>
+                <include name="${lib.commons-logging}"/>
+                <include name="${lib.commons-lang}"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/identitystore.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jacc-api.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jacc-spi.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-api.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-common.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-ee.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-internal.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-manifest.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-mbeans.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-unsupported-api.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-upgrade.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jps-wls.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/jsr173_1.0_api.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/oraclepki.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/osdt_cert.jar"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/osdt_core.jar"/>
+                <include name="${lib.retail-public-security-api}"/>
+                <include name="thirdparty/oracle/retail-public-security-api/1.8/lib/sjsxp.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${projects.dir}/applications/pos/dist/db">
+            <fileset dir="${depends.basedir}/applications/pos/databases"/>
+            <fileset dir="${depends.basedir}/modules/common/deploy/server/common/db/sql/shared"/>
+            <fileset dir="${depends.basedir}/modules/common/deploy/server/common/db/sql/procedures"/>
+
+        </copy>
+    </target>
+
+    <property name="src.excludes" value="**/test/**,**/db/sql/unittest/**,**/db/sql/qatest/**,**/classes/**,**/dist/**,**/inst/**,**/javadoc/**,**/findbugs/**"/>
+    <property name="domain.src.path" value="src/oracle/retail/stores/domain"/>
+    <property name="domain.src.includes" value="*,xsd/**,META-INF/**,${domain.src.path}/arts/**,${domain.src.path}/discount/**,${domain.src.path}/factory/**,${domain.src.path}/financial/**,${domain.src.path}/ixretail/**,${domain.src.path}/lineitem/**,${domain.src.path}/manager/ifc/tax/**,${domain.src.path}/manager/tax/**,${domain.src.path}/tax/**,${domain.src.path}/transaction/**"/>
+    <property name="pos.src.path" value="src/oracle/retail/stores/pos"/>
+    <property name="pos.src.includes" value="*,assemble/*,assemble/resources/**,databases/**,deploy/**,installer/**,locales/**,META-INF/**,${pos.src.path}/ado/**,${pos.src.path}/config/**,${pos.src.path}/device/**,${pos.src.path}/manager/utility/**,${pos.src.path}/receipt/**,${pos.src.path}/services/**,${pos.src.path}/tdo/**,${pos.src.path}/ui/**"/>
+    <property name="closed.src.includes"
+        value="applications/simkeystore/build.xml, applications/simkeystore/src,
+               commerceservices/shared/build.xml, commerceservices/shared/src,
+               modules/commext/build.xml, modules/commext/src,
+               modules/datareplication/build.xml, modules/datareplication/src,
+               modules/encryptionclient/build.xml, modules/encryptionclient/src,
+               modules/exportfile/build.xml, modules/exportfile/src,
+               modules/exportxml/build.xml, modules/exportxml/src,
+               modules/persistence/build.xml, modules/persistence/src,
+               modules/posrm/build.xml, modules/posrm/src,
+               modules/receipts/build.xml, modules/receipts/src,
+               modules/utility/build.xml, modules/utility/src"/>
+
+    <target name="aru.prebundle">
+        <antcall target="aru.prebundle.new"/>
+        <antcall target="aru.prebundle.original"/>
+    </target>
+
+    <target name="aru.prebundle.new">
+        <mkdir dir="${projects.dir}/install/dist"/>
+        <zip destfile="${projects.dir}/install/dist/ORPOS-${package.version}_source.zip">
+            <zipfileset dir="${projects.dir}/installer" excludes="installer-common/findbugs/**,installer-common/META-INF/**,**/findbugs/**" prefix="ORPOS-${package.version}_source/installer"/>
+            <zipfileset dir="${projects.dir}/internal/DIMP" excludes=".classpath,.project,**/findbugs/**" prefix="ORPOS-${package.version}_source/DIMP"/>
+            <zipfileset dir="${projects.dir}/modules/utility/deploy" excludes="${src.excludes},templates/**" prefix="ORPOS-${package.version}_source/modules/utility/deploy"/>
+            <zipfileset dir="${projects.dir}/modules/common/deploy" excludes="${src.excludes},templates/**,shared/tools/**,shared/lib/**,shared/common/tools/automatedTesting/**" prefix="ORPOS-${package.version}_source/modules/common/deploy"/>
+            <zipfileset dir="${projects.dir}/modules/common" includes="build.xml" prefix="ORPOS-${package.version}_source/modules/common"/>
+            <zipfileset dir="${projects.dir}/modules/enterpriseconnection" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/enterpriseconnection"/>
+            <zipfileset dir="${projects.dir}/modules/psi" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/psi"/>
+            <zipfileset dir="${projects.dir}/modules/billpay" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/billpay"/>
+            <zipfileset dir="${projects.dir}/modules/siebel" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/siebel"/>
+            <zipfileset dir="${projects.dir}/clientinterfaces" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/clientinterfaces"/>
+            <zipfileset dir="${projects.dir}/applications/rsakeystore" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/applications/rsakeystore"/>
+            <zipfileset dir="${projects.dir}/modules/domain"
+                        includes="${domain.src.includes}"
+                        excludes="${src.excludes},**/*Ifc.java"
+                        prefix="ORPOS-${package.version}_source/modules/domain"/>
+            <zipfileset dir="${projects.dir}/applications/pos"
+                        includes="${pos.src.includes},**/*Ifc.java"
+                        excludes="${src.excludes},assemble/ARU/**,assemble/assemble.working.dir/**,deploy/client/bin/PerformanceTestHarness.bat,deploy/server/bin/txntool.bat,deploy/client/config/**/*PerformanceTestHarness*.xml"
+                        prefix="ORPOS-${package.version}_source/applications/pos"/>
+            <zipfileset dir="${projects.dir}" includes="${closed.src.includes}" prefix="ORPOS-${package.version}_source"/>
+        </zip>
+    </target>
+
+    <target name="aru.prebundle.original">
+        <mkdir dir="${projects.dir}/install/dist"/>
+        <zip destfile="${projects.dir}/install/dist/ORPOS-${package.version}_source_pack2.zip">
+            <zipfileset dir="${projects.dir}/installer" excludes="installer-common/findbugs/**,installer-common/META-INF/**,**/findbugs/**" prefix="ORPOS-${package.version}_source/installer"/>
+            <zipfileset dir="${projects.dir}/internal/DIMP" excludes=".classpath,.project,**/findbugs/**" prefix="ORPOS-${package.version}_source/DIMP"/>
+            <zipfileset dir="${projects.dir}/modules/common" excludes="${src.excludes},deploy/shared/common/tools/automatedTesting/**" prefix="ORPOS-${package.version}_source/modules/common"/>
+            <zipfileset dir="${projects.dir}/modules/utility" excludes="${src.excludes},templates/**" prefix="ORPOS-${package.version}_source/modules/utility"/>
+            <zipfileset dir="${projects.dir}/modules/encryptionclient" excludes="${src.excludes},META-INF/**" prefix="ORPOS-${package.version}_source/modules/encryptionclient"/>
+            <zipfileset dir="${projects.dir}/modules/domain" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/domain"/>
+            <zipfileset dir="${projects.dir}/modules/commext" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/commext"/>
+            <zipfileset dir="${projects.dir}/modules/datareplication" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/datareplication"/>
+            <zipfileset dir="${projects.dir}/modules/exportfile" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/exportfile"/>
+            <zipfileset dir="${projects.dir}/modules/exportxml" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/exportxml"/>
+            <zipfileset dir="${projects.dir}/modules/enterpriseconnection" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/enterpriseconnection"/>
+            <zipfileset dir="${projects.dir}/modules/resourceadapter" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/resourceadapter"/>
+            <zipfileset dir="${projects.dir}/modules/persistence" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/persistence"/>
+            <zipfileset dir="${projects.dir}/modules/psi" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/psi"/>
+            <zipfileset dir="${projects.dir}/modules/receipts" excludes="${src.excludes}," prefix="ORPOS-${package.version}_source/modules/receipts"/>
+            <zipfileset dir="${projects.dir}/modules/billpay" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/billpay"/>
+            <zipfileset dir="${projects.dir}/modules/siebel" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/modules/siebel"/>
+            <zipfileset dir="${projects.dir}/clientinterfaces" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/clientinterfaces"/>
+            <zipfileset dir="${projects.dir}/applications/pos" excludes="${src.excludes},assemble/ARU/**,assemble/assemble.working.dir/**,deploy/client/bin/PerformanceTestHarness.bat,deploy/server/bin/txntool.bat,deploy/client/config/**/*PerformanceTestHarness*.xml" prefix="ORPOS-${package.version}_source/applications/pos"/>
+            <zipfileset dir="${projects.dir}/applications/simkeystore" excludes="${src.excludes},META-INF/**" prefix="ORPOS-${package.version}_source/applications/simkeystore"/>
+            <zipfileset dir="${projects.dir}/applications/rsakeystore" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/applications/rsakeystore"/>
+            <zipfileset dir="${projects.dir}/commerceservices/shared" excludes="${src.excludes}" prefix="ORPOS-${package.version}_source/commerceservices/shared"/>
+        </zip>
+    </target>
+
+    <target name="-pre.unittest.impl">
+        <antcall target="prepare-test-files"/>
+    </target>
+
+    <target name="prepare-test-files" >
+
+        <echo message="Configuring: JDBC_URL:${db.jdbc-url}"/>
+        <echo message="Configuring: JDBC_USER: ${db.user}"/>
+        <echo message="Configuring: JDBC_DRIVER: ${db.jdbc-driver}" />
+        <echo message="Configuring: JDBC_EXCEPTION_MAP: ${db.jdbc-exception-map}" />
+        <echo message="Configuring: JDBC_HELPER: ${db.jdbc-helper}"/>
+
+        <copy overwrite="true" file="${java-test.src.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+              toFile="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml" />
+
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_DRIVER" value="${db.jdbc-driver}"/>
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_URL" value="${db.jdbc-url}"/>
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_USER" value="${db.user}"/>
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_PASSWORD" value="${db.password}"/>
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_EXCEPTION_MAP" value="${db.jdbc-exception-map}" />
+        <replace file="${java-test.classes.dir}/oracle/retail/stores/pos/DefaultTestDataTechnician.xml"
+             token="JDBC_HELPER" value="${db.jdbc-helper}" />
+
+        <!-- Populate a wallet -->
+        <echo message="Configuring wallet..."/>
+        <saveUnittestCredential userNameAlias="${db.password}" userName="${db.password}" password="${db.password}" property="temp.db.password-property"/>
+    </target>
+    <target name="-jar.impl.with.manifest.not.specified" unless="manifest.specified">
+        <mkdir dir="../dist"/>
+        <property name="manifest.classpath" value="../../common/lib/ext/log4j-1.2.16.jar ../../common/lib/ext/activation.jar ../../common/lib/ext/mx4j-tools.jar ../../common/lib/ext/jpos17.jar ../../common/lib/ext/servlet.jar ../../common/lib/ext/mail.jar ../../common/lib/ext/jms.jar ../../common/lib/ext/jh.jar ../../common/lib/ext/jaxb-api.jar ../../common/lib/ext/jaxb-impl.jar ../../common/lib/ext/jaxb-libs.jar ../../common/lib/ext/jaxb-runtime.jar ../../common/lib/ext/jdom.jar ../../common/lib/ext/xmlParserAPIs.jar ../../common/lib/ext/xercesImpl.jar ../3rdparty/lib/ibmjpos.jar ../3rdparty/lib/jai_codec.jar ../3rdparty/lib/jai_core.jar ../3rdparty/lib/jpos14.jar ../3rdparty/lib/jpos.jar"/>
+        <echo message="manifest name:${manifest.name} for ${jarfile}"/>
+            <jar jarfile="${jarfile}"
+                compress="${compress}"
+                basedir="${basedir}"
+                includes="${includes}"
+                excludes="${excludes}">
+                <manifest>
+                    <attribute name="Build-Timestamp" value="${anthill.build.date_time}"/>
+                    <section name="${manifest.name}" />
+                    <attribute name="Specification-Title" value="${spec.title}"/>
+                    <attribute name="Specification-Version" value="${spec.version}"/>
+                    <attribute name="Specification-Vendor" value="${spec.vendor}"/>
+                    <attribute name="Implementation-Title" value="${impl.title}"/>
+                    <attribute name="Implementation-Version" value="${anthill.version}"/>
+                    <attribute name="Implementation-Vendor" value="${impl.vendor}"/>
+                    <attribute name="JDK-Compiler" value="${osenv.JAVA_HOME}"/>
+                    <attribute name="Build-Number" value="${anthill.version}"/>
+                    <attribute name="Version-Number" value="${new.manifest.version.number}"/>
+                    <attribute name="View" value="${anthill.branch.name}"/>
+                    <attribute name="Class-Path" value="${manifest.classpath}"/>
+                </manifest>
+            </jar>
+    </target>
+</project>
+

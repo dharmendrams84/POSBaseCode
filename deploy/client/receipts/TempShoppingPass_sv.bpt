@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TempShoppingPass_sv.bpt /main/2 2010/09/06 14:06:05 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/25/09 - hide sales assoc label if assoc is null
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - fixed formatting of finance rate and APR using
+ *                         MaskFormatter
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/20/09 - set cutPaper to false on main report body
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for TempShoppingPass
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="TempShoppingPass" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header_sv.bpt" id="30686834" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="8018457">
+                <element text="TILLFÄLLIGT SHOPPINGPASS" id="1786276472" justified="1" stretch="true" />
+            </line>
+            <line id="29711519">
+                <element text="" id="15104248" fillChar="_" stretch="true" />
+            </line>
+            <line id="4426366" />
+            <line id="5283099">
+                <methodElement precededBySpace="false" id="2030900">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="24202537">
+            <line id="25227449">
+                <methodElement precededBySpace="false" id="13918037">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="Vector" name="getLines" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="27327968">
+            <line id="8099213">
+                <methodElement precededBySpace="false" id="1145063">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="getCity" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="," id="1485966" />
+                <methodElement id="17937322">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="getState" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="30198018">
+                <methodElement precededBySpace="false" id="32782030">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="getPostalCode" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="-" id="22103853" dependsOnPresenceOf="20611583" />
+                <methodElement precededBySpace="false" id="20611583">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.utility.InstantCreditIfc">
+                            <method returns="AddressIfc" name="getPrimaryAddress" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="getPostalCodeExtension" class="oracle.retail.stores.domain.utility.AddressIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7005560" dependsOnPresenceOf="28441936" />
+            <line id="16730584" dependsOnPresenceOf="28441936">
+                <element text="Du har godkänts för ett" id="2588020" justified="1" stretch="true" />
+            </line>
+            <line id="295579" dependsOnPresenceOf="28441936">
+                <element text="Oracle-kort." id="25299736" justified="1" stretch="true" />
+            </line>
+            <line id="13982772" dependsOnPresenceOf="28441936" />
+            <line id="615979" dependsOnPresenceOf="28441936">
+                <element text="Gällande villkor för ditt konto hittar du" id="13517603" />
+            </line>
+            <line id="14416814">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="i avtalet om avbetalningskrediten hos" valuePrintedWhenTrue="" id="28441936">
+                    <method returns="boolean" name="isOneDayTempPass" class="oracle.retail.stores.pos.receipt.TempShoppingPass" />
+                </methodElement>
+            </line>
+            <line id="8423740" dependsOnPresenceOf="28441936">
+                <element text="handlaren. Ditt nya Oracle-kort" id="28676063" />
+            </line>
+            <line id="685056" dependsOnPresenceOf="28441936">
+                <element text="skickas till dig per post." id="30557827" />
+            </line>
+            <line id="2095860" dependsOnPresenceOf="28441936" />
+            <line id="30708925" />
+            <line id="17280847" dependsOnPresenceOf="28441936">
+                <element text="DITT KONTONUMMER ÄR:" id="13469104" />
+            </line>
+            <line id="17411841" dependsOnPresenceOf="28441936">
+                <methodElement precededBySpace="false" id="21926304">
+                    <method returns="String" name="getFormattedCardNumber" class="oracle.retail.stores.pos.receipt.TempShoppingPass" />
+                </methodElement>
+            </line>
+            <line id="6049905">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="KORTTYP: Oracle-kredit" id="9201570">
+                    <method returns="boolean" name="isOneDayTempPass" class="oracle.retail.stores.pos.receipt.TempShoppingPass" />
+                </methodElement>
+            </line>
+            <line id="2617672" />
+            <line id="4933891">
+                <methodElement precededBySpace="false" id="794400" printedAsBarcode="true">
+                    <method returns="String" name="getCardNumber" class="oracle.retail.stores.pos.receipt.TempShoppingPass" />
+                </methodElement>
+            </line>
+            <line id="1899884" />
+            <line id="20737064">
+                <element text="SHOPPINGPASSETS UTGÅNGSDATUM:" id="16286089" />
+            </line>
+            <line id="23068595">
+                <methodElement precededBySpace="false" formatter="Date.SHORT" id="28374943">
+                    <method returns="EYSDate" name="getExpDate" class="oracle.retail.stores.pos.receipt.TempShoppingPass" />
+                </methodElement>
+            </line>
+            <line id="32624005" dependsOnPresenceOf="9201570" />
+            <line id="31571848">
+                <element text="DIN KREDITGRÄNS:" id="12636540" />
+                <methodElement id="30179903">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CurrencyIfc" name="getCreditLimit" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27612848" />
+            <line id="30747731" dependsOnPresenceOf="9201570">
+                <element text="AKTUELLT SALDO:" id="31597144" />
+                <methodElement id="28662729">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CurrencyIfc" name="getCurrentBalance" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12643262" dependsOnPresenceOf="9201570" />
+            <line id="30504365" dependsOnPresenceOf="9201570">
+                <element text="TILLGÄNGLIG KREDIT:" id="31175868" />
+                <methodElement id="7741873">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CurrencyIfc" name="getAvailableCredit" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25268820" dependsOnPresenceOf="9201570" />
+            <line id="23901724" dependsOnPresenceOf="9201570">
+                <element text="SENASTE BETALNING OCH BELOPP:" id="12146991" />
+            </line>
+            <line id="29719363" dependsOnPresenceOf="9201570">
+                <methodElement precededBySpace="false" formatter="Date.SHORT" id="21742354">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="EYSDate" name="getLastPaymentDate" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="11" id="22923228">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="CurrencyIfc" name="getLastPaymentAmount" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9392740" />
+            <line id="21102111">
+                <element text="För att skydda både dig och oss kommer" id="22565934" />
+            </line>
+            <line id="17127245">
+                <element text="vi att be dig visa ID-kort när du använder" id="7479634" />
+            </line>
+            <line id="26144630">
+                <element text="shoppingpasset. Om du har frågor om" id="25172526" />
+            </line>
+            <line id="22593514">
+                <element text="Oracle-kortet kan du ringa" id="5066542" />
+            </line>
+            <line id="23715104">
+                <element text="+1-800-xxx-xxxx." id="862256" />
+            </line>
+            <line id="30626900" />
+            <line id="26323883">
+                <element text="Kund" id="18352317" />
+            </line>
+            <line id="33100528">
+                <element text="Underskrift:" id="17177752" fillChar="_" stretch="true" />
+            </line>
+            <line id="28528574" />
+            <line id="33474754" />
+            <line id="11709161">
+                <element text="AKTUELL RÖRLIG RÄNTA ÄR" id="27355763" />
+            </line>
+            <line id="26934292">
+                <methodElement precededBySpace="false" formatter="#.####%" id="9181755">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="String" name="getMonthlyPeriodicRate" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+                <methodElement formatter="##.##%" prefix="(APR " suffix=")" id="28733373">
+                    <method returns="InstantCreditIfc" name="getCard" class="oracle.retail.stores.pos.receipt.TempShoppingPass">
+                        <method returns="String" name="getApr" class="oracle.retail.stores.domain.utility.InstantCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="11623684" />
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="1495765" />
+</blueprint>
+
+

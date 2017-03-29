@@ -1,0 +1,52 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/shared/config/rmihost.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:26 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Add ADE Header
+ *
+ * ===========================================================================
+ */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  $Log:
+   1    360Commerce 1.0         12/13/2005 4:46:53 PM  Barry A. Pape
+  $
+  Revision 1.8  2004/05/24 22:20:57  crain
+  @scr 5060 Purchase Order- Extra copy of receipt printed when PO Tender issued by Other
+
+  Revision 1.6  2004/05/19 20:37:11  crain
+  @scr 5080 Tender Redeem_Disc. Applied Alt Flow not Called from Foreign Gift Cert Alt Flow
+
+  Revision 1.2  2004/02/12 16:46:36  mcs
+  Forcing head revision
+
+  Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+  updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    NOTE: Replace data_server_host_name and store_server_host_name with host
+    names.  Try DNS name first; if that fails, use numeric IP address.
+
+    Replace data_server_port_number and store_server_port_number with
+    port numbers.
+
+    Replace data_server_name with server name (CORPORATESERVER
+    or STORESERVER).
+-->
+<!DOCTYPE CRFHOSTS SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/crfhost.dtd" [
+]>
+
+<CRFHOSTS transport="RMI">
+    <URL name="data_server_host_name" port="data_server_port_number" tier="data_server_name"/>
+    <URL name="store_server_host_name" port="store_server_port_number" tier="STORESERVER"/>
+</CRFHOSTS>

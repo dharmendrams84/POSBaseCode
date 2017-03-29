@@ -1,0 +1,51 @@
+<html >
+    
+    <body>
+        <h2>Installation Summary</h2>
+        <p>
+        <b>Install Profile:</b> ${input_install_profile}
+        <p>
+        <b>POS Platform Components Selected:</b>
+        <ul>
+#if($input_install_base_application_enabled == "true")<li>Base POS Application</li>
+#end
+#if($input_install_platform_IBM4694_enabled == "true")<li>IBM 4694</li>
+#end
+#if($input_install_platform_IBMSurePOS750_enabled == "true")<li>IBM SurePOS 750</li>
+#end
+#if($input_install_platform_WincorBeetle_enabled == "true")<li>Wincor Beetle</li>
+#end
+#if($input_install_platform_FujitsuTeamPOS2000_enabled == "true")<li>Fujitsu TeamPOS 2000</li>
+#end
+#if($input_install_platform_POSsim_enabled == "true")<li>POS Simulation</li>
+#end
+#if($input_install_platform_Other_enabled == "true")<li>Other</li>
+#end
+        </ul>
+        <p>
+        <b>POS Devices Selected:</b>
+        <ul>
+#if($input_install_device_BarcodeScanner_enabled == "true") <li>Barcode Scanner</li>
+#end
+#if($input_install_device_CashDrawer_enabled == "true") <li>Cash Drawer</li>
+#end
+#if($input_install_device_MagneticStripeReader_enabled == "true") <li>Magnetic Stripe Reader</li>
+#end
+#if($input_install_device_LineDisplay_enabled == "true") <li>Line Display</li>
+#end
+#if($input_install_device_HardTotals_enabled == "true") <li>Hard Totals</li>
+#end
+#if($input_install_device_MICR_enabled == "true") <li>MICR</li>
+#end
+#if($input_install_device_HypercomPackage_enabled == "true") <li>Hypercom Package</li>
+#end
+#if($input_install_device_IngenicoPackage_enabled == "true") <li>Ingenico Package</li>
+#end
+#if($input_install_device_printer_support == "FRANKING") <li>Printer support (with check franking)</li>
+#end
+#if($input_install_device_printer_support == "NO_FRANKING") <li>Printer support (without check franking)</li>
+#end
+        </ul>
+    </body>
+    
+</html>

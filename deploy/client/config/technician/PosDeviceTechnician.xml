@@ -1,0 +1,251 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/technician/PosDeviceTechnician.xml /rgbustores_13.4x_generic_branch/3 2012/01/30 09:56:13 ohorne Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    01/27/12 - set alwaysPrintLineFeeds to true for
+ *                         IppPrinterActionGroup
+ *    icole     08/17/11 - Added checkHealthOKText property to the FingerprintActionGroup
+ *                         entry.
+ *    cgreene   06/07/11 - update to first pass of removing pospal project
+ *    cgreene   03/01/11 - move from devices folder
+ *    blarsen   02/24/11 - added FingerprintReaderActionGroupIfc.
+ *    cgreene   02/18/11 - refactor printing for switching character sets
+ *    cgreene   02/16/11 - move barcode prefix to posdevices.xml
+ *    blarsen   02/09/11 - adding FalseAcceptRate property to the
+ *                         FingerprintReaderSession (externalizing this to give
+ *                         control to customer)
+ *    blarsen   01/24/11 - changed posdevices.xml to use a simulated
+ *                         fingerprint reader session. This allows those w/o a
+ *                         reader installed to function properly.
+ *    blarsen   05/25/10 - added FingerprintReaderSession
+ *    blarsen   06/09/10 - XbranchMerge blarsen_biometrics-poc from
+ *                         st_rgbustores_techissueseatel_generic_branch
+ *    asinton   01/26/11 - adding support for simulated devices to reduce
+ *                         errors in the logging.
+ *    cgreene   12/21/10 - implement isDisableEventsOnly so that scanner that
+ *                         don't disable can still have the dataEvents turned
+ *                         off.
+ *    cgreene   11/05/10 - set total size of simulated hardtotals session
+ *    asinton   07/26/10 - Fix Greek receipt alignment.
+ *    asinton   06/22/10 - Add characterWidths for GREEK and LATIN_EXTENDED_A.
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/22/09 - set enabled to true when SimulatedPrinter Session
+ *    acadar    12/18/09 - fixed location for data folder
+ *    acadar    12/15/09 - set frankingCapable to false by default
+ *    acadar    12/15/09 - cleanup and refactoring of PdfReceiptPrinter's use
+ *                         in POSPrinterActionGroup
+ *    ohorne    12/10/09 - jpos printing fix
+ *    acadar    12/08/09 - changed path to the data folder
+ *    acadar    12/07/09 - changed the location of IPP conf. file
+ *    acadar    12/07/09 - updates based on code review comments
+ *    acadar    12/07/09 - updates
+ *    acadar    12/02/09 - fixed the merge issue
+ *    acadar    12/02/09 - checked in Owen's changes for the Ipp installer
+ *    ohorne    12/02/09 - added installer support for IPP printing
+ *    cgreene   08/18/09 - added option for enabled for simulated printing
+ *    cgreene   05/19/09 - added simulatedOpenPause for aid in perf testing
+ *    mszekely  05/01/09 - BUG 8483023 configuration for HP printers
+ *    sgu       03/23/09 - refresh
+ *    blarsen   03/19/09 - Various slips are being advanced before anything can
+ *                         be printed on the IBM I18N printer. That printers
+ *                         newline is bigger than the old printer. Adding
+ *                         support for a more flexible start-franking-line
+ *                         property.
+ *    sgu       03/23/09 - added hard totals file size property
+ *    sgu       03/23/09 - add hard totals file size to simulated hard totals
+ *    blarsen   03/10/09 - added slipPrintSize property - the actual number of
+ *                         character to be printed
+ *    cgreene   02/26/09 - switch char widths to int. fix plugin to support
+ *    blarsen   02/23/09 - adding cyrillic to the characterWidths property for
+ *                         Russian
+ *    abondala  02/20/09 - added missing MICRActionGroup
+ *    abondala  02/20/09 - fixed scanner offline issue
+ *    blarsen   02/19/09 - added 2 properties to POSPrinterActionGroup:
+ *                         alwaysPrintLineFeeds (to better control a printer's
+ *                         wrapping behavior) and characterWidths (to specify
+ *                         how many columns a printed character requires)
+ *    ddbaker   01/13/09 - Added back accidentally removed configuration item
+ *                         to configuration files.
+ *    asinton   12/11/08 - Updates to posdevices.xml.
+ *    asinton   12/11/08 - Configuration fix.
+ *    asinton   12/10/08 - Updates for debit configuration.
+ *    cgreene   11/07/08 - implement buffer in ReceiptPrinter for USB printers
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE DEVICETECHNICIAN SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/devicescript.dtd">
+
+<DEVICETECHNICIAN package="oracle.retail.stores.pos.device">
+    <ACTIONGROUP name="CRFDeviceActionGroupIfc"
+            class="CRFDeviceActionGroup"
+            package="oracle.retail.stores.foundation.manager.device"/>
+
+    <ACTIONGROUP name="POSDeviceActionGroupIfc"
+            class="POSDeviceActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <ACTIONGROUP name="CashDrawerActionGroupIfc"
+            class="CashDrawerActionGroup"
+            package="oracle.retail.stores.pos.device">
+        <PROPERTY propname="beepTimeout" propvalue="1000" proptype="INTEGER" />
+        <PROPERTY propname="beepFrequency" propvalue="20010" proptype="INTEGER" />
+        <PROPERTY propname="beepDuration" propvalue="250" proptype="INTEGER" />
+        <PROPERTY propname="beepDelay" propvalue="750" proptype="INTEGER" />
+        <PROPERTY propname="cashDrawerDelay" propvalue="2001" proptype="LONG" />
+    </ACTIONGROUP>
+
+    <!-- Printer action groups are defined here.
+         ReceiptPrinter objects are defined in DeviceContext.xml.
+         BlueprintedReceipt objects are defined in ApplicationContext.xml. -->
+    <!-- START JPOS Printer Action Group
+    <ACTIONGROUP name="PrinterActionGroupIfc"
+            class="POSPrinterActionGroup"
+            package="oracle.retail.stores.pos.device">
+        <PROPERTY propname="slipInsertionTimeout" propvalue="60000" proptype="INTEGER" />
+        <PROPERTY propname="frankingCapable" propvalue="true" proptype="BOOLEAN"/>
+        <PROPERTY propname="slipLineSize" propvalue="$SLIP_LINE_SIZE$" proptype="INTEGER" />
+        <PROPERTY propname="slipPrintSize" propvalue="$SLIP_PRINT_SIZE$" proptype="INTEGER" />
+        <PROPERTY propname="frankingLines" propvalue="frankingLinePurchaseOrder=1,frankingLineGiftCertificateIssued=1,frankingLineGiftCertificateVoided=1,frankingLineStoreCreditIssued=1" proptype="STRING" />
+        <PROPERTY propname="alwaysPrintLineFeeds" propvalue="$ALWAYS_PRINT_LINE_FEEDS$" proptype="BOOLEAN" />
+        <PROPERTY propname="characterWidths" propvalue="BASIC_LATIN=1,LATIN_1_SUPPLEMENT=1,GENERAL_PUNCTUATION=1,CJK_UNIFIED_IDEOGRAPHS=2,HALFWIDTH_AND_FULLWIDTH_FORMS=2,CJK_SYMBOLS_AND_PUNCTUATION=2,HIRAGANA=2,KATAKANA=2,HANGUL_SYLLABLES=2,CYRILLIC=1,GREEK=2,LATIN_EXTENDED_A=1" proptype="STRING" />
+        <PROPERTY propname="eReceiptXmlConfig" proptype="STRING" propvalue="classpath://receipts/printing/ereceipt/eReceiptXMLConfig.xml"/>
+        <PROPERTY propname="eReceiptFopConfig" proptype="STRING" propvalue="classpath://receipts/printing/ereceipt/eReceiptFOPConfig.xml"/>
+    </ACTIONGROUP>
+    END JPOS Printer Action Group -->
+
+    <!-- START IPP Printer Action Group
+    <ACTIONGROUP name="PrinterActionGroupIfc"
+            class="IppPrinterActionGroup"
+            package="oracle.retail.stores.pos.device">
+        <PROPERTY propname="xmlConfig" proptype="STRING" propvalue="classpath://receipts/printing/ipp/IppXMLConfig.xml"/>
+        <PROPERTY propname="fopConfig" proptype="STRING" propvalue="classpath://receipts/printing/ipp/IppFOPConfig.xml"/>
+        <PROPERTY propname="eReceiptXmlConfig" proptype="STRING" propvalue="classpath://receipts/printing/ereceipt/eReceiptXMLConfig.xml"/>
+        <PROPERTY propname="eReceiptFopConfig" proptype="STRING" propvalue="classpath://receipts/printing/ereceipt/eReceiptFOPConfig.xml"/>
+        <PROPERTY propname="alwaysPrintLineFeeds" propvalue="true" proptype="BOOLEAN" />
+        <PROPERTY propname="characterWidths" propvalue="BASIC_LATIN=1,LATIN_1_SUPPLEMENT=1,GENERAL_PUNCTUATION=1,CJK_UNIFIED_IDEOGRAPHS=2,HALFWIDTH_AND_FULLWIDTH_FORMS=2,CJK_SYMBOLS_AND_PUNCTUATION=2,HIRAGANA=2,KATAKANA=2,HANGUL_SYLLABLES=2,CYRILLIC=1,GREEK=2,LATIN_EXTENDED_A=1" proptype="STRING" />
+    </ACTIONGROUP>
+    END IPP Printer Action Group -->
+
+    <ACTIONGROUP name="LineDisplayActionGroupIfc"
+            class="LineDisplayActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <ACTIONGROUP name="HardTotalsActionGroupIfc"
+            class="HardTotalsActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <ACTIONGROUP name="MSRActionGroupIfc"
+            class="MSRActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <ACTIONGROUP name="MICRActionGroupIfc"
+            class="MICRActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <ACTIONGROUP name="FingerprintReaderActionGroupIfc"
+            class="FingerprintReaderActionGroup"
+            package="oracle.retail.stores.pos.device">
+            
+        <!-- The text returned by checkHealth is not defined in the UPOS spec.
+             This property can be set to some text string that a vendor's
+             driver places in the checkHealth Jpos property that is indicative
+             that the deice is perceived to be healthy. --> 
+         <PROPERTY propname="checkHealthOKText" proptype="STRING" propvalue="OK"/>
+    </ACTIONGROUP>
+ 
+    <ACTIONGROUP name="ScannerActionGroupIfc"
+            class="ScannerActionGroup"
+            package="oracle.retail.stores.pos.device"/>
+
+    <!-- DEVICE SESSIONS -->
+
+    <SESSION name="ScannerSession"
+            devicename = "defaultScanner"
+            class="SimulatedScannerSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED">
+            <!-- Default if not specified is DEVICE_AND_EVENTS. Other valid value is EVENTS_ONLY. -->
+            <!-- PROPERTY propname="shouldDisable" propvalue="DEVICE_AND_EVENTS" proptype="STRING" / -->
+    </SESSION>
+
+     <SESSION name="FingerprintReaderSession"
+            devicename = "defaultFingerprintReader"
+            class="SimulatedFingerprintReaderSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED">
+
+        <!-- falseAcceptRate can be any one of the enums defined in FingerprintReaderSessionIfc. E.g. LOW, MEDIUM HIGH
+             This controls how similar fingerprints must be to be considered a match.
+             worst cases: LOW might require the employee to touch the fingerprint scanner several times 
+                              before a successful login is achieved.
+                          HIGH might login an employee as the wrong employee if their fingerprints are too similar
+                              the read fingerprint and the fingerprint associated with the employee  -->
+        <PROPERTY propname="falseAcceptRate" propvalue="LOW" proptype="oracle.retail.stores.foundation.manager.device.FingerprintReaderSessionIfc$FALSE_ACCEPT_RATE" />
+     </SESSION>
+
+    <SESSION name="SimulatedMICRSession"
+            devicename = "defaultMICR"
+            class="SimulatedMICRSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED"
+            />
+
+    <SESSION name="MSRSession"
+            devicename = "defaultMSR"
+            class="SimulatedMSRSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED"
+            />
+
+    <!-- START DefaultPrinter SESSION
+    <SESSION name="PrinterSession"
+            devicename = "defaultPrinter"
+            class="PrinterSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED">
+    </SESSION>
+    END DefaultPrinter SESSION -->
+
+    <!-- START Simulated DefaultPrinter SESSION -->
+    <SESSION name="SimulatedPrinterSession"
+            devicename = "defaultPrinter"
+            class="SimulatedPrinterSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED">
+     </SESSION>
+     <!-- END Simulated DefaultPrinter SESSION -->
+
+    <SESSION name="SimulatedCashDrawerSession"
+            devicename = "defaultCashDrawer"
+            class="SimulatedCashDrawerSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_RELEASED">
+            <!-- Comment out this property when not using a SimulatedCashDrawerSession -->
+            <!-- PROPERTY propname="simulatedOpenPause" propvalue="3000" proptype="LONG" / -->
+    </SESSION>
+
+    <SESSION name="SimulatedHardTotalsSession"
+            devicename = "defaultHardTotals"
+            class="SimulatedHardTotalsSession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode = "MODE_IDLE">
+            <PROPERTY propname="totalsSize" propvalue="1000000" proptype="INTEGER" />
+    </SESSION>
+
+    <SESSION name="SimulatedLineDisplaySession"
+            devicename = "defaultLineDisplay"
+            class="SimulatedLineDisplaySession"
+            package="oracle.retail.stores.foundation.manager.device"
+            defaultmode="MODE_RELEASED"
+            />
+
+</DEVICETECHNICIAN>

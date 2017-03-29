@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2011, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/assemble/assemble-common.xml /rgbustores_13.4x_generic_branch/16 2012/02/08 16:02:56 drbarber Exp $
+ * ===========================================================================
+ * NOTES
+ * This build file is shared between the ARU assemble build.xml and the non-ARU
+ * assemble build.xml.  The targets here constitute the bulk of the assemble
+ * work for the POS installers.
+ *
+ * MODIFIED    (MM/DD/YY)
+ * drbarber    02/06/12 - BUG 13655676: removing automatedTesting files from
+ *                        packaging
+ * sgu         10/26/11 - remove jpos jars from installer bundle
+ * mszekely    10/19/11 - BUG 13098178: sync ARU and EPD packages
+ * ohorne      09/19/11 - decoupled sample data from installers
+ * drbarber    07/21/11 - BUG 12573758: Removing RSA client libraries
+ * ohorne      07/05/11 - jai libs assembled as shared libs
+ * cgreene     06/07/11 - update to first pass of removing pospal project
+ * abondala    06/07/11 - XbranchMerge
+ *                        abondala_send_tx_to_co_through_webservice from main
+ * mchellap    05/24/11 - Remove Axis wsdl4j.jar from product distribution
+ * drbarber    05/23/11 - bug12567285: removing ant_docs from installer
+ * ohorne      05/17/11 - removed distribution of ISD jars
+ * abondala    05/31/11 - added additional jars for axis2
+ * mchellap    05/31/11 - XbranchMerge mchellap_bug-12560318 from
+ *                        rgbustores_13.4x_generic_branch
+ * drbarber    05/20/11 - bug 12567285 - removing ant docs from installer
+ * hyin        04/27/11 - XbranchMerge hyin_spring_upgrade from
+ *                        rgbustores_13.4x_generic_branch
+ * sgu         04/13/11 - check in all
+ * sgu         04/13/11 - XbranchMerge sgu_bug-12356652 from
+ *                        rgbustores_13.4x_generic_branch
+ * sgu         04/13/11 - add additional axis2 jars to client and server
+ * hyin        04/13/11 - spring upgrade second round
+ * hyin        04/01/11 - spring 3 upgrade
+ * abondala    04/11/11 - XbranchMerge abondala_bug11827952-salting_passwords
+ *                        from main
+ * mchellap    04/08/11 - Axis2 rampart 1.5.1 migration
+ * hyin        03/18/11 - using javadb to replace derby
+ * abondala    03/25/11 - merging
+ * abondala    03/25/11 - implement salting for the passwords
+ * hyin        03/15/11 - fix tab
+ * hyin        03/14/11 - adding javaDB jars
+ * abondala    02/24/11 - create a seperate jar for independent util classes
+ *                        that can be deployed outside the ear in the
+ *                        application server.
+ * sgu         02/08/11 - check in after merge
+ * sgu         02/01/11 - check in all
+ * ohorne      01/27/11 - FOP 1.0 upgrade
+ * tzgarba     01/27/11 - Moved common assemble targets to a shared XML file
+ * tzgarba     01/25/11 - File for shared assemble targets.
+ * tzgarba     01/25/11 - Creation
+ * ===========================================================================
+ */
+-->
+
+<project name="assemble-common" basedir=".">
+
+    <target name="init">
+        <property file="../../../build/depends.properties"/>
+        <property name="depends.basedir" value="../../../"/>
+        <property name="projects.dir" value="../../../"/>
+        <property name="assemble.dir" value="assemble.working.dir"/>
+        <property name="pos.dir" value="${projects.dir}/applications/pos"/>
+        <property name="package.dir" value="${projects.dir}/install/dist/pos.package.working.dir"/>
+        <property name="file.encoding" value="UTF-8"/>
+        <property name="mock.char.1" value="\u6211"/>
+        <property name="mock.char.2" value="\u624B"/>
+        <property name="mock.string.1" value="////u54e6////u00e3////u00e7"/>
+        <property name="mock.string.2" value="////u7c21////u5358////u00a3"/>
+
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <fileset dir="${depends.basedir}">
+                    <include name="${lib.ant-contrib}"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+
+        <available file="${package.dir}/../ORPOS-${package.version}_source.zip" property="pos.aru.prebundle.exists" />
+        <mkdir dir="${assemble.dir}"/>
+
+    </target>
+
+    <target name="assemble.adjuncts" depends="init">
+
+        <property name="adjunct.list" value="modules/commext,
+            modules/common,
+            modules/datareplication,
+            modules/domain,
+            modules/encryptionclient,
+            modules/enterpriseconnection,
+            modules/exportfile,
+            modules/exportxml,
+            modules/foundation,
+            modules/persistence,
+            modules/posrm,
+            modules/psi,
+            modules/receipts,
+            modules/siebel,
+            modules/billpay,
+            modules/utility,
+            applications/pos"/>
+
+        <echo message="assemble.dir = ${assemble.dir}"/>
+        <echo message="projects.dir = ${projects.dir}"/>
+
+        <for list="${adjunct.list}" param="adjunct" delimiter=", ">
+            <sequential>
+                <echo>Assembling @{adjunct}</echo>
+                <copy todir="${assemble.dir}" includeemptydirs="false">
+                    <fileset dir="${projects.dir}/@{adjunct}/deploy">
+                        <!-- exlude stuff that doesn't need to be in the POS installer -->
+                        <exclude name="**/.sbas/*"/>
+                        <exclude name="**/*.ser"/>
+                        <exclude name="**/*Collapsed*"/>
+                        <exclude name="**/*JMSTestReceiverConduit*"/>
+                        <exclude name="**/*PerformanceTestHarness*"/>
+                        <exclude name="server/bin/txntool.bat"/>
+                        <exclude name="client/bin/sp750.bat"/>
+                    </fileset>
+                </copy>
+            </sequential>
+        </for>
+
+        <!-- Pull ereceipt fop into client assemble. -->
+        <copy todir="${assemble.dir}/client/common/lib/ext" overwrite="false" flatten="true">
+            <fileset dir="${projects.dir}">
+                <include name="${lib.barcode4j-fop-ext}"/>
+                <include name="${lib.commons-io}"/>
+                <include name="${lib.fop-avalon-framework}"/>
+                <include name="${lib.fop-batik-all}"/>
+                <include name="${lib.fop-xmlgraphics-commons}"/>
+                <include name="${lib.fop}"/>
+                <include name="${lib.javahelp}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.velocity}"/>
+                <include name="${lib.xml-apis-ext}"/>
+                <include name="${lib.xml-apis}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy server oracle library files -->
+        <copy todir="${assemble.dir}/server/common/lib" overwrite="false">
+            <fileset dir="${projects.dir}/clientinterfaces/customer-interface/dist" includes="${oracle.stores.customer-interface.deploy.name}.jar"/>
+            <fileset dir="${projects.dir}/clientinterfaces/transaction-interface/dist" includes="${oracle.stores.transaction-interface.deploy.name}.jar"/>
+            <!-- For POS to Returns Management integration -->
+            <fileset dir="${projects.dir}/webapp/retwebsvc-webapp/dist">
+                <include name="retwebsvc-webapp-client.jar"/>
+                <exclude name="*-src.jar" />
+            </fileset>
+            <!-- For POS to Central Office webservices integration -->
+            <fileset dir="${projects.dir}/webapp/webservices-webapp/dist">
+                <include name="webservices-webapp-client.jar"/>
+                <exclude name="*-src.jar" />
+            </fileset>
+        </copy>
+        <!-- Re-zip shared.jar into only the JAXB classes and exceptions. -->
+        <jar destfile="${assemble.dir}/server/common/lib/shared-generated.jar">
+            <zipfileset src="${projects.dir}/commerceservices/shared/dist/shared.jar">
+                <include name="oracle/retail/stores/commerceservices/common/*"/>
+                <include name="oracle/retail/stores/commerceservices/util/**/*"/>
+            </zipfileset>
+        </jar>
+
+        <!-- For pos-sim integration -->
+        <copy todir="${assemble.dir}/server/common/lib/ext" overwrite="false" flatten="true">
+            <fileset dir="${projects.dir}">
+                <include name="${lib.oracle-sim-ws}"/>
+                <include name="${lib.oracle-sim-ws-secure}"/>
+                <include name="${lib.jaxb-impl}"/>
+                <include name="${lib.jaxb-xjc}"/>
+                <include name="${lib.jwsdp-xsdlib}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy shared oracle library files -->
+        <copy todir="${assemble.dir}/shared/common/lib" overwrite="false" flatten="true">
+            <!-- Copy the files needed for RSA encryption support.
+                Must be copied to same directory as ${oracle.stores.rsakeystore.deploy.name}.jar. -->
+            <fileset dir="${projects.dir}">
+                <include name="${lib.j2ee.resource}"/>
+                <include name="${lib.j2ee.ejb}"/>
+                <include name="${lib.j2ee.servlet}"/>
+                <include name="${lib.j2ee.servlet.jsp}"/>
+                <include name="${lib.j2ee.jms}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy shared extension library files -->
+        <copy todir="${assemble.dir}/shared/common/lib/ext" overwrite="false" flatten="true">
+            <fileset dir="${projects.dir}">
+                <include name="${lib.commons-codec}"/>
+                <include name="${lib.commons-collections}"/>
+                <include name="${lib.commons-lang}"/>
+                <include name="${lib.commons-logging}"/>
+                <include name="${lib.jaxb-api}"/>
+                <include name="${lib.log4j}"/>
+                <include name="${lib.mail}"/>
+                <include name="${lib.activation}"/>
+                <include name="${lib.quartz}"/>
+                <include name="${lib.spring.core}"/>
+                <include name="${lib.spring.context}"/>
+                <include name="${lib.spring.beans}"/>
+                <include name="${lib.spring.context.support}"/>
+                <include name="${lib.spring.web}"/>
+                <include name="${lib.spring.jdbc}"/>
+                <include name="${lib.spring.transaction}"/>
+                <include name="${lib.spring.expression}"/>
+                <include name="${lib.spring.asm}"/>
+                <include name="${lib.spring.aop}"/>
+                <include name="${lib.spring.aopalliance}"/>
+                <include name="${lib.xerces-impl}"/>
+                <include name="${lib.xml-apis}"/>
+                <include name="${lib.xmlparserapis}"/>
+                <include name="${lib.jai-codec}"/>
+                <include name="${lib.jai-core}"/>
+            <!-- xmlparserv2's Transformer implementation creates issues for XMLUtility class,
+                 add xalan and serializer to fix it -->
+                <include name="${lib.fop-serializer}"/>
+                <include name="${lib.xalan}"/>
+                <!-- copy oas client jar for connecting JMS and JNDI -->
+                <include name="${lib.oracle-oas-oc4jclient}"/>
+                <include name="${lib.javadb.derby}"/>
+                <include name="${lib.javadb.derbytools}"/>
+                <!--  copy common jars for web service integration -->
+                <include name="${lib.axis2}" />
+                <include name="${lib.axis2-axiom}" />
+                <include name="${lib.commons-httpclient}" />
+            </fileset>
+            <fileset dir="${projects.dir}">
+                 <!-- copy weblogic client jar for connecting JMS and JNDI -->
+                 <include name="${lib.oracle-weblogic-client}"/>
+                 <include name="${lib.oracle-weblogic-cipher}"/>
+            </fileset>
+        </copy>
+
+        <!-- move db.xml to bin dir where pos uses it instead of db dir -->
+        <move file="${assemble.dir}/server/common/db/db.xml"
+            todir="${assemble.dir}/server/bin" overwrite="true"/>
+
+        <!-- move required db jars for building databases -->
+        <copy todir="${assemble.dir}/server/common/db/lib" overwrite="true">
+            <fileset dir="${projects.dir}/applications/pos/dist/db/lib">
+                <exclude name="db2jcc.jar"/>
+                <exclude name="db2jcc_license_cu.jar"/>
+                <exclude name="jnp-client.jar"/>
+                <exclude name="label-webapp-app.jar"/>
+                <exclude name="label.jar"/>
+                <exclude name="parameter.jar"/>
+                <exclude name="store.jar"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="${projects.dir}/server/config/rtlog"/>
+        <copy todir="${assemble.dir}/server/config/rtlog" overwrite="true">
+            <fileset dir="${projects.dir}/modules/exportfile/config" includes="RTLog*.xml"/>
+            <fileset dir="${projects.dir}/modules/exportxml/config" includes="Jaxb*.xml"/>
+        </copy>
+
+        <echo file="${assemble.dir}/shared/config/version.txt">version = ${anthill.version}${line.separator}</echo>
+        <echo file="${assemble.dir}/shared/config/version.txt" append="true">${anthill.user.name}${line.separator}</echo>
+        <echo file="${assemble.dir}/shared/config/version.txt" append="true">${anthill.project.name}${line.separator}</echo>
+        <echo file="${assemble.dir}/shared/config/version.txt" append="true">branch = ${anthill.branch.name}${line.separator}</echo>
+        <echo file="${assemble.dir}/shared/config/version.txt" append="true">${anthill.build_track.name}${line.separator}</echo>
+        <echo file="${assemble.dir}/shared/config/version.txt" append="true">${anthill.build.date_time}${line.separator}</echo>
+    </target>
+
+    <target name="assemble.epd">
+
+        <!-- ######## Begin: Create EPD Packaging for Ant-Based Installer ######## -->
+
+        <property name="installer.stage.dir" value="${package.dir}/ORPOS-${package.version}"/>
+        <delete dir="${installer.stage.dir}" quiet="true"/>
+        <mkdir dir="${installer.stage.dir}"/>
+
+        <property name="product.stage.dir" value="${installer.stage.dir}/product"/>
+        <delete dir="${product.stage.dir}" quiet="true"/>
+        <mkdir dir="${product.stage.dir}"/>
+
+        <!-- Copy all the files in ${assemble.dir} -->
+        <copy todir="${product.stage.dir}" encoding="${file.encoding}">
+            <fileset dir="${assemble.dir}">
+                <!-- PABP FR 10, 11 Removing test data and automatedTesting directory contents from EPD -->
+                <exclude name="**/common/db/mock/**"/>
+                <exclude name="**/common/db/sql/basetest/**"/>
+                <exclude name="**/common/db/sql/unittest/**"/>
+                <exclude name="**/common/db/sql/qatest/**"/>
+                <exclude name="**/common/db/sql/integration/**"/>
+                <exclude name="**/common/tools/automatedTesting/**"/>
+                <exclude name="**/mock*/**"/>
+                <exclude name="**/mock*"/>
+                <exclude name="**/*mock*" />
+                <exclude name="**/*.bpt" />
+                <!-- PABP FR 10, 11 Ends -->
+
+                <!-- Sample Dataset is distributed on EPD as separate file -->
+                <exclude name="**/common/db/sql/sample/**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy antinstaller files -->
+        <copy todir="${installer.stage.dir}" encoding="${file.encoding}">
+            <fileset dir="${projects.dir}/thirdparty/sourceforge/antinstaller/0.8.0/shell">
+            	<exclude name="ant/docs/**"/>
+        	</fileset>
+            <fileset dir="${pos.dir}/installer/pos">
+                <exclude name="design/**"/>
+                <exclude name="ant.install.properties"/>
+                <exclude name=".project"/>
+                <exclude name=".classpath"/>
+            </fileset>
+        </copy>
+        <copy todir="${installer.stage.dir}/product/shared/bin" encoding="${file.encoding}" flatten="true">
+            <fileset dir="${projects.dir}/installer/installer-common/common"/>
+        </copy>
+
+        <!-- Jar receipt blueprints into one file. -->
+        <jar update="true" destfile="${installer.stage.dir}/product/client/receipts/blueprints.jar">
+            <fileset dir="${assemble.dir}/client/receipts">
+              <include name="**/*.bpt" />
+            </fileset>
+        </jar>
+
+        <!-- Copy CSF jars to ant-ext/ossa -->
+        <copy todir="${installer.stage.dir}/ant-ext/ossa" encoding="${file.encoding}" flatten="true">
+            <fileset dir="${projects.dir}">
+                <include name="${lib.retail-public-security-api}"/>
+                <include name="${lib.retail-public-security-identitystore}"/>
+                <include name="${lib.retail-public-security-jacc-api}"/>
+                <include name="${lib.retail-public-security-jacc-spi}"/>
+                <include name="${lib.retail-public-security-jps-api}"/>
+                <include name="${lib.retail-public-security-jps-common}"/>
+                <include name="${lib.retail-public-security-jps-ee}"/>
+                <include name="${lib.retail-public-security-jps-internal}"/>
+                <include name="${lib.retail-public-security-jps-manifest}"/>
+                <include name="${lib.retail-public-security-jps-mbeans}"/>
+                <include name="${lib.retail-public-security-jps-unsupported-api}"/>
+                <include name="${lib.retail-public-security-jps-upgrade}"/>
+                <include name="${lib.retail-public-security-jps-wls}"/>
+                <include name="${lib.retail-public-security-jsr-api}"/>
+                <include name="${lib.retail-public-security-oraclepki}"/>
+                <include name="${lib.retail-public-security-osdt-cert}"/>
+                <include name="${lib.retail-public-security-osdt-core}"/>
+                <include name="${lib.retail-public-security-sjsxp}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy ${lib.oracle.stores.secure.utility} and its dependencies to ant-ext -->
+        <copy todir="${installer.stage.dir}/ant-ext" encoding="${file.encoding}" flatten="true">
+            <fileset dir="${projects.dir}">
+                <include name="${lib.oracle.stores.secure.utility}"/>
+            	<include name="${lib.oracle.stores.encryptionclient}"/>
+                <include name="${lib.commons-logging}"/>
+                <include name="${lib.commons-codec}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy extensions jars to product/server/common/lib/ext. -->
+        <copy todir="${installer.stage.dir}/product/server/common/lib/ext" encoding="${file.encoding}" flatten="true">
+            <fileset dir="${projects.dir}">
+                <!-- Copy Axis2 jars -->
+                <include name="${lib.axis2-axiom-dom}"/>
+                <include name="${lib.axis2-axiom-impl}"/>
+            	<include name="${lib.axis2-adb-codegen}"/>
+                <include name="${lib.axis2-corba}"/>
+            	<include name="${lib.axis2-fastinfoset}"/>
+            	<include name="${lib.axis2-jaxbri}"/>
+            	<include name="${lib.axis2-jaxws}"/>
+            	<include name="${lib.axis2-jibx}"/>
+            	<include name="${lib.axis2-json}"/>
+            	<include name="${lib.axis2-xmlbeans}"/>
+            	<include name="${lib.xmlbeans}"/>
+            	<include name="${lib.xml-resolver}"/>
+            	<include name="${lib.regexp}"/>
+            	<include name="${lib.mex-1.5.4-impl}"/>
+                <include name="${lib.axis2-axiom-adb}"/>
+                <include name="${lib.axis2-codegen}"/>
+                <include name="${lib.axis2-adb}"/>
+                <include name="${lib.axis2-jaxen}"/>
+                <include name="${lib.axis2-mex}"/>
+                <include name="${lib.axis2-transport-http}"/>
+                <include name="${lib.axis2-transport-local}"/>
+                <include name="${lib.axis2-geronimo-stax}"/>
+                <include name="${lib.axis2-httpcore}"/>
+                <include name="${lib.axis2-neethi}"/>
+                <include name="${lib.axis2-woden-api}"/>
+                <include name="${lib.axis2-woden-impl-dom}"/>
+                <include name="${lib.oracle-wsdl4j}"/>
+                <include name="${lib.axis2-wss4j}"/>
+                <include name="${lib.axis2-wstx-asl}"/>
+                <include name="${lib.axis2-xmlschema}"/>
+                <include name="${lib.commons-codec}"/>
+                <include name="${lib.commons-logging}"/>
+                <include name="${lib.rampart-opensaml}"/>
+                <include name="${lib.rampart}"/>
+                <include name="${lib.rampart-policy}"/>
+                <include name="${lib.rampart-trust}"/>
+                <include name="${lib.rampart-xmlsec}"/>
+                <include name="${lib.rampart-xmltooling}"/>
+                <include name="${lib.rampart-wss4j}"/>
+                <include name="${lib.rampart-mar}"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy CSF jars to product/shared/common/lib/ext -->
+        <copy todir="${installer.stage.dir}/product/shared/common/lib/ext" encoding="${file.encoding}">
+            <fileset dir="${projects.dir}/thirdparty/oracle/retail-public-security-api/1.8/lib">
+                 <include name="*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy the installer-common.jar to ant-ext -->
+        <copy todir="${installer.stage.dir}/ant-ext" encoding="${file.encoding}">
+            <fileset dir="${projects.dir}/installer/installer-common/dist">
+                <exclude name="*-src.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy the shared installer ant scripts -->
+        <copy todir="${installer.stage.dir}" encoding="${file.encoding}">
+            <fileset dir="${projects.dir}/installer/installer-common/xml">
+                <exclude name="build-common-webapps.xml"/>
+                <exclude name="build-common-backoffice.xml"/>
+            </fileset>
+        </copy>
+
+        <fixcrlf eol="unix" srcdir="${installer.stage.dir}" encoding="${file.encoding}"
+            includes="**/*.sh,**/*.xml,**/*.properties,**/*.properties.*,**/*.xml.*,**/*.txt,ant/bin/ant" />
+
+        <!-- Copy pos-specific resources (images, license agreement text) used by the installer -->
+        <copy todir="${installer.stage.dir}/installer-resources" encoding="${file.encoding}">
+            <fileset dir="${basedir}/resources/COMMON"/>
+            <fileset dir="${basedir}/resources/Installer_Repository"/>
+            <fileset dir="../installer/pos/installer-resources"/>
+        </copy>
+
+        <!-- Copy the keystore jars to the EPD -->
+        <copy todir="${installer.stage.dir}/product/shared/common/lib" encoding="${file.encoding}">
+            <fileset dir="${projects.dir}/applications/simkeystore/dist">
+                <exclude name="*-src.jar"/>
+            </fileset>
+            <!-- Should be copied to same directory as kmsclient.jar. -->
+            <fileset dir="${projects.dir}/applications/rsakeystore/dist">
+                <exclude name="*-src.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- Create the ZIP -->
+        <delete file="${projects.dir}/install/dist/ORPOS-${package.version}.zip" quiet="true"/>
+        <zip destfile="${projects.dir}/install/dist/ORPOS-${package.version}.zip" >
+            <fileset dir="${package.dir}">
+                <include name="ORPOS-${package.version}/**"/>
+            </fileset>
+        </zip>
+
+       <delete dir="${package.dir}"/>
+
+        <if>
+            <available file="${assemble.dir}/mockres.jar" />
+            <then>
+                <copy file="${assemble.dir}/mockres.jar" tofile="${projects.dir}/install/internal/mockres.pos.jar"/>
+            </then>
+       </if>
+
+        <!-- ######## End: Create EPD Packaging for Ant-Based Installer ######## -->
+
+    </target>
+
+    <!-- Deploy target does nothing in POS -->
+    <target name="deploy">
+        <echo message="POS cannot be deployed, doing nothing"/>
+    </target>
+
+    <!-- This enables deploy and test in remote environments -->
+    <target name="remotetest" depends="init">
+            <foreach target="do_test"
+                list="${test.envs}"
+                param="dir"
+                parallel="false"
+                inheritall="true"
+                inheritrefs="true"/>
+    </target>
+
+    <target name="do_test" depends="init">
+        <echo message="deploying using build in dir ${projects.dir}/applications/pos/${dir}"/>
+        <ant dir="${projects.dir}/applications/pos/${dir}"
+                antfile="test.xml"
+                inheritall="true"
+                inheritrefs="true"
+                target="all">
+            <property name="application.build.dir" value="${projects.dir}/applications/pos"/>
+        </ant>
+    </target>
+
+</project>

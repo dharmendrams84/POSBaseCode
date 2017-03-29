@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/VATSummary_nl.bpt /main/2 2010/09/06 14:06:07 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    glwang    02/12/09 - adjust the length of lines to 40.
+ *    asinton   01/29/09 - Updated VAT Summary formatting for Type 2 VAT
+ *                         receipts.
+ *    ddbaker   01/23/09 - Test Automation Changes for VATSummary section of
+ *                         receipt
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="VATSummary" copies="1">
+    <report name="VATSummaryReport" id="1">
+        <group id="2">
+            <line id="17420119">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="8729633" />
+            <line id="11693080">
+                <element text="Bel.overzicht" id="20395394" />
+            </line>
+            <line id="30535459" />
+            <line id="10962758">
+                <element text="Code       Excl. bel    Bel      Incl. bel" id="10469377" />
+            </line>
+        </group>
+        <group id="7054482">
+            <line id="16886792">
+                <methodElement fixedWidth="5" precededBySpace="false" id="15788540">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="11" id="24548586" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="9" id="30029940" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="11" id="24373228" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getInclusiveTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="29562137">
+            <line id="10369519">
+                <element text="Tot." id="32347628" />
+                <methodElement fixedWidth="11" id="8374092" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc" name="getVATSummaryTotal" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="9" id="8924654" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc" name="getVATSummaryTotal" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getTaxAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement fixedWidth="11" id="8098831" justified="2">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc" name="getVATSummaryTotal" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="CurrencyIfc" name="getInclusiveTaxableAmount" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="30721082">
+            <line id="9844432" />
+            <line id="27189421">
+                <element text="Bel.tarieven" id="28356589" />
+            </line>
+        </group>
+        <group id="22800214">
+            <line id="11585012">
+                <methodElement fixedWidth="3" precededBySpace="false" id="28694225">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="String" name="getTaxRuleName" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="=" id="26483886" />
+                <methodElement id="22101278">
+                    <method returns="VATHelper" name="getVATHelper" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TaxInformationIfc[]" name="getVATSummary" class="oracle.retail.stores.pos.receipt.VATHelper">
+                            <method returns="String" name="getTaxPercentageAsString" class="oracle.retail.stores.domain.tax.TaxInformationIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="%" id="8922658" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/HousePaymentReceipt_nl.bpt /main/2 2010/09/06 14:05:55 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/14/09 - hard coded House Account Payment since this receipt
+ *                         is used for nothign else
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    cgreene   02/20/09 - set cutPaper to false for links
+ *    ddbaker   02/19/09 - Added additional copy text for multiple receipts.
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    atirkey   01/29/09 - modified receipt to remove paranthesis
+ *    ddbaker   01/23/09 - Test Automation Changes for HousePaymentReceipt
+ *    cgreene   01/07/09 - Various payment line formatting changes
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="HousePaymentReceipt" copies="2">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="21214546" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="474487880">
+            <line id="16474964">
+                <element text="Betaling eigen rekening" id="10751642" />
+                <methodElement id="29572994" justified="2" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PaymentIfc" name="getPayment" class="oracle.retail.stores.domain.transaction.PaymentTransactionIfc">
+                            <method returns="CurrencyIfc" name="getPaymentAmount" class="oracle.retail.stores.domain.financial.Payment" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" V " id="7497628" />
+            </line>
+            <line id="3556929">
+                <element text="  Rek.nr.:" id="29360591" />
+                <methodElement id="2367691">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="PaymentIfc" name="getPayment" class="oracle.retail.stores.domain.transaction.PaymentTransactionIfc">
+                            <method returns="EncipheredCardDataIfc" name="getEncipheredCardData" class="oracle.retail.stores.domain.financial.Payment">
+                                <method returns="String" name="getLastFourAcctNumber" class="oracle.retail.stores.foundation.manager.device.EncipheredCardDataIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20870479" />
+            <line id="25675100">
+                <element text="Subtot." id="16464374" stretch="true" />
+                <methodElement id="32934204" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getPreTaxSubtotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="3465517" />
+            </line>
+            <line id="11416420" />
+            <line id="11544872">
+                <element text="Tot." id="1184712349" stretch="true" />
+                <methodElement id="25860324" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getGrandTotal" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="24174741" />
+            </line>
+            <line id="22946636" />
+        </group>
+    </report>
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879915" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879917" cutPaper="false">
+        <group id="26460711">
+            <line id="4779445" />
+            <line id="32386092">
+                <element text="Totale aanbest." id="20988917" stretch="true" />
+                <methodElement id="22216747" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getCollectedTenderTotalAmount" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="8828932" />
+            </line>
+            <line id="26622782" />
+            <line id="746824">
+                <element text="Benod. wijziging" id="5990634" stretch="true" />
+                <methodElement id="31929620" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="20391686" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="2" cutPaper="false">
+        <group id="908342820">
+            <line id="15734641" />
+            <line id="29409449">
+                <copyElement id="18890580" justified="1" stretch="true">
+                    <copyText>Kopie winkel</copyText>
+                    <copyText>Kopie klant</copyText>
+                    <copyText>Kopie winkel</copyText>
+                    <copyText>Kopie klant</copyText>
+                    <copyText>Kopie winkel</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="8981996" />
+</blueprint>
+
+

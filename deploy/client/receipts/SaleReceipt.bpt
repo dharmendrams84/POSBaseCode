@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/SaleReceipt.bpt /rgbustores_13.4x_generic_branch/6 2011/10/25 17:27:06 hyin Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    hyin      10/25/11 - add checking before printing customer send info
+ *    cgreene   07/07/11 - moved YOU SAVED text up according to Bryna feedback
+ *    cgreene   06/29/11 - formatted Number of Items Sold with QUANTITY
+ *    cgreene   06/15/11 - implement gift card for servebase and training mode
+ *    cgreene   04/12/11 - added INTEGER format to getSaleQuantity
+ *    cgreene   03/18/11 - XbranchMerge cgreene_124_receipt_quick_wins from
+ *                         main
+ *    cgreene   03/16/11 - implement You Saved feature on reciept and
+ *                         AllowMultipleQuantity parameter
+ *    cgreene   10/27/10 - update idePath
+ *    asinton   09/28/10 - More updates for credit card promotion disclosure.
+ *    asinton   09/24/10 - Adding Credit Card Accountability Responsibility and
+ *                         Disclosure Act of 2009 changes.
+ *    npoola    09/10/10 - turned Stretch ON to avoid word wrap of the names
+ *    npoola    08/18/10 - linked the CustomerSendInfo.bpt
+ *    cgreene   05/28/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   03/10/10 - add new MailBankCheck blueprint and add to
+ *                         specialordercomplete
+ *    cgreene   02/11/10 - hide Change Due line if the transaction is suspended
+ *    abondala  01/02/10 - Update Header date
+ *    asinton   05/15/09 - Use calculated tender total amount from the receipt
+ *                         parameter bean.
+ *    djenning  05/12/09 - updating sale receipt for send address phone number
+ *    cgreene   05/06/09 - switch Total Tender to print getAmountTender
+ *    cgreene   04/22/09 - added ability for store credit to know if customer
+ *                         is business so name can print properly (only once)
+ *    cgreene   04/21/09 - add phone to mail bank check output. rearranged mbc
+ *                         refund text
+ *    cgreene   04/15/09 - make store credit customer name one line
+ *    cgreene   04/14/09 - make extra line in footer messages group depend on
+ *                         message
+ *    vikini    04/10/09 - Group Like Footer Messages for ILRM
+ *    djenning  04/01/09 - creating a separate getBillingCustomer() which
+ *                         returns a value if there is a send customer or an
+ *                         IRS customer associated with the transaction. used
+ *                         for printing the billing address info in those two
+ *                         cases.
+ *    djenning  03/31/09 - merge
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    cgreene   03/30/09 - print special instructions line as two lines and
+ *                         spell out whole label. hide label when there are not
+ *                         special instructions
+ *    cgreene   03/25/09 - survey should be printed after Customer Copy
+ *    cgreene   03/25/09 - extra line feed after Change Due removed to prevent
+ *                         too may spaces before VATSummary to Customer Copy
+ *                         element
+ *    cgreene   03/19/09 - set shipping slip link to not cut paper because
+ *                         first report of slip will cut
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/11/09 - add lines to print trans tax override
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/06/09 - added tax exempt cert number and reason
+ *    cgreene   03/04/09 - fix blank lines in shipping slip and make messages
+ *                         camel case
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    cgreene   03/03/09 - fix tax override to not print when there is no
+ *                         reason code, if there was no reason, there was no
+ *                         override
+ *    cgreene   03/02/09 - fix PAT documentType
+ *    glwang    03/02/09 - link to PAT statement report
+ *    cgreene   03/02/09 - fix item noumber to not depend on gift card issue.
+ *                         Fix Restocking fee line formatting. Fixed tax
+ *                         override rate method and formatting
+ *    vikini    03/01/09 - Incorporate CodeReview Comments
+ *    vikini    03/01/09 - Incorporated Code Review comments
+ *    vikini    02/28/09 - Fixing Error in display of RM Footer Messages in
+ *                         Receipt
+ *    vikini    11/20/08 - ADE merge issue
+ *    mahising  02/28/09 - merge conflicts resolved
+ *    mahising  02/28/09 - Fixed restocking fee receipt issue for total
+ *    mahising  02/28/09 - Fixed return restocking fees receipt issue
+ *    atirkey   02/28/09 - merge conflicts resolved
+ *    atirkey   02/27/09 - modified for printing reason codes
+ *    blarsen   02/27/09 - added stretch to shipping charge - fixes I18N
+ *                         alignment
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    atirkey   02/26/09 - added gift card related details
+ *    blarsen   02/24/09 - adding choice formatter to the tax code indicator -
+ *                         this is required by other languages - but, should be
+ *                         an option for english
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/25/09 - update disocunt name methods to call non-deprecated
+ *                         methods
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    ranojha   02/24/09 - Fixed quantity returned and discountamount for
+ *                         Return Transactions
+ *    glwang    02/23/09 - add bar line under Transaction Reentry
+ *    glwang    02/23/09 - Add Transaction Re-entry mode
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - made lines with currency line up using stretch on
+ *                         the currency element and some padding after the
+ *                         currency element (for the tax indicator character)
+ *    mahising  02/22/09 - Fixed issue for printing promotion name in receipt
+ *    cgreene   02/21/09 - remove extra spaces from item group and before total
+ *                         discount
+ *    cgreene   02/21/09 - hard code Canceled in CanceledReceipt and remove
+ *                         from SaleReceipt
+ *    glwang    02/20/09 - reset the item price dependency
+ *    ddbaker   02/20/09 - Corrected alignments of item unit price
+ *    ddbaker   02/20/09 - Hide non-relevant tax override information when it
+ *                         does not exist.
+ *    glwang    02/20/09 - result of the merge
+ *    glwang    02/20/09 - create new layway payment receipts and reset itemid
+ *                         dependency at sale receipt
+ *    mahising  02/20/09 - Fixed for special instructions
+ *    atirkey   02/20/09 - modified display
+ *    mahising  02/19/09 - Fixed bug 2248
+ *    atirkey   02/19/09 - trans re entry
+ *    arathore  02/18/09 - corrected the width for discount reason code.
+ *    mahising  02/17/09 - resolved merge issue
+ *    mahising  02/17/09 - Fixed customer billing information issue for sale
+ *                         transaction
+ *    atirkey   02/17/09 - modified
+ *    atirkey   02/17/09 - Gift card details
+ *    glwang    02/16/09 - expand the length of discount field
+ *    miparek   02/15/09 - fixed d#1782,made Sales right justified by removing
+ *                         fixedWidth attribute
+ *    glwang    02/13/09 - fix gift card related issues
+ *    ddbaker   02/11/09 - Removed blank line beginning the item description
+ *                         group
+ *    jswan     02/04/09 - Made blank line depdend on 'isDuplicateReceipt()'.
+ *    ddbaker   01/30/09 - Fixed lost merge.
+ *    ddbaker   01/30/09 - Adding truncation to bank account number in
+ *                         accordance with the EncryptionCardData object.
+ *    jswan     01/29/09 - Results of merge
+ *    jswan     01/29/09 - Modified to correct issues with printing store
+ *                         credit.
+ *    ddbaker   01/26/09 - Test Automation Changes for SaleReceipt
+ *    cgreene   01/13/09 - sale receipt subtotals alignment and alteration
+ *                         print fixes
+ *    cgreene   01/13/09 - multiple send and gift receipt changes. deleted
+ *                         SendGiftReceipt
+ *    cgreene   01/09/09 - made several shipping based formatting changes
+ *    cgreene   01/06/09 - print absolute value of item quantity
+ *    cgreene   01/06/09 - move giftcard issue reload to new line
+ *    npoola    12/17/08 - pickupdelivery and sale receipt changes for
+ *                         displaying discount names
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   12/12/08 - limit space of item desc to 25 chars
+ *    vikini    12/11/08 - Adding auto line break in GetItemReceiptMessage
+ *    vikini    12/11/08 - Adding auto linebreak into ItemMEssage Receipt and
+ *                         Footer
+ *    cgreene   12/09/08 - centered bank check info
+ *    cgreene   12/08/08 - add getReasonCode method to taxcontainer for bpts to
+ *                         query when there are no taxinfos
+ *    cgreene   12/04/08 - merge version 28 29 and 30 so that this receipt
+ *                         formats properly
+ *    cgreene   11/20/08 - fix for Orig Receipt: None use isReturnLineItem
+ *                         method
+ *    sgu       11/20/08 - refres to latest label
+ *    sgu       11/20/08 - replace isVATCodePrinting with isVATEnabled
+ *    mchellap  11/19/08 - Changes for gift card balance amount
+ *    cgreene   11/17/08 - fixed getTransactionType to 5=EXCHANGE
+ *    cgreene   11/17/08 - added StoreCreditReceipt details
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *    cgreene   11/13/08 - add survey report
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="SaleReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/client/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/client/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <linkReport documentType="CustomerSendInfo" idePath="/pos/deploy/client/receipts/CustomerSendInfo.bpt" id="4524213" cutPaper="false">
+        <dependsOn returns="boolean" name="isTransactionHasSendItem" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="Items" idePath="/pos/deploy/client/receipts/Items.bpt" id="16879915" cutPaper="false" />
+    <linkReport documentType="Totals" idePath="/pos/deploy/client/receipts/Totals.bpt" id="16879916" cutPaper="false" />
+    <linkReport documentType="Tenders" idePath="/pos/deploy/client/receipts/Tenders.bpt" id="16879917" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879918" cutPaper="false">
+        <group id="21775432">
+            <line id="19002349" dependsOnPresenceOf="6147615" />
+            <line id="4675508">
+                <element text="  Store Credit Issued" id="10345944" dependsOnPresenceOf="6147615" />
+                <methodElement fixedWidth="17" printedWhenLengthZero="false" id="6147615" fillChar=" " justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderStoreCreditIfc" name="getIssuedStoreCredit" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAmount" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc">
+                                <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1503060">
+                <element text="  Store Credit #:" id="1476602" dependsOnPresenceOf="20188930" />
+                <methodElement printedWhenLengthZero="false" id="20188930">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderStoreCreditIfc" name="getIssuedStoreCredit" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getStoreCreditID" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18037555" dependsOnPresenceOf="27172040">
+                <element text="  Name:" id="11979296" dependsOnPresenceOf="27172040" />
+                <methodElement printedWhenLengthZero="false" id="27172040" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderStoreCreditIfc" name="getIssuedStoreCredit" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="StoreCreditIfc" name="getStoreCredit" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc">
+                                <method returns="String" name="getFullName" class="oracle.retail.stores.domain.utility.StoreCreditIfc" param="Locale" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9113552">
+                <element text="  ID Type:" id="26003159" dependsOnPresenceOf="25300975" />
+                <methodElement printedWhenLengthZero="false" id="25300975">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderStoreCreditIfc" name="getIssuedStoreCredit" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getPersonalIDType" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" param="Locale" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="26460711">
+            <line id="18945918" />
+            <line id="26049230">
+                <element text="Total Tender" id="20988917" stretch="true" />
+                <methodElement id="22216747" justified="right">
+                    <method returns="CurrencyIfc" name="getTotalTenderAmount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <element text="   " id="18860423" />
+            </line>
+            <line id="24745276" dependsOnPresenceOf="5855220">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse=" " valuePrintedWhenTrue="" id="5855220">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isSuspended" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20237898" dependsOnPresenceOf="5855220">
+                <element text="Change Due" id="5990634" stretch="true" />
+                <methodElement id="15260515" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="15951383" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="10741977" dependsOnPresenceOf="21905549" />
+            <line id="18316025" dependsOnPresenceOf="21905549">
+                <element text="Number of Items Sold:" id="10166575" stretch="true" />
+                <methodElement formatter="QUANTITY" printedWhenValueZero="false" id="21905549">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="BigDecimal" name="getQuantitySale" class="oracle.retail.stores.domain.transaction.TransactionTotalsIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="    " id="3319865" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="29901568" dependsOnPresenceOf="7789224" />
+            <line id="5832412" dependsOnPresenceOf="7789224">
+                <element text=" " id="14854214" stretch="true" />
+                <element text="YOU SAVED" id="26614986" escapeSequence="\|4C" />
+                <methodElement formatter="CURRENCY" printedWhenValueZero="false" id="7789224" escapeSequence="\|4C">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TransactionTotalsIfc" name="getTransactionTotals" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="CurrencyIfc" name="getAmountOffTotalForReceipt" class="oracle.retail.stores.domain.transaction.TransactionTotals" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" " id="21797883" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/client/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="PAT" idePath="/pos/deploy/client/receipts/PAT.bpt" id="13926415" cutPaper="false">
+        <dependsOn returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+            <method returns="IRSCustomerIfc" name="getIRSCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+        </dependsOn>
+    </linkReport>
+    <linkReport documentType="MailBankCheck" idePath="/pos/deploy/client/receipts/MailBankCheck.bpt" id="13704629" cutPaper="false" />
+    <report name="AfterPATReport" id="16889914" cutPaper="false">
+        <group id="24735679">
+            <line id="26713016">
+                <element text="Return Ticket ID: " id="7374667" dependsOnPresenceOf="661726" />
+                <methodElement printedWhenLengthZero="false" id="661726">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="RebateItem" name="getReturnTicketID" class="oracle.retail.stores.domain.transaction.SaleReturnTransaction" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24974962" dependsOnPresenceOf="661726" />
+        </group>
+        <group id="18848737">
+            <line id="28975479" dependsOnPresenceOf="24799268" />
+            <line id="12488505">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="30758639" dependsOnPresenceOf="24799268">
+                    <method returns="ReceiptFooterMessageDTO[]" name="getReturnReceiptFooterMessages" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getItemIds" class="oracle.retail.stores.domain.stock.ReceiptFooterMessageDTO" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12496979">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="24799268">
+                    <method returns="ReceiptFooterMessageDTO[]" name="getReturnReceiptFooterMessages" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getItemMessage" class="oracle.retail.stores.domain.stock.ReceiptFooterMessageDTO" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="CreditCardPromotionDisclosure" idePath="/pos/deploy/client/receipts/CreditCardPromotionDisclosure.bpt" id="8765000" cutPaper="false">
+        <dependsOn returns="boolean" name="getCreditCardPromotionDescriptionPart1" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/client/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="7525870" />
+            <line id="12206609">
+                <element text="Customer Copy" id="20784700" justified="center" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Survey" idePath="/pos/deploy/client/receipts/Survey.bpt" id="13926412" cutPaper="false">
+        <dependsOn returns="boolean" name="isSurveyShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <linkReport documentType="Footer" idePath="/pos/deploy/client/receipts/Footer.bpt" id="4830873" />
+    <linkReport documentType="ShippingSlip" idePath="/pos/deploy/client/receipts/ShippingSlip.bpt" id="1095671" cutPaper="false">
+        <dependsOn returns="boolean" name="hasSendPackages" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+</blueprint>
+

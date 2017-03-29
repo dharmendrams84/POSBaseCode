@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/StoreCreditReceipt_ja.bpt /main/13 2010/09/06 14:06:03 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    blarsen   08/26/09 - XbranchMerge
+ *                         blarsen_bug8809064-store-credit-no-expiry-fix from
+ *                         rgbustores_13.1x_branch
+ *    blarsen   08/18/09 - Don't print expiry line if expiry date is null.
+ *    cgreene   03/25/09 - hide sales assoc label if assoc is null
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for StoreCreditReceipt
+ *    cgreene   12/12/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="StoreCreditReceipt" copies="2">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <report name="StoreCreditReceipt_Report" id="1" cutPaper="false">
+        <group id="908342820">
+            <line id="27182317">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8439983" />
+                <element text=" " id="511877" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="29350564" />
+            </line>
+            <line id="9624795">
+                <element text="取り引き:" id="635315678" />
+                <methodElement fixedWidth="10" id="396957609">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getFormattedTransactionSequenceNumber" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="店舗:" id="1220036792" justified="right" stretch="true" />
+                <methodElement id="9699476">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getFormattedStoreID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31571602">
+                <element text="レジ:" id="1980528140" />
+                <methodElement fixedWidth="5" id="1609326572">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getFormattedWorkstationID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="ドロワ:" id="802697176" justified="right" stretch="true" />
+                <methodElement id="1213286481">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getTillID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27682895">
+                <element text="キャッシャ:" id="1260931880" />
+                <methodElement fixedWidth="5" id="557261111">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EmployeeIfc" name="getCashier" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.employee.EmployeeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="売上:" id="1156990198" dependsOnPresenceOf="1848929844" justified="right" stretch="true" />
+                <methodElement printedWhenLengthZero="false" id="1848929844">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="EmployeeIfc" name="getSalesAssociate" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="String" name="getEmployeeID" class="oracle.retail.stores.domain.employee.EmployeeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="671035" dependsOnPresenceOf="14908241">
+                <element text="VAT:" id="24250743" dependsOnPresenceOf="14908241" />
+                <methodElement printedWhenLengthZero="false" id="14908241">
+                    <method returns="String" name="getVATNumber" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="8470547" dependsOnPresenceOf="33130411">
+                <element text="顧客:" id="7890675" dependsOnPresenceOf="33130411" />
+                <methodElement printedWhenLengthZero="false" id="33130411">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getCustomerID" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3808966" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* 領収書ではありません、トレーニングモードです *" id="29490417" justified="1" stretch="true">
+                <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+            </methodElement>
+			</line>
+            <line id="17117904">
+                <element text="店舗クレジット" id="4" justified="center" stretch="true" />
+            </line>
+            <line id="3" />
+            <line id="17561633">
+                <methodElement precededBySpace="false" id="10105046" printedAsBarcode="true" justified="center" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getStoreCreditID" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="23103355">
+                <element text="" id="1876783069" fillChar="_" stretch="true" />
+            </line>
+            <line id="31953906" />
+            <line id="29285620">
+                <element text="店舗クレジット #:" id="10002038" />
+                <methodElement precededBySpace="false" id="10190436">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="getStoreCreditID" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                    </method>
+                </methodElement>
+                <methodElement id="5469699" justified="right" stretch="true">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="getAmount" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24999227" dependsOnPresenceOf="718890">
+                <element text="  期限切れ:" id="28894212" dependsOnPresenceOf="718890" />
+                <methodElement formatter="Date.SHORT" id="718890">
+                    <method returns="TenderLineItemIfc" name="getTender" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="EYSDate" name="getExpirationDate" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="2" cutPaper="false">
+        <group id="908342820">
+            <line id="15219455" />
+            <line id="5472895">
+                <copyElement id="15508209" justified="center" stretch="true">
+                    <copyText>顧客コピー</copyText>
+                    <copyText>店舗コピー</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

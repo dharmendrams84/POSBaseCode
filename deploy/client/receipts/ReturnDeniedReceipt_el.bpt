@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/ReturnDeniedReceipt_el.bpt /main/2 2010/09/06 14:06:01 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  02/22/10 - fix the return denied receipt
+ *    abondala  01/02/10 - Update Header date
+ *    vikini    03/19/09 - Receipt File Creation in ADE
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="ReturnsDeniedReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="5421869" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="ReturnsDeniedReceiptReport" id="1">
+        <group id="15925395">
+            <line id="5874749" />
+            <line id="27975024">
+                <element text="ΑΠΟΡΡΙΨΗ ΕΠΙΣΤΡΟΦΗΣ" id="11537644" fillChar=" " justified="center" stretch="true" />
+            </line>
+            <line id="9681799" />
+            <line id="29013322">
+                <element text="Ταυτ. δελτίου επιστροφής: " id="7374667" dependsOnPresenceOf="20533924" />
+                <methodElement printedWhenLengthZero="false" id="20533924">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="String" name="getReturnTicket" class="oracle.retail.stores.domain.transaction.AbstractTenderableTransaction" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4356619" />
+            <line id="10661662">
+                <element text="Αντίγρ. χονδρεμπόρου" id="2206908" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="19124556" />
+</blueprint>
+
+

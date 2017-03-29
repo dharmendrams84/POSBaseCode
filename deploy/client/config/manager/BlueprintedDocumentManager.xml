@@ -1,0 +1,172 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/manager/BlueprintedDocumentManager.xml /rgbustores_13.4x_generic_branch/2 2011/06/03 09:46:42 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   06/02/11 - Tweaks to support Servebase chipnpin
+ *    asinton   09/24/10 - Adding Credit Card Accountability Responsibility and
+ *                         Disclosure Act of 2009 changes.
+ *    npoola    08/18/10 - linked the CustomerSendInfo.bpt
+ *    nkgautam  07/06/10 - new receipt addition for bill payment reports
+ *    nkgautam  06/21/10 - added new receipts for bill pay transaction
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   04/12/10 - add ability to search a list of directories for
+ *                         blueprints
+ *    cgreene   03/10/10 - add new MailBankCheck blueprint and add to
+ *                         specialordercomplete
+ *    abondala  01/02/10 - Update Header date
+ *    vikini    03/19/09 - Incorporating Code review comments
+ *    vikini    03/17/09 - Checkin after refresh to tip
+ *    vikini    03/15/09 - Adding Returns Denies Receipt
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    cgreene   03/02/09 - fix PAT documentType
+ *    glwang    03/02/09 - tunning the format
+ *    glwang    03/02/09 - Add pat statement related
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    atirkey   01/15/09 - Till reconcile bpt added
+ *    cgreene   01/13/09 - multiple send and gift receipt changes. deleted
+ *                         SendGiftReceipt
+ *    cgreene   12/16/08 - fix bpt lookup comments to reflect _en_US
+ *    atirkey   12/02/08 - Layaway delete receipt
+ *    aphulamb  11/27/08 - checking files after merging code for receipt
+ *                         printing by Amrish
+ *    cgreene   11/25/08 - added additional receipt types for flexibility in
+ *                         receipt copy counts
+ *    atirkey   11/21/08 - layway delete receipt changes
+ *    cgreene   11/17/08 - added StoreCreditReceipt
+ *    cgreene   11/13/08 - add Survey bluerpint
+ *    cgreene   11/07/08 - remove old receipts from context and
+ *                         blueprintsDisabled option
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE BPTDOCMGRCONFIG SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/bptdocmgrcfg.dtd">
+
+<BPTDOCMGRCONFIG>
+    <COMMENT>
+       This is a the configuration script for the BlueprintedDocumentManager.
+       It defines basic properties as well as override for blueprint filenames
+    </COMMENT>
+
+    <!-- Configure whether the manager should be persisting beans passed to the
+        manager for printing as serialized objects (*.ser). The serialized files
+        are used for sample data when designing/editing receipt blueprint
+        (*.bpt) files. Switch to true when designing blueprints, and false when
+        in production. -->
+	<PROPERTY propname="persistBeansAsDataObject"
+	          propvalue="false"
+	          proptype="Boolean"/>
+
+    <!-- Configure a semicolon delimited list of paths relative to pos/bin/
+        where receipt blueprints (*.bpt) can be found. If archive files (*.jar
+        or *.zip) are found, their contents will be searched.
+        When persistBeansAsDataObject is set to true, serialized beans (*.ser)
+        will be persisted into the first actual directory found.
+        E.g. "../receipts". -->
+    <PROPERTY propname="receiptsPath"
+              propvalue="../receipts;../receipts/blueprints.jar"
+              proptype="String" />
+
+    <!-- The following list are the names of the receipt file names that match
+        the receipts document type. See PrintableDocumentParameterBeanIfc
+        #getDocumentType(). The doc type of the receipt that prints after a sale
+        is completed is called "SaleReceipt". The matching file name is
+        "SaleReceipt.bpt". If it is desired to print from a different file name,
+        change the file name to match your desired file. E.g.
+        "MySaleReceipt.bpt".
+        <p>
+        For an example of locale-specific blueprint searching in base locale
+        United States English with ORPOS installed with base values and property
+        configurations, the system will look for your file first at
+        "C:\OracleRetailStore\Client\pos\receipts\MySaleReceipt_en_US.bpt"
+        then
+        "C:\OracleRetailStore\Client\pos\receipts\MySaleReceipt_en.bpt"
+        then
+        "C:\OracleRetailStore\Client\pos\receipts\MySaleReceipt.bpt".
+        -->
+    <RECEIPT type="AlterationReceipt" fileName="AlterationReceipt.bpt" />
+    <RECEIPT type="Ankle" fileName="Ankle.bpt" />
+    <RECEIPT type="AssociateProductivityReport" fileName="AssociateProductivityReport.bpt" />
+    <RECEIPT type="BillPayFooter" fileName="BillPayFooter.bpt" />
+    <RECEIPT type="BillPayHeader" fileName="BillPayHeader.bpt" />
+    <RECEIPT type="BillPayReceipt" fileName="BillPayReceipt.bpt" />
+    <RECEIPT type="BillPaymentReport" fileName="BillPaymentReport.bpt" />
+    <RECEIPT type="CanceledReceipt" fileName="CanceledReceipt.bpt" />
+    <RECEIPT type="CustomerSendInfo" fileName="CustomerSendInfo.bpt" />     
+    <RECEIPT type="CreditCardPromotionDisclosure" fileName="CreditCardPromotionDisclosure.bpt" />
+    <RECEIPT type="CreditSignatureSlipReceipt" fileName="CreditSignatureSlipReceipt.bpt" />
+    <RECEIPT type="DebitSlipReceipt" fileName="DebitSlipReceipt.bpt" />
+    <RECEIPT type="DepartmentSalesReport" fileName="DepartmentSalesReport.bpt" />
+    <RECEIPT type="ECheckSignatureSlipReceipt" fileName="ECheckSignatureSlipReceipt.bpt" />
+    <RECEIPT type="EmployeeDiscountReceipt" fileName="EmployeeDiscountReceipt.bpt" />
+    <RECEIPT type="ExchangeReceipt" fileName="ExchangeReceipt.bpt" />
+    <RECEIPT type="Footer" fileName="Footer.bpt" />
+    <RECEIPT type="GiftCardInquirySlip" fileName="GiftCardInquirySlip.bpt" />
+    <RECEIPT type="GiftReceipt" fileName="GiftReceipt.bpt" />
+    <RECEIPT type="Header" fileName="Header.bpt" />
+    <RECEIPT type="HourlyProductivityReport" fileName="HourlyProductivityReport.bpt" />
+    <RECEIPT type="HousePaymentReceipt" fileName="HousePaymentReceipt.bpt" />
+    <RECEIPT type="ICCDetails" fileName="ICCDetails.bpt" />
+    <RECEIPT type="InstantCreditInquiryInfoSlip" fileName="InstantCreditInquiryInfoSlip.bpt" />
+    <RECEIPT type="InventoryInquirySlip" fileName="InventoryInquirySlip.bpt" />
+    <RECEIPT type="Items" fileName="Items.bpt" />
+    <RECEIPT type="LayawayDeleteReceipt" fileName="LayawayDeleteReceipt.bpt" />
+    <RECEIPT type="LayawayPaymentReceipt" fileName="LayawayPaymentReceipt.bpt" />
+    <RECEIPT type="LayawayPickupReceipt" fileName="LayawayPickupReceipt.bpt" />
+    <RECEIPT type="LayawayReceipt" fileName="LayawayReceipt.bpt" />
+    <RECEIPT type="Logo" fileName="Logo.bpt" />
+    <RECEIPT type="MailBankCheck" fileName="MailBankCheck.bpt" />
+    <RECEIPT type="NameVerificationSlip" fileName="NameVerificationSlip.bpt" />
+    <RECEIPT type="NoSaleSlip" fileName="NoSaleSlip.bpt" />
+    <RECEIPT type="OrderReceipt" fileName="OrderReceipt.bpt" />
+    <RECEIPT type="OrdersSummaryReport" fileName="OrdersSummaryReport.bpt" />
+    <RECEIPT type="OrderStatusReport" fileName="OrderStatusReport.bpt" />
+    <RECEIPT type="PickupDeliveryOrderReceipt" fileName="PickupDeliveryOrderReceipt.bpt" />
+    <RECEIPT type="PAT" fileName="PAT.bpt" />
+    <RECEIPT type="QueuedTransactionsReport" fileName="QueuedTransactionsReport.bpt" />
+    <RECEIPT type="RebateReceipt" fileName="RebateReceipt.bpt" />
+    <RECEIPT type="RedeemReceipt" fileName="RedeemReceipt.bpt" />
+    <RECEIPT type="ReturnReceipt" fileName="ReturnReceipt.bpt" />
+    <RECEIPT type="ReturnDeniedReceipt" fileName="ReturnDeniedReceipt.bpt" />
+    <RECEIPT type="SaleReceipt" fileName="SaleReceipt.bpt" />
+    <RECEIPT type="ShippingSlip" fileName="ShippingSlip.bpt" />
+    <RECEIPT type="SpecialOrderReceipt" fileName="SpecialOrderReceipt.bpt" />
+    <RECEIPT type="StoreCreditReceipt" fileName="StoreCreditReceipt.bpt" />
+    <RECEIPT type="SpecialOrderCancelReceipt" fileName="SpecialOrderCancelReceipt.bpt" />
+    <RECEIPT type="SpecialOrderCompleteReceipt" fileName="SpecialOrderCompleteReceipt.bpt" />
+    <RECEIPT type="SummaryReport" fileName="SummaryReport.bpt" />
+    <RECEIPT type="Survey" fileName="Survey.bpt" />
+    <RECEIPT type="SuspendedTransactionsReport" fileName="SuspendedTransactionsReport.bpt" />
+    <RECEIPT type="SuspendReceipt" fileName="SuspendReceipt.bpt" />
+    <RECEIPT type="TaxExemptReceipt" fileName="TaxExemptReceipt.bpt" />
+    <RECEIPT type="TempShoppingPass" fileName="TempShoppingPass.bpt" />
+    <RECEIPT type="Tenders" fileName="Tenders.bpt" />
+    <RECEIPT type="TillCountReport" fileName="TillCountReport.bpt" />
+    <RECEIPT type="TillLoanReceipt" fileName="TillLoanReceipt.bpt" />
+    <RECEIPT type="TillPayInReceipt" fileName="TillPayInReceipt.bpt" />
+    <RECEIPT type="TillPayOutReceipt" fileName="TillPayOutReceipt.bpt" />
+    <RECEIPT type="TillPayrollPayOutReceipt" fileName="TillPayrollPayOutReceipt.bpt" />
+    <RECEIPT type="TillPickupReceipt" fileName="TillPickupReceipt.bpt" />
+    <RECEIPT type="TillSummaryReport" fileName="TillSummaryReport.bpt" />
+    <RECEIPT type="Totals" fileName="Totals.bpt" />
+    <RECEIPT type="VATSummary" fileName="VATSummary.bpt" />
+    <RECEIPT type="VoidHousePaymentReceipt" fileName="VoidHousePaymentReceipt.bpt" />
+    <RECEIPT type="VoidLayawayReceipt" fileName="VoidLayawayReceipt.bpt" />
+    <RECEIPT type="VoidRedeemReceipt" fileName="VoidRedeemReceipt.bpt" />
+    <RECEIPT type="VoidSaleReceipt" fileName="VoidSaleReceipt.bpt" />
+    <RECEIPT type="VoidSpecialOrderReceipt" fileName="VoidSpecialOrderReceipt.bpt" />
+    <RECEIPT type="VoidTillAdjustmentsReceipt" fileName="VoidTillAdjustmentsReceipt.bpt" />
+    <RECEIPT type="VoidBillPayReceipt" fileName="VoidBillPayReceipt.bpt" />
+
+</BPTDOCMGRCONFIG>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/TillCountReport_sv.bpt /main/2 2010/09/06 14:06:05 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  06/18/10 - new receipt file for MS lang
+ *    cgreene   03/24/09 - implement TillCountReportItem based version of the
+ *                         report
+ *    cgreene   03/17/09 - fixed till count report to print in both summary and
+ *                         detail versions
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/05/09 - added choice format for header when close or loan
+ *                         count. added currency denomination to Totals header
+ *    ddbaker   01/26/09 - Test Automation Changes for TillCountReport
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="TillCountReport" copies="1">
+    <report name="TillCountReportReport" id="1">
+        <group id="1">
+            <line id="13982086">
+                <element text="  " id="12999802" stretch="true" />
+                <element text="Kassasummering för nr:" id="1" />
+                <methodElement id="1085514">
+                    <method returns="String" name="getTillID" class="oracle.retail.stores.pos.reports.TillCountReport" />
+                </methodElement>
+                <element text="  " id="10440667" stretch="true" />
+            </line>
+            <line id="15245345" />
+            <line id="6885751">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8450395" />
+                <element text="  " id="20480126" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="17351907" />
+            </line>
+            <line id="33136362">
+                <element text="Varuhus:" id="23770016" />
+                <methodElement id="6660472">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Kassa:" id="10142366" justified="2" stretch="true" />
+                <methodElement id="20144840">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="19940306">
+                <element text="Kassör-ID:" id="27750457" />
+                <methodElement id="31898931">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="10475532" />
+            <line id="540190">
+                <methodElement precededBySpace="false" formatter="0#Starta räkning av växelkassa|1#Avsluta räkning av växelkassa|2#Räkna hämtningar|3#Räkna lån|4#Avsluta kassaräkning" id="21853520" justified="1" stretch="true">
+                    <method returns="int" name="getTillCountType" class="oracle.retail.stores.pos.reports.TillCountReport" />
+                </methodElement>
+            </line>
+            <line id="19287723">
+                <element text="" id="25243547" fillChar="_" stretch="true" />
+            </line>
+            <line id="25599567" />
+        </group>
+        <group id="15137554">
+            <line id="28228711">
+                <methodElement precededBySpace="false" formatter="0#Kontant|1#Kredit|2#Check|3#Resecheck|4#Presentkort|5#Postväxel|6#Debet|7#Kupong|8#Presentkort|9#Varuhuskredit|10#Presentkort för köpcentrum|11#Inköpsorder|12#Betalningsorder|13#E-check|14#Kanadensiska kontanter|15#Kanadensisk check|16#Kontanter i brittiska pund|17#Check i brittiska pund|18#Kontanter i euro|19#Check i euro" printedWhenLengthZero="false" id="7302037" justified="1" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="TenderDescriptorIfc" name="getTenderDescriptor" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="int" name="getTenderType" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="15216027" />
+            <line id="4538204">
+                <element text="" id="28345530" />
+                <element text="Valörer       " id="6852284" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="Antal" id="12030286" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="boolean" name="isCountHeaderDisplayed" class="oracle.retail.stores.pos.reports.TillCountReportItem" />
+                    </method>
+                </methodElement>
+                <element text="Belopp " id="13249886" justified="2" stretch="true" />
+            </line>
+            <line id="28544449" dependsOnPresenceOf="20697412" />
+            <line id="18822609">
+                <methodElement fixedWidth="20" precededBySpace="false" printedWhenLengthZero="false" id="20697412">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getDenominations" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="TenderDescriptorIfc" name="getTenderDescriptor" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc">
+                                <method returns="DenominationIfc" name="getDenomination" class="oracle.retail.stores.domain.tender.TenderDescriptorIfc">
+                                    <method returns="String" name="getDenominationDisplayName" class="oracle.retail.stores.commerceservices.common.currency.DenominationIfc" param="Locale" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="27481058" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getDenominations" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="int" name="getNumberItemsTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="5203358" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getDenominations" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29826511" dependsOnPresenceOf="30922674" />
+            <line id="1539649">
+                <methodElement fixedWidth="20" precededBySpace="false" formatter="AmEx#AmEx|Diners#Diners|Discover#Discover|HouseCard#Butikskort|JCB#JCB|MasterCard#MasterCard|Visa#Visa" printedWhenLengthZero="false" id="30922674">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getSubTypes" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="String" name="getTenderSubType" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="#0;(#0)" printedWhenLengthZero="false" id="27025593" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getSubTypes" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="int" name="getNumberItemsTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="28681063" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getSubTypes" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26597493">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue=" " id="19438663">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="boolean" name="isTotalCounted" class="oracle.retail.stores.pos.reports.TillCountReportItem" />
+                    </method>
+                </methodElement>
+                <element text=" " id="8201745" />
+            </line>
+            <line id="1215084">
+                <element text="Summor" id="4854113" />
+                <methodElement fixedWidth="14" prefix="(" suffix=")" id="30102751">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getTotals" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc">
+                                <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                    <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                                </method>
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="#0;(#0)" printedWhenLengthZero="false" id="6481844" dependsOnPresenceOf="19438663" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getTotals" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="int" name="getNumberItemsTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="15032690" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportItems" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="FinancialCountTenderItemIfc[]" name="getTotals" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="CurrencyIfc" name="getAmountTotal" class="oracle.retail.stores.domain.financial.FinancialCountTenderItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="5807225" />
+            <line id="8827256" />
+        </group>
+        <group id="31844113">
+            <line id="10820979">
+                <element text="Summor" id="3178737" />
+                <methodElement fixedWidth="14" prefix="(" suffix=")" id="9070181">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportTotals" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="CurrencyIfc" name="getAmount" class="oracle.retail.stores.pos.reports.TillCountReportItem">
+                            <method returns="CurrencyTypeIfc" name="getType" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc">
+                                <method returns="String" name="getCurrencyCode" class="oracle.retail.stores.commerceservices.common.currency.CurrencyTypeIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="22748417" justified="2" stretch="true">
+                    <method returns="TillCountReportItem[]" name="getTillCountReportTotals" class="oracle.retail.stores.pos.reports.TillCountReport">
+                        <method returns="CurrencyIfc" name="getAmount" class="oracle.retail.stores.pos.reports.TillCountReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="19091568">
+            <line id="18801574" />
+            <line id="24737685">
+                <element text=" SLUT PÅ RAPPORTEN " id="29970135" fillChar="-" justified="1" stretch="true" />
+            </line>
+            <line id="26870275" />
+            <line id="33175995" />
+            <line id="9744175" />
+        </group>
+    </report>
+</blueprint>
+
+

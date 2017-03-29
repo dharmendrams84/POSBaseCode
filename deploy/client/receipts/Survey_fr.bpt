@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Survey_fr.bpt /main/5 2010/06/30 00:23:12 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/23/09 - Test Automation Changes for Survey section.
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *    cgreene   11/13/08 - initial version
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Survey" copies="1">
+    <report name="SurveyReport" id="1" cutPaper="false">
+        <group id="2">
+            <line id="5249460">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="3051384" />
+            <line id="26612952">
+                <element text="Envoyez vos commentaires et recevez" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="26058267">
+                <element text="un avoir de 10 %. Appelez" id="2" justified="1" stretch="true" />
+            </line>
+            <line id="1927586">
+                <element text="le 1-800-555-5555, 921 h EST," id="3" justified="1" stretch="true" />
+            </line>
+            <line id="11121774">
+                <element text="participez au sondage du service" id="4" justified="1" stretch="true" />
+            </line>
+            <line id="19528370">
+                <element text="client et obtenez un code remise" id="5" justified="1" stretch="true" />
+            </line>
+            <line id="33499184">
+                <element text="de 10 %. Offre valable aux Etats-Unis." id="6" justified="1" stretch="true" />
+            </line>
+            <line id="18851795">
+                <element text="Les 10 % s'appliquent aux" id="7" justified="1" stretch="true" />
+            </line>
+            <line id="1114328">
+                <element text="marchandises uniquement." id="8" justified="1" stretch="true" />
+            </line>
+            <line id="19661409">
+                <element text="Aucun ajustement de prix sur les" id="9" justified="1" stretch="true" />
+            </line>
+            <line id="7302560">
+                <element text="achats antérieurs. Non cumulable" id="10" justified="1" stretch="true" />
+            </line>
+            <line id="16434455">
+                <element text="avec d'autres offres, expire 30 jours" id="11" justified="1" stretch="true" />
+            </line>
+            <line id="3">
+                <element text="après achat. Code remise mag : _____" id="12" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

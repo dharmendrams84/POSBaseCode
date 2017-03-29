@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/admin/adminuicfg.xml /rgbustores_13.4x_generic_branch/1 2011/05/06 14:15:28 mszekely Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/17/09 - Added ADE Header
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+
+
+<!DOCTYPE UICFG SYSTEM "classpath://oracle/retail/stores/pos/config/defaults/posui.dtd">
+<!--
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     $Log:
+      5    I18N_P2    1.3.1.0     12/18/2007 3:09:14 PM  Sandy Gu        static
+            text fix for POS
+      4    360Commerce 1.3         11/22/2007 10:59:04 PM Naveen Ganesh   PSI
+           Code checkin
+      3    360Commerce 1.2         3/31/2005 4:27:11 PM   Robert Pearse
+      2    360Commerce 1.1         3/10/2005 10:19:33 AM  Robert Pearse
+      1    360Commerce 1.0         2/11/2005 12:09:25 PM  Robert Pearse
+     $
+     Revision 1.3  2004/05/31 14:21:51  dfierling
+     @scr 3754 - disabled cancel button on options screen
+
+     Revision 1.2  2004/02/12 16:48:47  mcs
+     Forcing head revision
+
+     Revision 1.1.1.1  2004/02/11 01:04:13  cschellenger
+     updating to pvcs 360store-current
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<UICFG>
+
+    <BEAN
+        specName="AdminOptionsButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="eJournal"
+            enabled="true"
+            keyName="F2"
+            labelTag="ElectronicJournal"/>
+
+        <BUTTON
+            actionName="Reset"
+            enabled="false"
+            keyName="F3"
+            labelTag="ResetHardTotals"/>
+
+        <BUTTON
+            actionName="Security"
+            enabled="true"
+            keyName="F4"
+            labelTag="Security"/>
+
+        <BUTTON
+            actionName="Queue"
+            enabled="true"
+            keyName="F5"
+            labelTag="QueueManagement"/>
+
+        <BUTTON
+            actionName="Manager"
+            enabled="true"
+            keyName="F6"
+            labelTag="Manager"/>
+
+        <BUTTON actionName="TransReentry"
+            enabled="true"
+            keyName="F7"
+            labelTag="TransReentryOn"/>
+
+        <BUTTON
+            actionName="About"
+            enabled="true"
+            keyName="F8"
+            labelTag="HelpAbout"/>
+
+    </BEAN>
+
+    <BEAN
+        specName="AdminOptionsNoQueueButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="eJournal"
+            enabled="true"
+            keyName="F2"
+            labelTag="ElectronicJournal"/>
+
+        <BUTTON
+            actionName="Reset"
+            enabled="false"
+            keyName="F3"
+            labelTag="ResetHardTotals"/>
+
+        <BUTTON
+            actionName="Security"
+            enabled="true"
+            keyName="F4"
+            labelTag="Security"/>
+
+        <BUTTON
+            actionName="Manager"
+            enabled="true"
+            keyName="F5"
+            labelTag="Manager"/>
+
+		<BUTTON actionName="TransReentry"
+            enabled="true"
+            keyName="F6"
+            labelTag="TransReentryOn"/>
+
+        <BUTTON
+            actionName="About"
+            enabled="true"
+            keyName="F7"
+            labelTag="HelpAbout"/>
+
+    </BEAN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="adminText"
+        specName="ADMIN_OPTIONS">
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="AdminOptionsButtonSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[false],Undo[true],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY propName="promptTextTag"   propValue="ChooseOptionPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY propName="screenNameTag" propValue="AdminOptionsScreenName"/>
+        </ASSIGNMENT>
+
+    </OVERLAYSCREEN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="adminText"
+        specName="ADMIN_OPTIONS_NO_QUEUE">
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[false],Undo[true],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="AdminOptionsNoQueueButtonSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY propName="promptTextTag"   propValue="ChooseOptionPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StatusPanelSpec">
+            <BEANPROPERTY propName="screenNameTag" propValue="AdminOptionsScreenName"/>
+        </ASSIGNMENT>
+
+    </OVERLAYSCREEN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="EYSPOSDefaultSpec"
+        resourceBundleFilename="adminText"
+        specName="RESETTING_HARDTOTALS">
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY propName="promptTextTag"   propValue="ResetHardTotalsPrompt"/>
+        </ASSIGNMENT>
+
+    </OVERLAYSCREEN>
+
+</UICFG>

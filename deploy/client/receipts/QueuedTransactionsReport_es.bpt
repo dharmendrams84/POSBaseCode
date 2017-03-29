@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/QueuedTransactionsReport_es.bpt /main/12 2010/09/06 14:06:00 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   01/27/10 - add more transaciton types to delimited list
+ *    abondala  01/02/10 - Update Header date
+ *    vikini    05/08/09 - added missed TransactionTypes
+ *    stallama  04/30/09 - Added valid transaction types to the masking for the
+ *                         transaction type. Also changed the alignment of the
+ *                         transaction type.
+ *    cgreene   03/10/09 - removed pound sign from list header per mockup
+ *    cgreene   03/06/09 - fixed stretchyness of header
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/26/09 - add extra space to end of report
+ *    blarsen   02/21/09 - changing trans/type/date header to stretch - this
+ *                         will support printers with varying widths and I18N
+ *    atirkey   02/19/09 - null checks added
+ *    atirkey   02/19/09 - modified header
+ *    glwang    01/30/09 - add header, change the ids
+ *    ddbaker   01/23/09 - Test Automation Changes for QueuedTransactionsReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="QueuedTransactionsReport" copies="1">
+    <report name="QueuedTransactionsReportReport" id="1">
+        <group id="1">
+            <line id="18687346">
+                <element text="Informe cola" id="1" justified="center" stretch="true" />
+            </line>
+            <line id="8755816" />
+            <line id="22831804">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text=" " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="5660886">
+                <element text="Tienda:" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+                <element text="Puesto:" id="26203554" justified="right" stretch="true" />
+                <methodElement id="33387099">
+                    <method returns="String" name="getRegisterID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="15696851">
+                <element text="ID cajero:" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+<line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* No es inf., Modo formación *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="8970080">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="11087549" />
+            <line id="20956938">
+                <element text="Tipo" id="6934951" justified="center" />
+            </line>
+            <line id="78219">
+                <element text="Nº transac." id="7676992" stretch="true" />
+                <element text="Fecha" id="17277979" justified="center" stretch="true" />
+                <element text="Hora" id="25429182" justified="center" stretch="true" />
+            </line>
+            <line id="6011238" />
+            <line id="32048085">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="No hay ngn transacción en cola." valuePrintedWhenTrue="" id="27662063">
+                    <method returns="boolean" name="hasQueuedTransactions" class="oracle.retail.stores.pos.reports.QueuedTransactionsReport" />
+                </methodElement>
+            </line>
+        </group>
+        <group id="2">
+            <line id="9651234">
+                <methodElement precededBySpace="false" formatter="0#Desconocido|1#Venta|2#Devolución|3#Anulación|4#Sin venta|5#Cambio|6#Abrir tienda|7#Cerrar tienda|8#Abrir puesto|9#Cerrar puesto|10#Caja abierta|11#Caja cerrada|12#Préstamo caja|13#Recogida caja|14#Susp. caja|15#Reanudación caja|16#Ingreso|17#Pago|18#Pago cuenta propia|19#Iniciación de reserva|20#Reserva completa|21#Pago reserva|22#Eliminación reserva|23#Pedido|24#Pedido completo|25#Cancelación pedido|26#Pedido|36#Canje|37#Entrar en el modo de formación|38#Salir del modo de formación|39#Envío|40#Pago nómina|41#Entrar en reentrada transacción|42#Salir de reentrada transacción|43#Caja anulada" printedWhenLengthZero="false" printedWhenValueZero="false" id="31307396" dependsOnPresenceOf="11076393" justified="center">
+                    <method returns="QueuedTransactionReportItem[]" name="getQueuedTransactions" class="oracle.retail.stores.pos.reports.QueuedTransactionsReport">
+                        <method returns="int" name="getTransactionType" class="oracle.retail.stores.pos.reports.QueuedTransactionReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24864323">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="11076393">
+                    <method returns="QueuedTransactionReportItem[]" name="getQueuedTransactions" class="oracle.retail.stores.pos.reports.QueuedTransactionsReport">
+                        <method returns="String" name="getTransactionID" class="oracle.retail.stores.pos.reports.QueuedTransactionReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="Date.SHORT" printedWhenLengthZero="false" id="31414820" dependsOnPresenceOf="11076393" justified="right" stretch="true">
+                    <method returns="QueuedTransactionReportItem[]" name="getQueuedTransactions" class="oracle.retail.stores.pos.reports.QueuedTransactionsReport">
+                        <method returns="EYSDate" name="getTimestampBegin" class="oracle.retail.stores.pos.reports.QueuedTransactionReportItem" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="Time.SHORT" printedWhenLengthZero="false" id="8056984" dependsOnPresenceOf="11076393" justified="right" stretch="true">
+                    <method returns="QueuedTransactionReportItem[]" name="getQueuedTransactions" class="oracle.retail.stores.pos.reports.QueuedTransactionsReport">
+                        <method returns="EYSDate" name="getTimestampBegin" class="oracle.retail.stores.pos.reports.QueuedTransactionReportItem" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="31392212" />
+            <line id="14050342">
+                <element text=" FIN DEL INF. " id="27444246" fillChar="-" justified="center" stretch="true" />
+            </line>
+<line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* No es inf., Modo formación *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="10769718" />
+        </group>
+    </report>
+</blueprint>
+
+

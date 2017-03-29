@@ -1,0 +1,144 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/src/oracle/retail/stores/pos/services/tender/activation/activation.xml /rgbustores_13.4x_generic_branch/3 2011/08/02 14:17:17 jswan Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    asinton   05/04/11 - New activation service for APF.
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE SERVICE SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/tourguide.dtd">
+
+<SERVICE name="Activation"
+         package="oracle.retail.stores.pos.services.tender.activation"
+         tourcam="ON">
+    <CARGO class="ActivationCargo"/>
+    <SERVICECODE>
+        <LETTER name="Activate"/>
+        <LETTER name="Approved"/>
+        <LETTER name="Declined"/>
+        <LETTER name="Failure"/>
+        <LETTER name="Error"/>
+        <LETTER name="Offline"/>
+        <LETTER name="Success"/>
+        <LETTER name="Manual"/>
+
+        <LANEACTION class="ActivationDeclinedAisle"/>
+        <LANEACTION class="ActivationOfflineAisle"/>
+        <LANEACTION class="FailureConversionAisle" package="oracle.retail.stores.pos.services.common"/>
+        <LANEACTION class="GiftCardInfoEnteredAisle"/>
+        <LANEACTION class="ActivationErrorAisle"/>
+        <LANEACTION class="ManualApprovalRoad"/>
+
+        <SITEACTION class="ActivationSite"/>
+        <SITEACTION class="GetGiftCardInfoSite"/>
+        <SITEACTION class="EvaluateRequestListSite"/>
+    </SERVICECODE>
+    <MAP>
+        <REGION region="SERVICE" startsite="EvaluateRequestList">
+
+            <SITE name="EvaluateRequestList" siteaction="EvaluateRequestListSite">
+                <ROAD name="ActivationsSucceeded"
+                      letter="Success"
+                      destination="Final"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="CallActivation"
+                      letter="Activate"
+                      destination="Activation"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+            </SITE>
+
+            <SITE name="Activation" siteaction="ActivationSite">
+                <AISLE name="ActivationDeclined"
+                      letter="Declined"
+                      laneaction="ActivationDeclinedAisle">
+                </AISLE>
+                <AISLE name="ActivationOffline"
+                      letter="Offline"
+                      laneaction="ActivationOfflineAisle">
+                </AISLE>
+                <AISLE name="ActivationError"
+                      letter="Error"
+                      laneaction="ActivationErrorAisle">
+                </AISLE>
+                <ROAD name="ActivationManualApproval"
+                      letter="Manual"
+                      laneaction="ManualApprovalRoad"
+                      destination="EvaluateRequestList"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="ActivationApproved"
+                      letter="Approved"
+                      destination="EvaluateRequestList"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="ActivationCardInfo"
+                      letter="CardInfo"
+                      destination="GetGiftCardInfo"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+                <ROAD name="ActivationFailed"
+                      letter="Failure"
+                      destination="Final"
+                      tape="ADVANCE" record="OFF" index="OFF">
+                </ROAD>
+            </SITE>
+
+            <SITE name="GetGiftCardInfo" siteaction="GetGiftCardInfoSite">
+                <COMMENT>
+                    This site displays the SELL_GIFT_CARD form to allow
+                    the user to enter the required information for the
+                    item.
+                </COMMENT>
+                <AISLE
+                    name="GiftCardInfoEntered"
+                    letter="Next"
+                    laneaction="GiftCardInfoEnteredAisle">
+                    <COMMENT>
+                        This aisle is traversed after the user entered the
+                        gift card information.
+                    </COMMENT>
+                </AISLE>
+                <ROAD
+                    name="InfoEnteredSuccess"
+                    letter="Continue"
+                    destination="Activation"
+                    tape="ADVANCE"
+                    record="ON"
+                    index="ON">
+                </ROAD>
+                <ROAD
+                    name="InfoEnteredFailed"
+                    letter="InvalidCardNumber"
+                    destination="GetGiftCardInfo"
+                    tape="ADVANCE"
+                    record="ON"
+                    index="ON">
+                </ROAD>
+                <AISLE name="ActivationCancelled"
+                      letter="Cancel"
+                      laneaction="FailureConversionAisle">
+                </AISLE>
+                <ROAD name="ActivationFailed"
+                      letter="Failure"
+                      destination="Final"
+                      tape="ADVANCE"
+                      record="ON"
+                      index="ON">
+                </ROAD>
+            </SITE>
+
+            <SYSTEMSITE name="Final" action="RETURN"/>
+
+        </REGION>
+    </MAP>
+</SERVICE>

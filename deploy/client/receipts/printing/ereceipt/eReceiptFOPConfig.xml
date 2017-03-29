@@ -1,0 +1,60 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/printing/ereceipt/eReceiptFOPConfig.xml /rgbustores_13.4x_generic_branch/2 2012/01/30 09:56:13 ohorne Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    01/27/12 - removed fopFontConfigFile b/c it is no longer being
+ *                         used
+ *    jswan     10/26/10 - Added Employee Discount receipt.
+ *    rsnayak   10/07/10 - Added Bill Pay e-receipt
+ *    jswan     02/19/10 - Modified to allow email of exchange transactions.
+ *    masahu    02/05/10 - Added the ReturnReceipt to eReceipt configuration
+ *    jswan     01/29/10 - Additional modifications for attaching rebate and
+ *                         gift reciepts to the EReceipt.
+ *    jswan     01/28/10 - Modifications to support emailing rebate, gift and
+ *                         alteration receipts with the sale reciept.
+ *    acadar    01/22/10 - changes to print multiple copies on separate papers
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/09/09 - enable separate format for ereceipts
+ *    acadar    12/07/09 - changes to files location
+ *    acadar    12/07/09 - configuration file for network fop printing
+ *    acadar    11/30/09 - updates
+ *    acadar    11/24/09 - enable network printing
+ *    acadar    11/24/09 - configuration file for fop
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE ERECEIPTCONFIG SYSTEM "classpath://oracle/retail/stores/manager/device/dtd/ereceiptcfg.dtd">
+
+<ERECEIPTCONFIG>
+    <COMMENT>
+       This is a the configuration script for the IPP Printer.
+       It defines mapping between fop templates and blueprint documents
+    </COMMENT>
+
+    <!-- Configure a directory path (relative to /pos/bin/) where fop templates
+         (*.xml) will be found . E.g. "../receipts/ipp/xsl". -->
+    <PROPERTY propname="fopFilesDirectory"
+              propvalue="../receipts/printing/templates/xsl"
+              proptype="String" />
+
+
+    <!--  ereceipt mapping  -->
+     <ERECEIPT type="SaleReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="RebateReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="AlterationReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="GiftReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="ExchangeReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="TaxExemptReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="ReturnReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="BillPayReceipt" fileName="ipp_image_receipt.xsl" />
+     <ERECEIPT type="EmployeeDiscountReceipt" fileName="ipp_image_receipt.xsl" />
+</ERECEIPTCONFIG>

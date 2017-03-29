@@ -1,0 +1,58 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/config/manager/ItemBasketManager.xml /rgbustores_13.4x_generic_branch/2 2011/09/16 15:17:07 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    abondala  12/16/09 - Added ADE Header
+ *
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE MSGDISP SYSTEM "classpath://oracle/retail/stores/platform/client/message/config/msgdisp.dtd">
+
+<MSGDISP monitorinterval="300" >
+	<COMMENT> Item Basket configuration xml. This defines the connector and formatter definitions</COMMENT>
+
+	<!--
+		Do not change Service factory unless using any other method to invoke Sim webservice
+		Provider URL Needs points to the SIM web service.
+	-->
+	<CONNECTORS>
+		<CONNECTOR name="InventoryService" javaclass="oracle.retail.stores.pos.services.inventoryconnector.InventoryWebServiceConnector">
+          <PROPERTY propname="timeOutInSeconds" propvalue="10"/>
+          <PROPERTY propname="providerURL" propvalue="ORSIMWebServiceURL"/>
+          <PROPERTY propname="serviceFactory" propvalue="org.apache.axis.client.ServiceFactory" />
+    </CONNECTOR>
+	</CONNECTORS>
+
+	<FORMATTERS>
+		<FORMATTER name="passThruFormatter" javaclass="oracle.retail.stores.pos.services.inventoryconnector.ItemBasketFormatter">
+		</FORMATTER>
+	</FORMATTERS>
+
+	<RULES>
+		<RULE name="retryRule" javaclass="oracle.retail.stores.commext.message.rule.RetryActionRule">
+		</RULE>
+	</RULES>
+
+	<MSGROUTERS>
+	    <DEFAULTROUTER rule="retryRule" >
+		      <MSGCONNECTOR connector="InventoryService"
+		                formatter="passThruFormatter" />
+		</DEFAULTROUTER>
+		<!--  Item Basket Message Route -->
+	    <MSGROUTER type="ItemBasket" rule="retryRule">
+		     <MSGCONNECTOR connector="InventoryService" formatter="passThruFormatter" />
+	    </MSGROUTER>
+	</MSGROUTERS>
+
+
+</MSGDISP>

@@ -1,0 +1,243 @@
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/assemble/ARU/build.xml /rgbustores_13.4x_generic_branch/1 2011/12/12 12:11:42 cgreene Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   12/12/11 - update to ant 1.8.2
+ *    tzgarba   01/27/11 - Updated to use shared assemble targets
+ *    tzgarba   01/27/11 - Moved common assemble targets to a shared XML file
+ *    kelesika  01/14/11 - upgrade to xerces 2.11.0
+ *    cgreene   01/07/11 - merge foundation projects back into one
+ *    sgu       11/11/10 - add rsa jars to ARU build
+ *    cgreene   11/02/10 - refactor some classes between common and utility
+ *    tzgarba   10/21/10 - Included locales in ARU installer packaging
+ *    tzgarba   09/20/10 - Filtered locales directory from the EPD
+ *    tzgarba   09/07/10 - Updated to match latest changes to trunk assemble
+ *    mchellap  08/13/10 - BUG#9955168 Updates for 13.3
+ *    cgreene   07/26/10 - consolidate xml jars
+ *    cgreene   05/17/10 - upgrade to commons-httpclient 3.1
+ *    mchellap  05/14/10 - Fixed PSI classpath issues
+ *    cgreene   05/11/10 - remove axis.jar
+ *    asinton   05/06/10 - Upgrade to ISD version 285
+ *    abondala  05/03/10 - XbranchMerge abondala_tech_78 from
+ *                         st_rgbustores_techissueseatel_generic_branch
+ *    abondala  04/15/10 - merged with the tip
+ *    abondala  04/14/10 - Updated
+ *    abondala  04/09/10 - Introduced Customer and Transaction webservices
+ *    cgreene   04/14/10 - rename deployment jars oracle.stores
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    cgreene   04/06/10 - update apache-ant version and remove it from
+ *                         360Common
+ *    mszekely  03/10/10 - BUG 9361097: Updating ARU source bundles for POS
+ *    mszekely  02/24/10 - BUG 9361097: Updating ARU source bundles
+ *    mpbarnet  02/11/10 - Updated to Xerces 2.9.1.a
+ *    abondala  02/03/10 - updated
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/08/09 - changes to the installer and classpath
+ *    acadar    12/02/09 - checked in Owen's changes for the Ipp installer
+ *    ohorne    11/24/09 - upgraded ApacheFOP to v0.95
+ *    tzgarba   09/02/09 - Phase 2 of third party refactor. Refactored
+ *                         remaining libraries and removed 11 more unused
+ *                         libraries.
+ *    msawatph  03/20/09 - ACME: supporting configs & sql files in the
+ *                         sparsetrees assemble
+ *    msawatph  03/12/09 - update build.xml with current 13.1.0 changes
+ *
+ * ===========================================================================
+ */
+-->
+<project name="assemble" default="" basedir=".">
+    <property file="../../../build/sparsetree.properties" />
+    <import file="../../../build/sharedassemble.xml" />
+
+    <!--
+       This shared file contains the main targes for
+       assembing the POS installer.
+     -->
+    <import file="assemble-common.xml"/>
+
+    <target name="assemble.clean" depends="init">
+        <delete includeemptydirs="true">
+            <fileset dir="${assemble.dir}" includes="**/*"/>
+        </delete>
+        <delete file="iabuild.properties"/>
+        <delete file="posBuild.iap_xml"/>
+    </target>
+
+    <target name="assemble" depends="init,check.in.base" >
+        <if>
+            <equals arg1="${onlybase}" arg2="true" />
+            <then>
+                <echo message="Base Only enabled assemble"/>
+                <antcall target="base.assemble" />
+            </then>
+            <elseif>
+                <equals arg1="${onlysparsetrees}" arg2="true" />
+                <then>
+                    <echo message="Sparsetrees Only enabled assemble"/>
+                    <ant target="sparsetrees.assemble" >
+                        <property name="insparsetree" value="true"/>
+                    </ant>
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${bothsparsetreesandbase}" arg2="true" />
+                <then>
+                    <echo message="Sparsetrees and BASE are enabled assemble"/>
+                    <ant target="sparsetrees.assemble" >
+                        <property name="insparsetree" value="true"/>
+                    </ant>
+                </then>
+            </elseif>
+        </if>
+    </target>
+
+    <target name="check.in.sparsetree">
+        <condition property="in.sparsetree">
+            <and>
+                <isset property="insparsetree"/>
+                <equals arg1="${insparsetree}" arg2="true" />
+            </and>
+        </condition>
+    </target>
+
+    <target name="check.in.base" depends="check.in.sparsetree" unless="in.sparsetree">
+        <condition property="onlybase">
+            <and>
+                <equals arg1="${base.enabled}" arg2="true" />
+                <not>
+                    <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                </not>
+            </and>
+        </condition>
+        <condition property="onlysparsetrees">
+            <and>
+                <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                <not>
+                    <equals arg1="${base.enabled}" arg2="true" />
+                </not>
+            </and>
+        </condition>
+        <condition property="bothsparsetreesandbase">
+            <and>
+                <equals arg1="${sparsetrees.enabled}" arg2="true" />
+                <equals arg1="${base.enabled}" arg2="true" />
+            </and>
+        </condition>
+    </target>
+
+    <target name="base.assemble" depends="assemble.adjuncts,assemble.epd"/>
+
+    <!--  SPARSE TREE ASSEMBLE SCRIPTS  -->
+
+    <target name="init_sparse" >
+        <property name="sparse.base.dir" value="../../../"/>
+        <property name="extract.location" value="${sparse.base.dir}sparsetree/extract"/>
+        <property name="epd.filename" value="${epd.pos.name}"/>
+
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <fileset dir="${sparse.base.dir}/thirdparty/apache/ant/1.8.2/lib">
+                    <include name="ant-contrib-1.0b3.jar" />
+                </fileset>
+            </classpath>
+        </taskdef>
+    </target>
+
+    <!-- sparse tree configs and sql files -->
+    <target name="sparsetrees.configs-sql" depends="init,init_sparse" description="Copy configurations and sqlfiles to extracted EPD area before assemble">
+        <for list="${sparsetree.list}" param="sparsetree.name">
+            <sequential>
+                <echo message="assembling configs and sql files from sparsetree/@{sparsetree.name}"/>
+                <antcall target="sparsetrees.pos" inheritAll="false">
+                     <param name="product.name" value="pos"/>
+                     <param name="epd.location" value="${epd.temp.path}"/>
+                     <param name="epd.name" value="${epd.filename}"/>
+                     <param name="sparsetree.dir.name" value="@{sparsetree.name}"/>
+                </antcall>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="sparsetrees.assemble" depends="init_sparse,sparsetrees.configs-sql">
+        <fileset id="extract.directory" dir="${extract.location}" includes="**/*.jar" />
+        <property name="prop.extract.directory" refid="extract.directory"/>
+        <propertyregex property="extracted.jar.list"
+                  input="${prop.extract.directory}"
+                  regexp="\;"
+                  replace="\,"
+                  casesensitive="false" />
+        <for list="${extracted.jar.list}" param="jar.name">
+            <sequential>
+                <antcall target="find.filepath" inheritrefs="true">
+                    <param name="param.jar.name" value="@{jar.name}"/>
+                </antcall>
+            </sequential>
+        </for>
+        <mkdir dir="${sparse.base.dir}/install/dist/"/>
+          <delete><fileset dir="${sparse.base.dir}/install/dist/" includes="${epd.pos.name}.zip"/></delete>
+        <zip destfile="${sparse.base.dir}/install/dist/${epd.pos.name}.zip" >
+                        <fileset dir="${epd.temp.path}">
+                            <include name="${epd.pos.name}/**"/>
+                        </fileset>
+        </zip>
+        <!--<delete includeemptydirs="true">
+            <fileset dir="${epd.temp.path}/${epd.pos.name}"/>
+        </delete>-->
+    </target>
+
+    <target name="find.filepath">
+
+        <fileset id="finding.file.path" dir="${epd.temp.path}/${epd.pos.name}" includes="**/${param.jar.name}"/>
+        <property name="prop.finding.file.path" refid="finding.file.path" />
+
+        <for list="${prop.finding.file.path}" param="prop.jar.file.path">
+            <sequential>
+
+                <propertyregex property="path.name.change"
+                  input="@{prop.jar.file.path}"
+                  regexp="\\"
+                  replace="\/"
+                  casesensitive="false" />
+
+                <script language="javascript">
+                <![CDATA[
+                        importPackage(java.lang, java.util, java.io);
+                        importPackage(Packages.org.apache.tools.ant);
+                        importPackage(Packages.org.apache.tools.ant.taskdefs);
+
+                        var str = self.getProject().getProperty("path.name.change");
+                        var myString = String(str);
+                        var mySplitResult = myString.split(";");
+                        for(i = 0; i < mySplitResult.length; i++)
+                        {
+                            self.getProject().setNewProperty("latest.path"+i ,mySplitResult[i]);
+                            var pathstr = String (mySplitResult[i]);
+                            var filename = pathstr.split("/")[pathstr.split("/").length-1];
+                            var path = pathstr.split(filename)[0];
+
+                            antcall=project.createTask("antcall");
+                            antcall.init();
+                            antcall.setTarget("mycopy");
+                            antcallParam=antcall.createParam();
+                            antcallParam.setName("latest.path");
+                            antcallParam.setValue(path);
+                            antcall.execute();
+                        }
+                ]]>
+                </script>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="mycopy" >
+        <copy todir="${epd.location}/${epd.filename}/${latest.path}" overwrite="true">
+            <fileset dir="${extract.location}" includes="${param.jar.name}"/>
+        </copy>
+    </target>
+</project>

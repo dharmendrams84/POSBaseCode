@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/AlterationReceipt_hr.bpt /main/1 2010/07/29 14:02:48 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    rajeekri  07/29/10 - HR file of pos 13.2. Including in 13.3
+ *    cgreene   05/28/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    ranojha   02/12/09 - Fixed copies for AlterationReceipt
+ *    atirkey   02/03/09 - Modified to print multiple copy headers
+ *    ddbaker   01/22/09 - Test Automation Changes for AlterationReceipt
+ *    cgreene   01/13/09 - sale receipt subtotals alignment and alteration
+ *                         print fixes
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="AlterationReceipt.bpt" copies="3">
+    <report name="Report" id="1">
+        <group id="1">
+            <line id="15091334">
+                <element text="  Kupac:" id="1" />
+                <methodElement id="11099170">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2112561">
+                <element text="  Telefon: " id="12275265" />
+                <methodElement id="10039058">
+                    <method returns="PhoneIfc" name="getCustomerPhone" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                    </method>
+                </methodElement>
+                <element text=" " id="21926324" />
+                <methodElement formatter="0#Kod kuće|1#Službeni|2#Mobilni|5#Ostalo" id="29513080">
+                    <method returns="PhoneIfc" name="getCustomerPhone" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="int" name="getPhoneType" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="12571663">
+            <line id="33238630" />
+            <line id="30589847">
+                <methodElement precededBySpace="false" id="8891950">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemDescription" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26278713">
+                <methodElement precededBySpace="false" id="15306087">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getItemNumber" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6504030">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake hlača" id="12370089">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isPantsAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26460367" dependsOnPresenceOf="12370089">
+                <element text="  Rub:" id="4479539" dependsOnPresenceOf="2218489" />
+                <methodElement printedWhenLengthZero="false" id="2218489" dependsOnPresenceOf="12370089">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getHem" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22507120" dependsOnPresenceOf="12370089">
+                <element text="  Suženje:" id="5111651" dependsOnPresenceOf="4504470" />
+                <methodElement printedWhenLengthZero="false" id="4504470" dependsOnPresenceOf="12370089">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsTaper" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18055655" dependsOnPresenceOf="12370089">
+                <element text="  Struk:" id="10997548" dependsOnPresenceOf="3660148" />
+                <methodElement printedWhenLengthZero="false" id="3660148" dependsOnPresenceOf="12370089">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsWaist" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="28678543" dependsOnPresenceOf="12370089">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="16866388" />
+                <methodElement printedWhenLengthZero="false" id="16866388" dependsOnPresenceOf="12370089">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="13884241">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake suknji" id="30843566">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isSkirtAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14927396" dependsOnPresenceOf="30843566">
+                <element text="  Rub:" id="4479539" dependsOnPresenceOf="17878696" />
+                <methodElement printedWhenLengthZero="false" id="17878696" dependsOnPresenceOf="30843566">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getHem" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31817359" dependsOnPresenceOf="30843566">
+                <element text="  Suženje:" id="5111651" dependsOnPresenceOf="4504471" />
+                <methodElement printedWhenLengthZero="false" id="4504471" dependsOnPresenceOf="30843566">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsTaper" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="30931963" dependsOnPresenceOf="30843566">
+                <element text="  Struk:" id="10997548" dependsOnPresenceOf="3660149" />
+                <methodElement printedWhenLengthZero="false" id="3660149" dependsOnPresenceOf="30843566">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsWaist" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14688457" dependsOnPresenceOf="30843566">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="33170964" />
+                <methodElement printedWhenLengthZero="false" id="16866389" dependsOnPresenceOf="30843566">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getPantsOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="20863188">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake kaputa" id="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isCoatAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3794357" dependsOnPresenceOf="33170964">
+                <element text="  Rub:" id="27825549" dependsOnPresenceOf="21806756" />
+                <methodElement printedWhenLengthZero="false" id="21806756" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getHem" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="18346782" dependsOnPresenceOf="33170964">
+                <element text="  Rukav:" id="4479539" dependsOnPresenceOf="28438755" />
+                <methodElement printedWhenLengthZero="false" id="28438755" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getSleeve" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22700073" dependsOnPresenceOf="33170964">
+                <element text="  Suženje:" id="5111651" dependsOnPresenceOf="21683565" />
+                <methodElement printedWhenLengthZero="false" id="21683565" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressTaper" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6251267" dependsOnPresenceOf="33170964">
+                <element text="  Vrat:" id="16955119" dependsOnPresenceOf="17415338" />
+                <methodElement printedWhenLengthZero="false" id="17415338" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressNeck" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6131844" dependsOnPresenceOf="33170964">
+                <element text="  Struk:" id="10997548" dependsOnPresenceOf="15732244" />
+                <methodElement printedWhenLengthZero="false" id="15732244" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressWaist" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12245160" dependsOnPresenceOf="33170964">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="31653755" />
+                <methodElement printedWhenLengthZero="false" id="31653755" dependsOnPresenceOf="33170964">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3346521">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake haljina" id="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isDressAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="7760420" dependsOnPresenceOf="15481119">
+                <element text="  Rub:" id="27825549" dependsOnPresenceOf="31250179" />
+                <methodElement id="31250179" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getHem" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3307594" dependsOnPresenceOf="15481119">
+                <element text="  Rukav:" id="4479539" dependsOnPresenceOf="27595593" />
+                <methodElement printedWhenLengthZero="false" id="27595593" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getSleeve" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24595355" dependsOnPresenceOf="15481119">
+                <element text="  Suženje:" id="5111651" dependsOnPresenceOf="32629465" />
+                <methodElement id="32629465" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressTaper" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="17089909" dependsOnPresenceOf="15481119">
+                <element text="  Vrat:" id="16955119" dependsOnPresenceOf="28297880" />
+                <methodElement printedWhenLengthZero="false" id="28297880" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressNeck" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4171180" dependsOnPresenceOf="15481119">
+                <element text="  Struk:" id="10997548" dependsOnPresenceOf="11891653" />
+                <methodElement printedWhenLengthZero="false" id="11891653" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressWaist" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="9818046" dependsOnPresenceOf="15481119">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="1919865" />
+                <methodElement printedWhenLengthZero="false" id="1919865" dependsOnPresenceOf="15481119">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getDressOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26542488">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake košulja" id="1143837">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isShirtAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="26980954" dependsOnPresenceOf="1143837">
+                <element text="  Rukav:" id="4479539" dependsOnPresenceOf="29005311" />
+                <methodElement printedWhenLengthZero="false" id="29005311" dependsOnPresenceOf="1143837">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getSleeve" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="14314484" dependsOnPresenceOf="1143837">
+                <element text="  Suženje:" id="5111651" dependsOnPresenceOf="16364009" />
+                <methodElement printedWhenLengthZero="false" id="16364009" dependsOnPresenceOf="1143837">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getShirtTaper" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31820984" dependsOnPresenceOf="1143837">
+                <element text="  Vrat:" id="16955119" dependsOnPresenceOf="33445352" />
+                <methodElement printedWhenLengthZero="false" id="33445352" dependsOnPresenceOf="1143837">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getShirtNeck" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="24744797" dependsOnPresenceOf="1143837">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="29568216" />
+                <methodElement printedWhenLengthZero="false" id="29568216" dependsOnPresenceOf="1143837">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getShirtOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="4126736">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="  Preinake radi popravka" id="11687948">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="boolean" name="isRepairsAlteration" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="1049443" dependsOnPresenceOf="11687948">
+                <element text="  Popravci:" id="4479539" dependsOnPresenceOf="8157150" />
+                <methodElement printedWhenLengthZero="false" id="8157150" dependsOnPresenceOf="11687948">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getRepairs" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="21925102" dependsOnPresenceOf="11687948">
+                <element text="  Ostalo:" id="28023108" dependsOnPresenceOf="18973879" />
+                <methodElement printedWhenLengthZero="false" id="18973879" dependsOnPresenceOf="11687948">
+                    <method returns="AlterationIfc[]" name="getAlterations" class="oracle.retail.stores.pos.receipt.AlterationReceiptParameterBeanIfc">
+                        <method returns="String" name="getOther" class="oracle.retail.stores.domain.utility.AlterationIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="33484928">
+            <line id="14721926" />
+            <line id="22002815" />
+            <line id="1043272" />
+            <line id="14301726">
+                <element text="Potpis:" id="8202782" fillChar="_" stretch="true" />
+            </line>
+            <line id="18725445" />
+            <line id="18871350" />
+            <line id="11549664">
+                <element text=" " id="20848981" />
+                <copyElement id="32977897" justified="1" stretch="true">
+                    <copyText>Kopija za prodavaonicu</copyText>
+                    <copyText>Kopija za kupca</copyText>
+                    <copyText>Kopija s preinakama</copyText>
+                </copyElement>
+            </line>
+            <line id="699689" />
+            <line id="12929374" />
+            <line id="5503831" />
+            <line id="26882784" />
+        </group>
+    </report>
+</blueprint>

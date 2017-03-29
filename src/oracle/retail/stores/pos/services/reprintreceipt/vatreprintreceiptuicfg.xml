@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $$Log:
+ * $ 1    360Commerce 1.0         4/30/2007 4:55:58 PM   Alan N. Sinton  CR
+ * $      26484 - Merge from v12.0_temp.
+ * $$$
+ * ===========================================================================
+ * $$Revision: /rgbustores_13.4x_generic_branch/2 $$
+ */-->
+<!DOCTYPE UICFG SYSTEM "classpath://oracle/retail/stores/pos/config/defaults/posui.dtd">
+
+<UICFG>
+
+    <BEAN
+        specName="VATReprintSelectButtonSpec"
+        configuratorPackage="oracle.retail.stores.pos.ui"
+        configuratorClassName="POSBeanConfigurator"
+        beanPackage="oracle.retail.stores.pos.ui.beans"
+        beanClassName="NavigationButtonBean">
+
+        <BUTTON
+            actionName="GiftReceipt"
+            enabled="true"
+            keyName="F2"
+            labelTag="GiftReceipt"/>
+
+        <!-- PrintOriginal button displays only when EnableReprintOriginalReceipt parameter is 'Y' -->
+        <BUTTON
+            actionName="PrintOriginal"
+            enabled="true"
+            keyName="F3"
+            labelTag="PrintOriginal"/>
+
+        <!-- Print VAT Summary Button for VAT enabled environment only. -->
+        <BUTTON
+            actionName="PrintVATSummary"
+            enabled="true"
+            keyName="F4"
+            labelTag="PrintVATSummary"/>
+
+    </BEAN>
+
+    <OVERLAYSCREEN
+        defaultScreenSpecName="POSStackedStatusScreenSpec"
+        resourceBundleFilename="reprintreceiptText"
+        specName="VAT_REPRINT_SELECT">
+
+        <ASSIGNMENT
+            areaName="GlobalNavigationPanel"
+            beanSpecName="GlobalNavigationPanelSpec">
+            <BEANPROPERTY
+                propName="buttonStates" propValue="Help[true],Cancel[true],Undo[true],Clear[false],Next[false],Keys[true]"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="StatusPanel"
+            beanSpecName="StackedStatusPanelSpec">
+            <BEANPROPERTY
+                propName="screenNameTag" propValue="ReprintSelectScreenName"/>
+        </ASSIGNMENT>
+        
+        <ASSIGNMENT
+            areaName="TotalStatusPanel"
+            beanSpecName="StackedTotalPanelSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="PromptAndResponsePanel"
+            beanSpecName="PromptAndResponsePanelSpec">
+            <BEANPROPERTY
+                propName="promptTextTag" propValue="ReprintSelectPrompt"/>
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="LocalNavigationPanel"
+            beanSpecName="VATReprintSelectButtonSpec">
+        </ASSIGNMENT>
+
+        <ASSIGNMENT
+            areaName="WorkPanel"
+            beanSpecName="ReprintSelectSpec">
+        </ASSIGNMENT>
+
+    </OVERLAYSCREEN>
+
+</UICFG>

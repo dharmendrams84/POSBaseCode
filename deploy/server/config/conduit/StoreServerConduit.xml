@@ -1,0 +1,579 @@
+<?xml version='1.0' ?>
+<!--
+/* =============================================================================
+* Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * =============================================================================
+ * =============================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+*     cgreene   08/05/11 - refactor and add ability for windowOfOperation to
+*                          POSLogExportDaemon
+*     sgu       06/09/11 - add install changes to enable/disable encryption
+*                          utility for pincomm
+*     sgu       06/07/11 - add pincommm encryption for house account payment
+*     abondala  06/07/11 - XbranchMerge
+*                          abondala_send_tx_to_co_through_webservice from main
+*     ohorne    05/13/11 - removed ISDITKTechnician and SimAuthTechnician
+*     vtemker   05/03/11 - Fixed issue with CO POS integration: missing CO host
+*                          name
+*     sgu       04/11/11 - add payment technician for pimcomm
+*     abondala  05/31/11 - refactored based on the review comments
+*     abondala  05/28/11 - Introduce webservice for sending transactions and
+*                          ejournals to the centraloffice applicaiton.
+*     abondala  04/29/11 - introduce webservice for sending transactions and
+*                          ejournals to the centraloffice application
+*     vtemker   05/03/11 - Added missing placeholder variable for CO hostname
+*     sgu       02/21/11 - remove rmiport assigned to the deprecated inventory
+*                          technician
+*     sgu       02/21/11 - add rmi port to technicians
+*     abondala  02/03/11 - updated
+*     abondala  01/27/11 - Introduce commext for processing final result
+*                          messages in rm-pos integration
+*     djenning  01/28/11 - store server should send DTM Poslog to local queue
+*     nkgautam  12/29/10 - XbranchMerge nkgautam_bug-10621446 from
+*                          rgbustores_13.3x_generic_branch
+*     abondala  11/19/10 - configurable webservice timeout
+*     djenning  11/09/10 - fix the previous checkin
+*     djenning  11/09/10 - fix the error installing storeserverconduit
+*     abondala  10/20/10 - remove unused queue's, customer and transaction
+*                          webapp modules from backoffice
+*     asinton   10/07/10 - Added configurable max number of retries for the
+*                          timeout reversal requests sent to ISD.
+*     jswan     09/16/10 - Changes made to support clear text RTLog output and
+*                          export of masked Credit and Debit card numbers.
+*     asinton   09/01/10 - Moved the DebitBinRangeTechnician configuration from
+*                          the StoreServerConduit.xml to the ClientConduit.xml.
+*     djenning  08/03/10 - update for optional truststore password
+*     abondala  07/21/10 - fix RM - POS integration errors
+*     mchellap  06/28/10 - Deprecate PSI Manager/Technician
+*     mchellap  06/22/10 - Added billpay technician
+*     cgreene   05/26/10 - convert to oracle packaging
+*     cgreene   05/05/10 - remove deprecated log manager and technician
+*     cgreene   04/09/10 - segregate client and server deployment files
+*     djenning  01/27/10 - update certificate work ( more to go ) and checkin
+*                          fix for StoreServerConduit.xml updates
+*     djenning  01/14/10 - merge
+*     djenning  01/12/10 - ssl + mq series topology change
+*     abondala  01/02/10 - Update Header date
+*     nkgautam  11/18/09 - check-in after refresh to tip
+*     nkgautam  11/18/09 - Connector Technician changes for POS Basket
+ *    vikini    11/18/09 - incorporating Code Review comments
+ *    vikini    11/16/09 - changing protocol value to https from http
+ *    vikini    10/29/09 - Fixed an issue with changes in propname value of
+ *                         DataManager from dataScript to configScript
+ *    vikini    10/26/09 - Changed Property for RemoteTT
+ *    vikini    10/23/09 - Incorporating review comments
+ *    vikini    10/22/09 - incorporating review comments
+ *    vikini    10/21/09 - Adding TransactionTechnician details
+ *    mchellap  09/30/09 - BUG#8932741 Enable RM Webservice authentication
+ *    cgreene   05/19/09 - added simulatedNetworkCallDelay for aid in perf
+ *                         testing
+ *    rkar      02/17/09 - RPITechnician: Changed passwordJMS to jmsPassword
+ *    asinton   02/06/09 - Added back the missing comment and
+ *                         search-and-replace tags.
+ *    aariyer   02/05/09 - Installer changes for Item basket
+ *    vikini    02/05/09 - Change in Item Basket install
+ *    aariyer   02/04/09 - Files for Item Basket Feature
+ *    vikini    02/03/09 - Fixing Error in commenting
+ *    aariyer   02/02/09 - Added files for Item Basket feature
+ *    ranojha   01/07/09 - Fixed the missing file changes
+ *    rkar      12/12/08 - Changed oasAdminUserId/password to
+ *                         userId/passwordJMS
+ *    ranojha   12/12/08 - Merged StoreServerConduit.xml after refresh
+ *    ranojha   12/11/08 - Configured MaximumTransactionsToExport for POSLog
+ *    mszekely  12/10/08 - 7544348 POS to RM integration
+ *    rkar      12/02/08 - (1) Commented-out RPITechnician - installer will
+ *                         uncomment. (2) Added oasAdminId, oasAdminPassword to
+ *                         RPITechnician
+ *    rkar      11/26/08 - Moved RPITechnician comments into a separate block
+ *    rkar      11/24/08 - RPITechnician: added support for OAS and WebSphere
+ *                         MQ, JMS servers
+ *    rkar      11/12/08 - POS-RM integration: Added ReturnsTechnician
+ *
+ * =============================================================================
+  $Log:
+   6    360Commerce 1.5         3/29/2007 1:18:34 PM   Michael Boyd    v8x
+        merge to trunk
+
+        6    .v8x      1.3.1.1     2/15/2007 6:02:38 PM   Brett J. Larsen CR
+        25411 -
+        changing all jms queue names to be compatible with WAS and OAS (not
+        with jboss)
+
+        changed MessageCenterDaemonTechnician's receiverBrokerName to "" -
+        this has been the correct value for some time
+
+        (this changes is an effort to reduce the number of manual edits
+        required during the config process)
+        5    .v8x      1.3.1.0     2/14/2007 9:45:16 AM   Rohit Sachdeva
+        24620:maximumTransactionsToExport default setting increased from 2 to
+        50...Could be changed as needed.
+   5    360Commerce 1.4         2/6/2007 2:07:44 PM    Edward B. Thorne Merge
+        from StoreServerConduit.xml, Revision 1.2.1.0
+   4    360Commerce 1.3         12/11/2006 9:11:56 AM  Jack G. Swan    Modified
+         to reflect corrected DataReplicationDaemon class name.
+   3    360Commerce 1.2         11/9/2006 6:52:22 PM   Jack G. Swan    Initial
+        XMl Replication check-in.
+   2    360Commerce 1.1         10/26/2006 4:40:07 PM  Gennady Ioffe   Changes
+        to support removal of 6.x Post-Processor
+   1    360Commerce 1.0         12/13/2005 4:46:54 PM  Barry A. Pape
+  $
+  Revision 1.12  2005/01/27 20:30:10  rsachdeva
+  @scr 7867 queue/EJournal for MessageCenterDaemonTechnician receiverQueueName and JMSJournalTechnician
+
+  Revision 1.11  2004/12/09 00:22:02  mwisbauer
+  @scr 7823 modified StoreSeverConduit and added backoffice.jndi.properties file
+
+  Revision 1.10  2004/11/29 17:31:31  jdeleau
+  @scr 7715 Make both receiving and sending queues configurable, along with their brokers.
+
+  Revision 1.9  2004/11/15 23:48:58  mwisbauer
+  @scr 7715 added queuename and brokername to xml files
+
+  Revision 1.8  2004/11/08 22:50:05  mwisbauer
+  @scr 7660 Combined the topic and queue name into the queueName parameter
+  in the JMSTechnichian section.
+
+  Revision 1.7  2004/11/04 19:13:32  kll
+  @scr 7613: remove postprocessor from storeserverconduit.xml
+
+  Revision 1.6  2004/11/04 17:17:09  mwisbauer
+  @scr 4505  added property to JMSJournalTechnician section of StoreServerC
+  Conduit.xml file for the queue name.
+
+  Revision 1.5  2004/08/18 15:18:53  jdeleau
+  @scr 6830 Remove Logger elements in XML, that were causing errors in the error log.
+  These statements are no longer relevant, as log4J is used instead.
+
+  Revision 1.4  2004/07/16 21:02:41  jdeleau
+  @scr 6318 Remove references to tax manager and technician, they
+  are no longer used in the new tax engine.
+
+  Revision 1.3  2004/03/16 18:42:38  cdb
+  @scr 0 Removed tabs from all java source code.
+
+  Revision 1.2  2004/02/12 16:46:37  mcs
+  Forcing head revision
+
+  Revision 1.1.1.1  2004/02/11 01:04:06  cschellenger
+  updating to pvcs 360store-current
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+-->
+<!DOCTYPE DISPATCHER SYSTEM "classpath://oracle/retail/stores/foundation/tour/dtd/dispatch.dtd">
+<DISPATCHER name="STORESERVER">
+
+    <TECHNICIAN name="STORETIER"
+        class = "TierTechnician"
+        package = "oracle.retail.stores.foundation.manager.tier"
+        export = "Y" >
+    </TECHNICIAN>
+
+    <MANAGER name="DataManager" class="DataManager"
+            package="oracle.retail.stores.foundation.manager.data">
+        <PROPERTY propname="configScript"
+            propvalue="classpath://config/manager/PosDIMDataManager.xml" />
+    </MANAGER>
+
+    <!-- Begin RemoteDT -->
+    <TECHNICIAN name="RemoteDT" class = "DataTechnician"
+                package = "oracle.retail.stores.foundation.manager.data"
+                export = "Y" rmiport="1310">
+        <PROPERTY propname="dataScript"
+                  propvalue="classpath://config/technician/DefaultDataTechnician.xml"/>
+    </TECHNICIAN>
+    <!-- End RemoteDT -->
+
+    <!-- Begin EnterpriseDT
+    <TECHNICIAN name="EnterpriseDT" class = "EnterpriseDataTechnician"
+                package = "oracle.retail.stores.enterpriseconnection.manager"
+                export = "Y" rmiport="1311">
+        <PROPERTY propname="dataScript"
+                  propvalue="classpath://config/technician/EnterpriseDataTechnician.xml"/>
+    </TECHNICIAN>
+    End EnterpriseDT -->
+
+    <MANAGER name="ThreadManager" class = "ThreadManager"
+        package = "oracle.retail.stores.foundation.manager.thread" >
+        <PROPERTY propname="threadPool" propvalue="StaticCache"/>
+        <PROPERTY propname="threadPoolProperty" propvalue="maxSize=4"/>
+    </MANAGER>
+
+    <TECHNICIAN name="DataSetTechnician"
+            class="DataSetTechnician"
+        package="oracle.retail.stores.foundation.manager.iddi"
+        export="Y" rmiport="1313">
+    </TECHNICIAN>
+
+    <!-- Deprecated POS SIM Integration Technician
+    <TECHNICIAN name="PSIInventoryTechnician"
+            class="PSIInventoryTechnician"
+        package="oracle.retail.stores.integration.psi.technician"
+        export="Y">
+    </TECHNICIAN>
+    -->
+
+    <TECHNICIAN name="ResourceTechnician"
+                class="ResourceTechnician"
+                package="oracle.retail.stores.foundation.manager.resource"
+                export="Y">
+        <PROPERTY propname="path"
+                  propvalue="config/ui;config/ui/bundles;config/ui/images;oracle/retail/stores/pos/config" />
+   </TECHNICIAN>
+
+   <MANAGER name="DLFormatManager"
+             class="ValidationManager"
+             package="oracle.retail.stores.domain.manager.validation"
+             export="N">
+       <PROPERTY propname="techName" propvalue="DLFormatTechnician"/>
+   </MANAGER>
+
+   <TECHNICIAN name="DLFormatTechnician" class="ValidationTechnician"
+                package="oracle.retail.stores.domain.manager.validation"
+                export="Y">
+        <PROPERTY
+            propname="configScript"
+            propvalue="classpath://config/validation/dlvalidationscript.xml"/>
+   </TECHNICIAN>
+
+    <MANAGER name="DaemonManager"
+             class="DaemonManager"
+             package="oracle.retail.stores.domain.manager.daemon">
+    </MANAGER>
+
+    <!-- IA_JMSJournal
+    <TECHNICIAN name="JMSJournalTechnician"
+                class="JMSJournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y" rmiport="1315">
+                <PROPERTY propname="journalFormatterClass"
+                          propvalue="oracle.retail.stores.pos.manager.journal.POSJournalFormatter"/>
+                <PROPERTY propname="journalHandlerClass"
+                          propvalue="oracle.retail.stores.pos.manager.journal.POSJMSJournalHandler"/>
+                <PROPERTY propname="queueName" propvalue="jms/EJournal"/>
+                <PROPERTY propname="consolePrintable" propvalue="N"/>
+    </TECHNICIAN>
+    IA_JMSJournal -->
+    
+    <!-- IA_WSJournal
+    <TECHNICIAN name="WebserviceJournalTechnician"
+                class="WebserviceJournalTechnician"
+                package="oracle.retail.stores.enterpriseconnection.manager"
+                export="Y" rmiport="1315">
+                <PROPERTY propname="journalFormatterClass"
+                          propvalue="oracle.retail.stores.pos.manager.journal.POSJournalFormatter"/>
+                <PROPERTY propname="journalHandlerClass"
+                          propvalue="oracle.retail.stores.enterpriseconnection.manager.WebserviceJournalHandler"/>
+                <PROPERTY propname="consolePrintable" propvalue="N"/>
+    </TECHNICIAN>
+    IA_WSJournal -->    
+
+    <!-- IA_Journal
+    <TECHNICIAN name="JournalTechnician"
+                class="JournalTechnician"
+                package="oracle.retail.stores.foundation.manager.journal"
+                export="Y" rmiport="1316">
+        <PROPERTY propname="consolePrintable" propvalue="N"/>
+    </TECHNICIAN>
+    IA_Journal -->
+
+    <!-- Begin JMS Data Replication Export
+    <TECHNICIAN name="DataReplicationDaemonTechnician"
+               class="DataReplicationDaemonTechnician"
+               package="oracle.retail.stores.domain.manager.datareplication"
+               export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.datareplication.DataReplicationExportDaemonThread"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="15"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.domain.manager.datareplication.JMSDataReplicationWriter"/>
+        <PROPERTY propname="extractorConfigurationFileName"
+                  propvalue="config/ReplicationExportConfig.xml"/>
+        <PROPERTY propname="extractorObjectFactoryName"
+                  propvalue="oracle.retail.stores.xmlreplication.ExtractorObjectFactory"/>
+        <PROPERTY propname="queueHostName"
+                  propvalue="$IA_CO_SERVER_NAME$"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="50"/>
+        <PROPERTY propname="queueName"
+                  propvalue="jms/POSLog"/>
+        <PROPERTY propname="compressed"
+                  propvalue="Y"/>
+    </TECHNICIAN>
+    End JMS DataReplication Export -->
+    <!-- The following two properties can be applied to the DataReplicationDaemonTechnician.  They are used
+        to indicate the window of operation for the DTM export.  If the "windowOfOperationStart" is set to
+        "05:00:00" and the "windowOfOperationEnd" set to "01:00:00", then the window of operation for DTM
+        export will be from 5:00 am in the morning until 1:00 am the next morning. This feature can be used
+        to keep export operations from occuring during memory-intensive IDDI extract processes.
+        <PROPERTY propname="windowOfOperationStart"
+                  propvalue="00:00:00"/>
+        <PROPERTY propname="windowOfOperationEnd"
+                  propvalue="23:59:59"/>
+    -->
+
+    <!-- Begin Webservice Data Replication Export
+    <TECHNICIAN name="DataReplicationDaemonTechnician"
+               class="DataReplicationDaemonTechnician"
+               package="oracle.retail.stores.domain.manager.datareplication"
+               export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.datareplication.DataReplicationExportDaemonThread"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="15"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.enterpriseconnection.manager.WebserviceDataReplicationWriter"/>
+        <PROPERTY propname="extractorConfigurationFileName"
+                  propvalue="config/ReplicationExportConfig.xml"/>
+        <PROPERTY propname="extractorObjectFactoryName"
+                  propvalue="oracle.retail.stores.xmlreplication.ExtractorObjectFactory"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="50"/>
+    </TECHNICIAN>
+    End Webservice DataReplication Export -->  
+
+
+    <!-- This version Exports to a file. -->
+    <!-- Begin POSLog File Export
+    <TECHNICIAN name="POSLogDaemonTechnician"
+               class="POSLogDaemonTechnician"
+               package="oracle.retail.stores.domain.manager.export"
+               export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.export.POSLogExportDaemonThread"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="900"/>
+        <PROPERTY propname="exportDirectoryName"
+                  propvalue="POSLog"/>
+        <PROPERTY propname="backupExportDirectoryName"
+                  propvalue="POSLogBackup"/>
+        <PROPERTY propname="trainingTransactionsExportable"
+                  propvalue="Y"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.domain.ixretail.log.POSLogWriter"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="-1"/>
+    </TECHNICIAN>
+    End POSLog File Export -->
+
+    <!-- This version Exports to a JMS Queue.-->
+    <!-- Begin POSLog Queue Export
+    <TECHNICIAN name="POSLogDaemonTechnician"
+               class="POSLogDaemonTechnician"
+               package="oracle.retail.stores.domain.manager.export"
+               export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.export.POSLogExportDaemonThread"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="60"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.domain.ixretail.log.POSLogWriter"/>
+        <PROPERTY propname="queueHostName"
+                  propvalue="$IA_CO_SERVER_NAME$"/>
+        <PROPERTY propname="queueName"
+                  propvalue="jms/POSLog"/>
+        <PROPERTY propname="trainingTransactionsExportable"
+                  propvalue="Y"/>
+        <PROPERTY propname="logWriterClass"
+                  propvalue="oracle.retail.stores.domain.ixretail.log.JMSPOSLogWriter"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="-1"/>
+    </TECHNICIAN>
+    End POSLog Queue Export -->
+
+    <!-- Mail Manager/Technician -->
+    <MANAGER name="MailManager"
+             class="MailManager"
+             package="oracle.retail.stores.foundation.manager.mail"
+             export="N"/>
+
+    <TECHNICIAN name="MailTechnician"
+                class="MailTechnician"
+                package="oracle.retail.stores.foundation.manager.mail"
+                export="Y"/>
+
+    <!--  Encryption -->
+    <MANAGER name="KeyStoreEncryptionManager"
+             class="KeyStoreEncryptionManager"
+             package="oracle.retail.stores.foundation.manager.encryption"
+             export="N">
+    </MANAGER>
+
+    <TECHNICIAN name="KeyStoreEncryptionTechnician"
+                class="KeyStoreEncryptionTechnician"
+                package="oracle.retail.stores.foundation.manager.encryption"
+                export="Y">
+    </TECHNICIAN>
+
+    <!-- Begin RTLogExportDaemonTechnician Technician
+    <TECHNICIAN name="RTLogExportDaemonTechnician"
+                class="RTLogExportDaemonTechnician"
+                package="oracle.retail.stores.domain.manager.rtlog"
+                export="Y">
+        <PROPERTY propname="daemonClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogExportDaemonThread"/>
+        <PROPERTY propname="daemonName"
+                  propvalue="RTLogExportDaemon"/>
+        <PROPERTY propname="sleepInterval"
+                  propvalue="600"/>
+        <PROPERTY propname="exportDirectoryName"
+                  propvalue="POSLog"/>
+        <PROPERTY propname="databaseAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogDatabaseAdapter"/>
+        <PROPERTY propname="encryptionAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogEncryptionAdapter"/>
+        <PROPERTY propname="outputAdapterClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogClearTextOutputAdapter"/>
+        <PROPERTY propname="exportFileConfigurationClassName"
+                  propvalue="oracle.retail.stores.exportfile.ExportFileConfiguration"/>
+        <PROPERTY propname="formatConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogFormat.xml"/>
+        <PROPERTY propname="entityReaderConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogExtractConfig.xml"/>
+        <PROPERTY propname="entityMappingConfigurationFileName"
+                  propvalue="../config/rtlog/RTLogMappingConfig.xml"/>
+        <PROPERTY propname="resultAuditLogClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogExportFileResultAuditLog"/>
+        <PROPERTY propname="mappingObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.exportfile.EntityMappingObjectFactory"/>
+        <PROPERTY propname="recordFormatObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogRecordFormatObjectFactory"/>
+        <PROPERTY propname="extractorObjectFactoryClassName"
+                  propvalue="oracle.retail.stores.xmlreplication.ExtractorObjectFactory"/>
+        <PROPERTY propname="currencyAdapterClassName"
+                  propvalue="oracle.retail.stores.domain.manager.rtlog.RTLogCurrencyAdapter"/>
+        <PROPERTY propname="maximumTransactionsToExport"
+                  propvalue="-1"/>
+    </TECHNICIAN>
+     End RTLogExportDaemonTechnician Technician -->
+    <!-- The following two properties can be applied to the RTLogExportDaemonTechnician.  They are used to
+         indicate the window of operation for the RTLog export.  If the "windowOfOperationStart" is set to
+         "05:00:00" and the "windowOfOperationEnd" set to "01:00:00", then the window of operation for RTLog
+         export will be from 5:00 am in the morning until 1:00 am the next morning. This feature can be used
+         to keep export operations from occuring during memory-intensive IDDI extract processes.
+        <PROPERTY propname="windowOfOperationStart"
+                  propvalue="00:00:00"/>
+        <PROPERTY propname="windowOfOperationEnd"
+                  propvalue="23:59:59"/>
+    -->
+    <!-- The following property can be applied to the RTLogExportDaemonTechnician.  It are used to
+         test the existing ReSA integration.
+        <PROPERTY propname="outputAdapterClassName"
+                  propvalue="oracle.retail.stores.exportfile.rtlog.RTLogEncryptingOutputAdapter"/>
+    -->
+
+   <!-- BEGIN FileTransferTechnician >
+   <TECHNICIAN name="FileTransferTechnician" class = "FileTransferTechnician"
+               package = "oracle.retail.stores.foundation.manager.filetransfer"
+               export = "Y" >
+           <PROPERTY propname="configScript"
+                      propvalue="classpath://config/technician/FileTransferTechnician.xml"/>
+           <PROPERTY propname="topicName" propvalue="jms/files"/>
+           <PROPERTY propname="listenForUpdates" propvalue="Y"/>
+
+           <PROPERTY propname="clientID" propvalue="$IA_CLIENT_ID$"/>
+           <PROPERTY propname="jmsID" propvalue="$IA_JMS_ID$"/>
+           <PROPERTY propname="jmsPassword" propvalue="!$IA_JMS_PASSWORD$"/>
+           <PROPERTY propname="durableSubscriber" propvalue="Y"/>
+   </TECHNICIAN>
+   <! END FileTransferTechnician -->
+
+   <!-- Begin InventoryReservationDaemonTechnician Technician
+   <TECHNICIAN class="InventoryReservationDaemonTechnician" compressvalets="N" encryptvalets="N" export="Y" name="InventoryReservationDaemonTechnician" package="oracle.retail.stores.pos.services.inventoryreservation" singleton="N">
+        <PROPERTY propname="daemonClassName" proptype="STRING" propvalue="oracle.retail.stores.pos.services.inventoryreservation.InventoryReservationDaemonThread"/>
+        <PROPERTY propname="sleepInterval" proptype="STRING" propvalue="900"/>
+        <PROPERTY propname="maximumOrdersToExport" proptype="STRING" propvalue="20"/>
+   </TECHNICIAN>
+   End InventoryReservationDaemonTechnician Technician -->
+
+   <!--
+        ReturnsTechnician is required for POS to Returns Management integration.
+        Properties:
+        protocol                    Network protocol used for Web Service calls
+        reconInterval               If RM server is offline, millisecs to wait before trying to re-connect
+        finalResultSendByJMS        If true, send Return Result to RM via JMS queue. If false, use Web Service
+        returnsManagerServerName    RM server's hostname or IP address
+        returnsManagerServerPort    TCP port where RM Web Services can be accessed
+
+        ** Following properties used only if finalResultSendByJMS property is true **
+
+        queueServer                 Hostname or IP address of RM's JMS server
+        queuePort                   TCP port, where RM's JMS server can be contacted, via JNDI (OAS)
+                                    or directly (WebSphere MQ)
+        queueConnFactoryJNDI        JNDI name of JMS queue connection factory (Oracle App Server only)
+        userIdJMS                   If RM is running on Oracle App Server: OAS administrator Id
+                                    If RM is running with WebSphere MQ: user Id to access RM's queue manager
+        jmsPassword                 If RM is running on Oracle App Server: OAS administrator password
+                                    If RM is running with WebSphere MQ: password to access RM's queue manager
+        returnResultQueue           Name (case-sensitive) of JMS queue, for ReturnResult messages to RM.
+                                    If RM is running on OAS, use JNDI name e.g. jms/FinalResult
+                                    If RM is running with WebSphere MQ, use queue name e.g. FINALRESULT
+        queueManager                Name of JMS queue manager (WebSphere MQ), or NONE if using OAS' JMS server
+     -->
+    <!-- BEGIN ReturnsTechnician
+    <TECHNICIAN name="ReturnsTechnician"
+            class="RPITechnician"
+        package="oracle.retail.stores.posrmint"
+        export="Y" rmiport="1317">
+        <PROPERTY propname="protocol"                   propvalue="$PROTOCOL$"/>
+        <PROPERTY propname="reconInterval"              propvalue="10000"/>
+        <PROPERTY propname="timeOutInMilliSeconds"      propvalue="10000"/>
+        <PROPERTY propname="compressionEnabled"         propvalue="true"/>
+        <PROPERTY propname="finalResultSendByJMS"       propvalue="$FINAL_RESULT_SEND_BY_JMS$"/>
+        <PROPERTY propname="returnsManagerServerName"   propvalue="$RM_SERVER_HOSTNAME$"/>
+        <PROPERTY propname="returnsManagerServerPort"   propvalue="$RM_SERVER_PORT$"/>
+        <PROPERTY propname="webServiceUser"             propvalue="$RM_SERVER_USER$"/>
+        <PROPERTY propname="webServicePassword"         propvalue="$RM_SERVER_PASSWORD$"/>
+        <PROPERTY propname="webServiceSecurityPolicy"   propvalue="classpath://config/rampart-policy.xml"/>
+    </TECHNICIAN>
+    END ReturnsTechnician -->
+
+    <!-- Connector -->
+    <TECHNICIAN name="ConnectorTechnician"
+                class="ConnectorTechnician"
+                package="oracle.retail.stores.commext.technician"
+                export="Y" rmiport="1318">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/DefaultConnectorTechnician.xml"/>
+    </TECHNICIAN>
+
+    <TECHNICIAN name="RemoteTT"
+                class = "RetailTransactionTechnician"
+                package = "oracle.retail.stores.commext.technician.data"
+                export = "Y" rmiport="1319">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/RetailTransactionTechnician.xml"/>
+    </TECHNICIAN>
+
+    <TECHNICIAN name="PaymentTechnician"
+                class="ConnectorTechnician"
+                package="oracle.retail.stores.commext.technician"
+                export="Y" rmiport="1320">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/PaymentTechnician.xml"/>
+    </TECHNICIAN>
+
+    <!--PincommEncryptionKeyInitializer Technician -->
+    <!-- BEGIN PincommEncryptionKeyInitializer
+    <TECHNICIAN name="PincommEncryptionKeyInitializerTechnician"
+                class="EncryptionKeyInitializerTechnician"
+                package="oracle.retail.stores.domain.manager.payment.pincomm"
+                export="Y">
+        <PROPERTY propname="configScript"
+                  propvalue="classpath://config/technician/PincommEncryptionKeyInitializerTechnician.xml"/>
+    </TECHNICIAN>
+    END PincommEncryptionKeyInitializer -->
+
+    <!--BillPay Technician -->
+    <!-- BEGIN BillPay
+    <TECHNICIAN name="BillPayTechnician"
+                class="BillPayTechnician"
+                package="oracle.retail.stores.pos.simulator.technician"
+                export="Y">
+    </TECHNICIAN>
+    END BillPay -->
+
+</DISPATCHER>

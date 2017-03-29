@@ -1,0 +1,110 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2012, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    01/27/12 - removed fopFontConfigFile b/c it is no longer being
+ *                         used
+ *    mchellap  12/06/11 - Added ICCDetails receipt
+ *    rsnayak   07/30/10 - Bill Pay network printing fix
+ *    abondala  01/02/10 - Update Header date
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/15/09 - reorganize printing files
+ *    acadar    12/09/09 - enable separate format for ereceipts
+ *    acadar    12/07/09 - changes to files location
+ *    acadar    12/07/09 - configuration file for network fop printing
+ *    acadar    11/30/09 - updates
+ *    acadar    11/24/09 - enable network printing
+ *    acadar    11/24/09 - configuration file for fop
+ * ===========================================================================
+ */
+-->
+<!DOCTYPE IPPCONFIG SYSTEM "classpath://oracle/retail/stores/manager/device/dtd/ippcfg.dtd">
+
+<IPPCONFIG>
+    <COMMENT>
+       This is a the configuration script for the IPP Printer.
+       It defines mapping between fop templates and blueprint documents
+    </COMMENT>
+
+    <!-- Configure a directory path (relative to /pos/bin/) where fop templates
+         (*.xml) will be found . E.g. "../receipts/ipp/xsl". -->
+    <PROPERTY propname="fopFilesDirectory"
+              propvalue="../receipts/printing/templates/xsl"
+              proptype="String" />
+
+
+    <!-- The following list are the names of the xml file names that match
+        the receipts document type. -->
+    <RECEIPT type="AlterationReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="AssociateProductivityReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="CanceledReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="CreditSignatureSlipReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="DebitSlipReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="DepartmentSalesReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="ECheckSignatureSlipReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="EmployeeDiscountReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="ExchangeReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="GiftCardInquirySlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="GiftReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="HourlyProductivityReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="HousePaymentReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="InstantCreditInquiryInfoSlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="InventoryInquirySlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="Items" fileName="ipp_default.xsl" />
+    <RECEIPT type="LayawayDeleteReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="LayawayPaymentReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="LayawayPickupReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="LayawayReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="NameVerificationSlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="NoSaleSlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="OrderReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="OrdersSummaryReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="OrderStatusReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="PickupDeliveryOrderReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="PAT" fileName="ipp_default.xsl" />
+    <RECEIPT type="QueuedTransactionsReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="RebateReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="RedeemReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="ReturnReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="ReturnDeniedReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="SaleReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="ShippingSlip" fileName="ipp_default.xsl" />
+    <RECEIPT type="SpecialOrderReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="StoreCreditReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="SpecialOrderCancelReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="SpecialOrderCompleteReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="SummaryReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="Survey" fileName="ipp_default.xsl" />
+    <RECEIPT type="SuspendedTransactionsReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="SuspendReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TaxExemptReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TempShoppingPass" fileName="ipp_default.xsl" />
+    <RECEIPT type="Tenders" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillCountReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillLoanReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillPayInReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillPayOutReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillPayrollPayOutReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillPickupReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="TillSummaryReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="Totals" fileName="ipp_default.xsl" />
+    <RECEIPT type="VATSummary" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidHousePaymentReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidLayawayReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidRedeemReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidSaleReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidSpecialOrderReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidTillAdjustmentsReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="VoidBillPayReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="BillPayReceipt" fileName="ipp_default.xsl" />
+    <RECEIPT type="BillPaymentReport" fileName="ipp_default.xsl" />
+    <RECEIPT type="ICCDetails" fileName="ipp_default.xsl" />
+    <RECEIPT type="Default" fileName="ipp_default.xsl" />
+
+</IPPCONFIG>

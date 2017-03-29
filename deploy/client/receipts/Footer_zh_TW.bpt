@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/Footer_zh_TW.bpt /main/7 2010/06/30 00:23:19 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   05/04/09 - update to 20 out of 20
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    mahising  02/18/09 - made www.oracle.com consistent
+ *    glwang    02/09/09 - changes per code review
+ *    glwang    02/09/09 - modify the properties of isTrainingMode line.
+ *    glwang    02/09/09 - Add training mode flag
+ *    ddbaker   01/21/09 - Update receipt header and footer with underscore
+ *                         separators
+ *    cgreene   01/07/09 - added extra blank line to bottom for better
+ *                         separation in console
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="Footer" copies="1">
+    <report name="FooterReport" id="1" cutPaper="false">
+        <group id="1">
+            <line id="9343039">
+                <element text="" id="166846" fillChar="_" stretch="true" />
+            </line>
+            <line id="16177011" />
+            <line id="6959258">
+                <element text="感謝您造訪" id="23160237" justified="1" stretch="true" />
+            </line>
+            <line id="14592269" />
+            <line id="12241337">
+                <element text="ORACLE" id="1070095" justified="1" stretch="true" />
+            </line>
+            <line id="17938704">
+                <element text="全球前 20 名" id="26064747" justified="1" stretch="true" />
+            </line>
+            <line id="9236202">
+                <element text="的零售商" id="4523363" justified="1" stretch="true" />
+            </line>
+            <line id="10050169">
+                <element text="都是執行 Oracle 應用程式" id="23321144" justified="1" stretch="true" />
+            </line>
+            <line id="181086">
+                <element text="www.oracle.com" id="1" justified="1" stretch="true" />
+            </line>
+            <line id="26132051" />
+        </group>
+    </report>
+</blueprint>
+
+

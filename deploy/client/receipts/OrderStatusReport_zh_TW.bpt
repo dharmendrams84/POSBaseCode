@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/OrderStatusReport_zh_TW.bpt /main/12 2010/09/06 14:06:00 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   04/16/09 - reformatted columns with 14 chars for first column
+ *    blarsen   03/18/09 - fixed some stretch-related formatting issues. added
+ *                         mask to getStatus call since it now returns a
+ *                         non-translated value
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    ddbaker   01/23/09 - Test Automation Changes for OrderStatusReport
+ *    cgreene   11/20/08 - ensure file is save in UTF-8 encoding
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="OrderStatusReport" copies="1">
+    <report name="OrderStatusReport" id="1">
+        <group id="1">
+            <line id="20280994">
+                <methodElement precededBySpace="false" formatter="新#新|已列印#已列印|部分#部分|已填寫#已填寫|已取消#已取消|已完成#已完成|已作廢#已作廢" id="22870270" justified="2" stretch="true">
+                    <method returns="String" name="getStatus" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+                <element text=" 訂單報表" id="1" stretch="true" />
+            </line>
+            <line id="16747636" />
+            <line id="22949069">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="19093325" />
+                <element text="  " id="9288907" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="31961917" />
+            </line>
+            <line id="30373009">
+                <element text="商店：" id="3174687" />
+                <methodElement id="6232457">
+                    <method returns="String" name="getStoreID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="15595312">
+                <element text="收銀員 ID：" id="28163150" />
+                <methodElement id="20325972">
+                    <method returns="String" name="getCashierID" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="24840600">
+                <element text="" id="4994869" fillChar="_" stretch="true" />
+            </line>
+            <line id="9060840" />
+            <line id="11733267">
+                <element text="開始日期：" id="21059933" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="30238139">
+                    <method returns="EYSDate" name="getStartDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="1635615">
+                <element text="結束日期：" id="689609" stretch="true" />
+                <methodElement formatter="Date.SHORT" id="9034788">
+                    <method returns="EYSDate" name="getEndDate" class="oracle.retail.stores.pos.reports.RegisterReport" />
+                </methodElement>
+            </line>
+            <line id="8703610">
+                <element text="" id="10261109" fillChar="_" stretch="true" />
+            </line>
+            <line id="14753666" />
+            <line id="17815542">
+                <element text="訂單         " id="3535439" />
+                <element text="日期" id="13124846" justified="2" stretch="true" />
+                <element text="金額 " id="7676992" justified="2" stretch="true" />
+            </line>
+            <line id="19623049" />
+        </group>
+        <group id="2">
+            <line id="23602584">
+                <methodElement fixedWidth="14" precededBySpace="false" id="22106160">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" formatter="Date.SHORT" id="25238876" justified="2" stretch="true">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="EYSDate" name="getRecordingTransactionBusinessDate" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+                <methodElement precededBySpace="false" id="1382340" justified="2" stretch="true">
+                    <method returns="OrderSummaryEntryIfc[]" name="getSummaryEntries" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="CurrencyIfc" name="getOrderTotal" class="oracle.retail.stores.domain.order.OrderSummaryEntryIfc" />
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+        <group id="9987904">
+            <line id="23257749" />
+            <line id="17423963">
+                <element text="總計" id="23638636" />
+                <methodElement fixedWidth="7" prefix="(" suffix=")" id="14237249">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.OrderStatusReport">
+                        <method returns="CurrencyTypeIfc" name="getType" class="com._360commerce.commerceservices.common.currency.CurrencyIfc">
+                            <method returns="String" name="getCurrencyCode" class="com._360commerce.commerceservices.common.currency.CurrencyTypeIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <methodElement id="1339144" justified="2" stretch="true">
+                    <method returns="int" name="getTotalCount" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+                <methodElement id="889659" justified="2" stretch="true">
+                    <method returns="CurrencyIfc" name="getTotalAmount" class="oracle.retail.stores.pos.reports.OrderStatusReport" />
+                </methodElement>
+            </line>
+            <line id="15020576" />
+            <line id="20843194">
+                <element text=" 報表結束 " id="27444246" fillChar="-" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

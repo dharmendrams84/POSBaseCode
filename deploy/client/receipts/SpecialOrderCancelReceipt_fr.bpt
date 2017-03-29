@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/SpecialOrderCancelReceipt_fr.bpt /main/13 2010/09/06 14:06:02 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    cgreene   03/11/09 - extracted totals group into a new blueprint
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/09/09 - remove extra order number under barcode because
+ *                         barcode actually has barcode printed along with it
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    npoola    03/04/09 - changed OrderNumber to be printed BarCode along with
+ *                         the number
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    ddbaker   02/25/09 - Updated for merges
+ *    ddbaker   02/25/09 - Updated for multiple copies of special order and
+ *                         layaway receipts.
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    npoola    02/24/09 - fixed the special order and pickup order receipts
+ *                         associated to defects 2547,2548
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    glwang    02/19/09 - fix the total refund
+ *    glwang    02/19/09 - fix total refund
+ *    glwang    02/19/09 - fix format of cancel special order receipt
+ *    npoola    02/18/09 - Pricing DIMP mapping changes and PDO receipt changes
+ *    glwang    02/12/09 - removing unnecesary empty lines by adding
+ *                         dependencies.
+ *    glwang    02/12/09 - print both store and customer copy receipts
+ *    glwang    01/30/09 - add header, change the ids
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="SpecialOrderCancelReceipt" copies="2">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879913" cutPaper="false">
+        <group id="908342820">
+            <line id="30008954">
+                <element text="Numéro cde :" id="13399538" />
+                <methodElement id="8619693">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getOrderStatus" class="oracle.retail.stores.domain.transaction.OrderTransactionIfc">
+                            <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="3823508">
+                <element text="  Client :" id="30020564" />
+                <methodElement id="13096122">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="String" name="getFirstLastName" class="oracle.retail.stores.domain.customer.CustomerIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="16768502" dependsOnPresenceOf="22169858">
+                <element text="  " id="27619845" dependsOnPresenceOf="22169858" />
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" id="22169858">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CustomerIfc" name="getCustomer" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc">
+                            <method returns="PhoneIfc" name="getPrimaryPhone" class="oracle.retail.stores.domain.customer.CustomerIfc">
+                                <method returns="String" name="toFormattedString" class="oracle.retail.stores.domain.utility.PhoneIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="29919449">
+                <element text="  Statut :" id="24802908" />
+                <methodElement formatter="0#Nouveau|1#Imprimé|2#Partiel|3#Complété|4#Annulé|5#Terminé|6#Vide" id="13219353">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getOrderStatus" class="oracle.retail.stores.domain.transaction.OrderTransactionIfc">
+                            <method returns="EYSStatusIfc" name="getStatus" class="oracle.retail.stores.domain.order.OrderStatusIfc">
+                                <method returns="int" name="getStatus" class="oracle.retail.stores.domain.utility.EYSStatusIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="22760479" />
+        </group>
+    </report>
+    <linkReport documentType="Items" idePath="/pos/deploy/receipts/Items.bpt" id="16879914" cutPaper="false" />
+    <linkReport documentType="Totals" idePath="/pos/deploy/receipts/Totals.bpt" id="16879915" cutPaper="false" />
+    <report name="DepositReport" id="16879916" cutPaper="false">
+        <group id="412503">
+            <line id="18885993">
+                <element text="Dépôt versé" id="33004721" stretch="true" />
+                <methodElement id="14110018" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getOrderStatus" class="oracle.retail.stores.domain.transaction.OrderTransactionIfc">
+                            <method returns="CurrencyIfc" name="getDepositAmount" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="3637355" />
+            </line>
+            <line id="25515362" />
+        </group>
+    </report>
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879917" cutPaper="false" />
+    <report name="TotalTenderReport" id="16879918" cutPaper="false">
+        <group id="26460711">
+            <line id="25252664" />
+            <line id="25068634">
+                <element text="Total remb." id="20988917" stretch="true" />
+                <methodElement id="29029004" justified="2">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBean">
+                        <method returns="OrderStatusIfc" name="getOrderStatus" class="oracle.retail.stores.domain.transaction.OrderTransactionIfc">
+                            <method returns="CurrencyIfc" name="getDepositAmount" class="oracle.retail.stores.domain.order.OrderStatusIfc">
+                                <method returns="CurrencyIfc" name="negate" class="oracle.retail.stores.commerceservices.common.currency.CurrencyIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="   " id="3626652" />
+            </line>
+            <line id="19097823" />
+            <line id="7031149" />
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <report name="OrderNumberReport" id="16879919" cutPaper="false">
+        <group id="26460712">
+            <line id="27366488">
+                <element text="N° CDE" id="29937172" justified="1" stretch="true" />
+            </line>
+            <line id="17975110" />
+            <line id="17131806" dependsOnPresenceOf="12052125">
+                <methodElement precededBySpace="false" id="12052125" printedAsBarcode="true" justified="1" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="OrderStatusIfc" name="getOrderStatus" class="oracle.retail.stores.domain.transaction.OrderTransactionIfc">
+                            <method returns="String" name="getOrderID" class="oracle.retail.stores.domain.order.OrderStatusIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="8964398" />
+            <line id="3682584">
+                <copyElement id="8000783" justified="1" stretch="true">
+                    <copyText>Copie mag.</copyText>
+                    <copyText>Copie client</copyText>
+                    <copyText>Copie mag.</copyText>
+                    <copyText>Copie client</copyText>
+                    <copyText>Copie mag.</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
+
+

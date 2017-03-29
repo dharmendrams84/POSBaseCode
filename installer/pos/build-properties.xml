@@ -1,0 +1,1406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/installer/pos/build-properties.xml /rgbustores_13.4x_generic_branch/16 2011/11/03 19:25:00 abondala Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  11/03/11 - if webservices option is not selected, use RMI for
+ *                         CTR.
+ *    abondala  11/03/11 - fixed the CTR-RMI lookup issue which is broken due
+ *                         to local queues configuration.
+ *    sgu       10/26/11 - call the new target to install jpos lib classpath
+ *    sgu       10/26/11 - remove jpos jars from installer bundle
+ *    abondala  10/20/11 - updated the conditions
+ *    abondala  10/05/11 - updated
+ *    abondala  10/05/11 - introduced ant task for all string encryption
+ *                         functions which will be used by all the installers
+ *    tzgarba   09/26/11 - Updated to use the secure record task to prevent
+ *                         logging of passwords.
+ *    mszekely  09/26/11 - BUG 13009467: restore rsa passwords to wallet
+ *    drbarber  09/14/11 - Bug 12968271: POS: Unable to build db from Installer
+ *    drbarber  08/16/11 - BUG 12810353: POS Client - New HP Printer Drivers to
+ *                         support the MICR need to be prompted for in the
+ *                         installer.
+ *    drbarber  08/04/11 - BugDB: 12703340: POS Red Stack Installer prompts for
+ *                         jpos.xml location but does not add it to classpath
+ *    drbarber  07/21/11 - BUG 12573758: Removing RSA client libraries
+ *    cgreene   06/07/11 - update to first pass of removing pospal project
+ *    abondala  05/20/11 - fix the classpath and replaced the datafiler
+ *                         property with the dataencrypt.classpath
+ *    abondala  04/11/11 - XbranchMerge abondala_bug11827952-salting_passwords
+ *                         from main
+ *    abondala  03/27/11 - merging with trunk
+ *    rsnayak   03/14/11 - deployment failure fix
+ *    abondala  02/24/11 - create a seperate jar for independent util classes
+ *                         that can be deployed outside the ear in the
+ *                         application server.
+ *    sgu       02/10/11 - upgrade jpos version
+ *    hyin      01/25/11 - modification per review comment
+ *    hyin      01/25/11 - add support for digitalpersona fingerprint device
+ *    sgu       12/03/10 - check in after merge
+ *    sgu       12/03/10 - remove the installer screen to prompt for jms ssl
+ *                         keystore password
+ *    blarsen   12/02/10 - EnterpriseDT was being uncommented for STANDALONE
+ *                         mode. Moved code responsible for this issue and
+ *                         other code for cleanup purposes from
+ *                         biuld-properties into build-conditions.
+ *    blarsen   11/30/10 - Moved some condition properties into
+ *                         build-conditions and added dependency on that
+ *                         target. Fixed problem where RM JMS port/queue were
+ *                         not being set properly in StoreServerConduit.xml.
+ *    ohorne    11/11/10 - Siebel install properties cleanup
+ *    blarsen   11/05/10 - Added installer.product.shared.config.dir property.
+ *    mszekely  10/28/10 - BUG 10215052: POS installer failing in GUI mode on
+ *                         red stack with IBM devices selected.
+ *    cgreene   11/02/10 - refactor some classes between common and utility
+ *    abondala  09/13/10 - merge update
+ *    abondala  09/13/10 - Introduced a new screen that will prompt for all the
+ *                         applications that can be integrated.
+ *    asinton   09/10/10 - Add IBM libraries for classpath
+ *    asinton   08/19/10 - encrypting the install phrase
+ *    mszekely  08/19/10 - BUG 10030842: Using trimmed wl property for
+ *                         classpath
+ *    djenning  08/11/10 - updated ant.install.properties
+ *    djenning  08/11/10 - use wallet for posfoundation keystore/truststore
+ *                         passwords
+ *    djenning  08/03/10 - put truststore password in wallet
+ *    abondala  07/21/10 - fix RM - POS integration errors
+ *    abondala  07/14/10 - fixed the encryption of siebel admin password in
+ *                         ant.installer.proeprties
+ *    abondala  07/09/10 - updated
+ *    abondala  07/08/10 - use CSF framework for offlinedb passwords
+ *    abhayg    06/29/10 - Fix for Network Receipt Printing issue
+ *    mszekely  06/16/10 - BUG 9720757: Adding 6 additional languages
+ *    asinton   06/02/10 - put jgl3.1.0.jar back into installer
+ *    abondala  05/27/10 - Siebel installer updates
+ *    abondala  05/27/10 - Installer changes for Siebel integration
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    djenning  05/20/10 - weblogic integration
+ *    cgreene   05/13/10 - convert jgl libraries to java.util
+ *    cgreene   05/10/10 - remove 360 form common folder
+ *    abondala  05/03/10 - XbranchMerge abondala_tech_78 from
+ *                         st_rgbustores_techissueseatel_generic_branch
+ *    asinton   04/26/10 - XbranchMerge asinton_remove-empty-dirs-full from
+ *                         st_rgbustores_techissueseatel_generic_branch
+ *    cgreene   04/15/10 - corrected common.jar reference
+ *    rsnayak   04/08/10 - Added target in build-properties.xml to write the
+ *                         encrypted password
+ *    mszekely  04/05/10 - XbranchMerge mszekely_9533901-jms from
+ *                         rgbustores_13.2x_generic_branch
+ *    mszekely  04/02/10 - XbranchMerge mszekely_bug-9533901 from
+ *                         rgbustores_13.2x_generic_branch *    cgreene   04/15/10 - corrected common.jar reference
+ *    abondala  04/14/10 - Updated
+ *    abondala  04/14/10 - updated webservices
+ *    abondala  04/14/10 - Updated
+ *    abondala  04/14/10 - updated webservices
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    mszekely  03/03/10 - BUG 8676849: Fix for RSA keystore newline issue
+ *    mchellap  02/16/10 - Fix derby user id/password encryption
+ *    abondala  01/30/10 - use commons-logging-1.1.1.jar in all applications to
+ *                         be consistent
+ *    asinton   01/25/10 - Installer change to prompt for Cherry Keyboard
+ *                         drivers when installing to HP platform.
+ *    djenning  01/14/10 - merge
+ *    djenning  01/12/10 - ssl + mq series topology change
+ *    abondala  01/02/10 - Update Header date
+ *    vikini    12/08/09 - saving Password in Wallet
+ *    cgreene   11/10/09 - switch pos installed -encrypted keys to -property
+ *    tzgarba   11/02/09 - Phase 2 of third party refactor. Refactored
+ *                         remaining libraries and removed 11 more unused
+ *                         libraries.
+ *    mchellap  09/25/09 - BUG#8932741 Enable RM Webservice authentication
+ *    mchellap  09/16/09 - Chagnes for new the CSF API
+ *    mchellap  09/03/09 - BUG 8848037 CSF Changes : Replaced encrypt and
+ *                         decrypy calls with saveCredential and
+ *                         retrieveCredential
+ *    asinton   05/08/09 - Re-order the Ingenico jars in the classpath.
+ *    mszekely  04/20/09 - BUG 8440800 classpaths for jpos and cpoi
+ *    abondala  04/18/09 - fix parameter distribution problem. With IBM jre,
+ *                         when the fork is set to true, java is failing to
+ *                         encrypt the property.
+ *    mszekely  12/17/08 - BUG 7646594 add gen.locales to pos installer
+ *    mszekely  12/11/08 - BUG 7544348 POS-RM installer changes
+ *    mszekely  12/09/08 - 7544348 POS to RM integration
+ *    mszekely  12/09/08 - 7544348 POS to RM integration
+ *    mszekely  11/12/08 - BUG 7555392 RSA for installers
+ *    mszekely  11/11/08 - BUG 7555392 RSA for installers
+ *
+ * ===========================================================================
+ */
+-->
+<project name="install-pos-properties" basedir=".">
+
+    <import file="build-common.xml"/>
+
+    <target name="init-properties" depends="init-conditions,init-properties-macros,init-install-properties,init-i18n-properties,remove-plaintext-passwords,echo-env,echo-input">
+        <!-- Locales properties can be moved to build-common.xml -->
+        <!-- Create supported_locales property -->
+        <property name="install.supported.locales" value="${install.en}${install.de}${install.fr}${install.es}${install.ja}${install.ko}${install.ru}${install.zh}${install.zh_TW}${install.pt}${install.it}${install.tr}${install.hu}${install.nl}${install.el}${install.pl}${install.sv}${install.hr}" />
+        <propertyregex property="install.supported.locales" input="${install.supported.locales}" regexp=",$" replace="" override="true"/>
+        <!-- Create gen.locales property -->
+        <property name="gen.locales" value="${install.de}${install.fr}${install.es}${install.ja}${install.ko}${install.ru}${install.zh}${install.zh_TW}${install.pt}${install.it}${install.tr}${install.hu}${install.nl}${install.el}${install.pl}${install.sv}${install.hr}" />
+        <propertyregex property="gen.locales" input="${gen.locales}" regexp=",$" replace="" override="true"/>
+    </target>
+
+    <target name="init-static-properties" depends="init-static-app,init-static-installer"/>
+
+    <target name="init-static-app">
+
+        <property name="app.name" value="pos"/>
+
+        <property name="app.version" value="13.0"/>
+
+        <property name="app.suite.name" value="OracleRetailStore"/>
+
+    </target>
+
+    <target name="init-static-installer">
+
+        <tstamp>
+            <format property="installer.time.now" pattern="yyyyMMddHHmm" locale="en" />
+        </tstamp>
+
+        <!-- Load environment variables -->
+        <property environment="env" />
+
+        <!-- Determine if we're running on a Unix or Windows platform -->
+        <condition property="installer.os.is-unix" value="true">
+            <os family="unix"/>
+        </condition>
+
+        <condition property="installer.os.is-windows" value="true">
+            <os family="windows"/>
+        </condition>
+
+        <condition property="installer.os.is-windows-xp" value="true">
+            <and>
+                <os family="windows"/>
+                <contains string="${os.name}" substring="xp" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <condition property="installer.os.is-windows-non-xp" value="true">
+            <and>
+                <os family="windows"/>
+                <not><contains string="${os.name}" substring="xp" casesensitive="false"/></not>
+            </and>
+        </condition>
+
+        <!-- OS-Specific Paths/Properties -->
+        <if>
+            <istrue value="${installer.os.is-unix}"/>
+            <then>
+                <!-- Unix Paths -->
+                <property name="installer.os.tmpdir" value="/tmp"/>
+                <property name="installer.os.hostname" value="${env.HOSTNAME}"/>
+                <property name="installer.os.script.ext" value="sh"/>
+                <property name="installer.pos.bin.fileset.exclude" value="*.bat"/>
+            </then>
+            <else>
+                <!-- Windows Paths -->
+                <property name="installer.os.tmpdir" value="C:/temp"/>
+                <property name="installer.os.hostname" value="${env.COMPUTERNAME}"/>
+                <property name="installer.os.script.ext" value="bat"/>
+                <property name="installer.pos.bin.fileset.exclude" value="*.sh"/>
+            </else>
+        </if>
+
+        <property name="installer.verbose" value="true"/>
+
+        <property name="installer.xml.newline-entity" value="&#xA;"/>
+
+        <!-- Temp dir within the installer tree  -->
+        <property name="installer.tmpdir" location="tmp" />
+
+        <!-- Temp file used to hash passwords -->
+        <property name="installer.tmp.password.file" value="${installer.tmpdir}/pwd.txt"/>
+
+        <!-- Location within the installer tree used for staging -->
+        <property name="installer.staging.dir" location="${installer.tmpdir}/staging" />
+
+        <!-- Location within the installer tree used for staging -->
+        <property name="installer.staging.pos.dir" location="${installer.staging.dir}/${app.name}" />
+
+        <property name="installer.staging.pos.config.dir" value="${installer.staging.pos.dir}/config"/>
+
+        <property name="installer.staging.common.dir" value="${installer.staging.dir}/common"/>
+
+        <property name="installer.staging.common.db.dir" value="${installer.staging.dir}/common/db"/>
+
+        <property name="installer.staging.log.dir" value="${input.install.directory}"/>
+
+        <property name="installer.staging.pos.receipts.printing.ipp.dir" value="${installer.staging.pos.dir}/receipts/printing/ipp"/>
+
+        <!-- directory where the application files for this product are located relative to the installer tree   -->
+        <property name="installer.product.dir" value="product"/>
+
+        <!-- where the POS-specific files are located -->
+        <property name="installer.product.pos.dir" value="${installer.product.dir}/${app.name}"/>
+
+        <!-- where the common files and product scripts are located -->
+        <if>
+            <istrue value="${install.is-server-install}"/>
+            <then>
+                <property name="installer.product.install.type" value="server"/>
+            </then>
+            <else>
+                <property name="installer.product.install.type" value="client"/>
+            </else>
+        </if>
+        <property name="installer.product.install.type.dir" value="${installer.product.dir}/${installer.product.install.type}"/>
+        <property name="installer.product.common.dir" value="${installer.product.install.type.dir}/common"/>
+        <property name="installer.product.bin.dir" value="${installer.product.install.type.dir}/bin"/>
+        <property name="installer.product.lib.dir" value="${installer.product.install.type.dir}/lib"/>
+        <property name="installer.product.shared.common.dir" value="${installer.product.dir}/shared/common"/>
+        <property name="installer.product.shared.bin.dir" value="${installer.product.dir}/shared/bin"/>
+        <property name="installer.product.shared.lib.dir" value="${installer.product.dir}/shared/lib"/>
+        <property name="installer.product.shared.config.dir" value="${installer.product.dir}/shared/config"/>
+
+        <!-- name of installer log file -->
+        <property name="installer.log.prefix" value="${app.name}-install"/>
+        <property name="installer.log.file" value="${installer.log.prefix}-${installer.time.now}.log"/>
+
+        <!-- Enable logging to a file unless otherwise specified -->
+        <if>
+            <or>
+                <not><isset property="installer.logging.enabled"/></not>
+                <istrue value="${installer.logging.enabled}"/>
+            </or>
+            <then>
+                <securerecord name="${installer.log.file}" loglevel="info" />
+            </then>
+        </if>
+
+
+        <!-- Directories that are commonly referenced in build.xml -->
+        <property name="install.deploy.pos.dir" value="${input.install.directory}/pos"/>
+        <property name="install.deploy.common.dir" value="${input.install.directory}/common"/>
+        <property name="install.deploy.common.db.dir" value="${input.install.directory}/common/db"/>
+        <property name="install.deploy.common.lib.dir" value="${input.install.directory}/common/lib"/>
+        <property name="install.deploy.common.db.sql.dir" value="${install.deploy.common.dir}/db/sql"/>
+
+
+        <!-- In antinstaller text mode, it is possible for the user to specify a different
+             directory than the one used for the RSA client libraries.  Therefore, an extra
+             check is needed to verify the correct directory is chosen. -->
+        <propertyregex property="installer.product.user.rsa.dir.temp1"
+             input="${input.keystore.rsa.jar1.check}"
+             regexp="(.+)(\\kmsclient.jar|/kmsclient.jar)"
+             select="\1"
+             defaultValue="${input.keystore.rsa.jar1.check}" />
+
+        <condition property="input.keystore.rsa.dir.mismatch">
+            <not>
+            <equals arg1="${installer.product.user.rsa.dir.temp1}" arg2="${input.keystore.rsa.jars.dir}"/>
+            </not>
+            </condition>
+        <if>
+            <isset property="input.keystore.rsa.dir.mismatch" />
+            <!-- directory location of RSA libraries user specified during UI installation -->
+            <then>
+                <property name="installer.product.user.rsa.dir" value="${installer.product.user.rsa.dir.temp1}"/>
+            </then>
+            <else>
+                <property name="installer.product.user.rsa.dir" value="${input.keystore.rsa.jars.dir}"/>
+            </else>
+        </if>
+
+        <!-- Normalize the paths -->
+        <normalize-path property="install.deploy.pos.dir"/>
+        <normalize-path property="install.deploy.common.dir"/>
+        <normalize-path property="install.deploy.common.db.dir"/>
+        <normalize-path property="install.deploy.common.db.sql.dir"/>
+        <normalize-path property="installer.product.user.rsa.dir"/>
+
+        <property name="installer.staging.pos.bin.dir" value="${installer.staging.pos.dir}/bin"/>
+        <property name="installer.staging.pos.config.conduit.dir" value="${installer.staging.pos.config.dir}/conduit"/>
+        <property name="installer.staging.pos.config.manager.dir" value="${installer.staging.pos.config.dir}/manager"/>
+        <property name="installer.staging.pos.config.technician.dir" value="${installer.staging.pos.config.dir}/technician"/>
+        <property name="installer.staging.pos.config.context.dir" value="${installer.staging.pos.config.dir}/context"/>
+
+        <!-- If we are using RSA convert keystore file path to use Unix style directory separators -->
+        <if>
+            <isset property="input.rsa.server.keystore.file"/>
+                <then>
+                    <path id="input.rsa.server.keystore.file.path">
+                        <pathelement path="${input.rsa.server.keystore.file}"/>
+                    </path>
+                    <pathconvert refid="input.rsa.server.keystore.file.path" property="install.rsa.server.keystore.file" targetos="unix"/>
+                </then>
+        </if>
+
+    </target>
+
+
+    <target name="init-install-properties" depends="trim-input-properties,init-static-properties,init-install-properties-passwords,init-install-properties-db,init-install-properties-keystore,init-install-properties-jposlib,init-install-properties-hpenv,init-install-properties-ibmenv,init-install-properties-jposxml,init-install-properties-dpfingerprint,init-install-properties-pos-rm"/>
+
+    <target name="init-install-properties-pos-rm">
+        <if>
+            <equals arg1="${input.enable.rm}" arg2="true" />
+            <then>
+            <!--  if rm is enabled -->
+                <property name="use.oracle.retail.return.management" value="Y" />
+                <property name="use.oracle.retail.return.management.hidden" value="N" />
+                <property name="use.rm.tenders" value="Y" />
+                <property name="use.rm.tenders.hidden" value="N" />
+            </then>
+         </if>
+
+         <!--  if RM enabled and send final result by webservice then set finalResultSendByJMS false -->
+         <if>
+             <equals arg1="${input.message.rm}" arg2="JMS" />
+             <then>
+                 <property name="final.result.send.by.jms" value="true" />
+             </then>
+             <else>
+                 <property name="final.result.send.by.jms" value="false"/>
+                 <property name="return.result.queue" value="" />
+             </else>
+         </if>
+
+         <if>
+            <istrue value="${install.is-rm-wl-install}" />
+             <then>
+                 <property name="return.result.queue" value="jms/FinalResult" />
+             </then>
+         </if>
+         <if>
+             <istrue value="${install.is-rm-mq-install}" />
+             <then>
+                 <property name="return.result.queue" value="FINALRESULT" />
+             </then>
+         </if>
+
+
+         <if>
+            <equals arg1="${input.enable.rm}" arg2="false" />
+            <then>
+            <!--  if POS-RM is disabled -->
+                <property name="use.oracle.retail.return.management" value="N" />
+                <property name="use.oracle.retail.return.management.hidden" value="Y" />
+                <property name="form.of.id.required.for.return" value="None" />
+                <property name="use.rm.tenders" value="N" />
+                <property name="use.rm.tenders.hidden" value="Y" />
+            </then>
+        </if>
+
+    </target>
+
+    <target name="init-install-properties-keystore">
+
+        <!-- Construct a property that contains the classpath for the keystore jars -->
+
+        <property name="install.keystore.classpath-property" value="${input.keystore.jars.dir}/${input.keystore.jar1}"/>
+        <if>
+            <not><equals arg1="${input.keystore.jar2}" arg2=""/></not>
+            <then>
+                <append-to-list property="install.keystore.classpath-property" delim="${path.separator}" value="${input.keystore.jars.dir}/${input.keystore.jar2}"/>
+            </then>
+        </if>
+        <if>
+            <not><equals arg1="${input.keystore.jar3}" arg2=""/></not>
+            <then>
+                <append-to-list property="install.keystore.classpath-property" delim="${path.separator}" value="${input.keystore.jars.dir}/${input.keystore.jar3}"/>
+            </then>
+        </if>
+        <if>
+            <not><equals arg1="${input.keystore.jar4}" arg2=""/></not>
+            <then>
+                <append-to-list property="install.keystore.classpath-property" delim="${path.separator}" value="${input.keystore.jars.dir}/${input.keystore.jar4}"/>
+            </then>
+        </if>
+        <if>
+            <not><equals arg1="${input.keystore.jar5}" arg2=""/></not>
+            <then>
+                <append-to-list property="install.keystore.classpath-property" delim="${path.separator}" value="${input.keystore.jars.dir}/${input.keystore.jar5}"/>
+            </then>
+        </if>
+
+        <!-- Convert the property into a real ant classpath -->
+        <path id="install.keystore.classpath">
+            <pathelement path="${install.keystore.classpath-property}"/>
+         </path>
+
+        <!-- Create windows and unix versions of the classpaths that can referenced as properties -->
+        <pathconvert refid="install.keystore.classpath" property="install.keystore.classpath-property.windows" targetos="windows"/>
+        <pathconvert refid="install.keystore.classpath" property="install.keystore.classpath-property.unix" targetos="unix"/>
+
+
+        <!-- escpae the keystore locations -->
+        <propertyregex property="escaped.ssl.keystore.location"
+             input="${input.ssl.keystore.location}"
+             regexp="\\" replace="/" global="true"
+             defaultValue="${input.ssl.keystore.location}" />
+        <propertyregex property="escaped.ssl.truststore.location"
+             input="${input.ssl.truststore.location}"
+             regexp="\\" replace="/" global="true"
+             defaultValue="${input.ssl.truststore.location}" />
+    </target>
+
+    <!-- Construct a property that contains the classpath for jpos jars -->
+    <target name="init-install-properties-jposlib">
+
+        <property name="install.jpos.classpath-property"
+            value="${input.jpos.jpos113}"/>
+
+        <!-- Convert the property into a real ant classpath -->
+        <path id="install.jpos.classpath">
+            <pathelement path="${install.jpos.classpath-property}"/>
+        </path>
+
+        <!-- Create windows and unix versions of the classpaths that can referenced as properties -->
+        <pathconvert refid="install.jpos.classpath" property="install.jpos.classpath-property.windows" targetos="windows"/>
+
+        <pathconvert refid="install.jpos.classpath" property="install.jpos.classpath-property.unix" targetos="unix"/>
+
+    </target>
+
+    <!-- Construct a property that contains the classpath for the hp environment jars -->
+    <target name="init-install-properties-hpenv">
+
+        <condition property="install.is-hp-env">
+            <equals arg1="${input.install.device.platform}" arg2="HP" />
+        </condition>
+
+        <condition property="install.is-hpus-env">
+            <equals arg1="${input.install.device.platform}" arg2="HPUS" />
+        </condition>
+
+        <if>
+            <or>
+                <istrue value="${install.is-hp-env}"/>
+                <istrue value="${install.is-hpus-env}"/>
+            </or>
+            <then>
+                <if>
+                    <istrue value="${installer.os.is-unix}"/>
+                    <then>
+                         <property name="install.hpenv.classpath-property" value="${input.hp.cherrykeyboard}${path.separator}${input.jpos.tpgjavapos}"/>
+                    </then>
+                    <else>
+                         <property name="install.hpenv.classpath-property" value="${input.hp.cherrykeyboard}${path.separator}${input.jpos.tpgjavapos}${path.separator}${input.hpjpos.jsr80}${path.separator}${input.hpjpos.jsr80_ri}${path.separator}${input.hpjpos.jsr80_ri_windows}"/>
+                    </else>
+                </if>
+            </then>
+            <else>
+                <property name="install.hpenv.classpath-property" value=""/>
+            </else>
+        </if>
+
+    </target>
+
+    <!-- Construct a property that contains the classpath for the ibm environment jars -->
+    <target name="init-install-properties-ibmenv">
+
+        <condition property="install.is-ibm-env">
+            <equals arg1="${input.install.device.platform}" arg2="IBM" />
+        </condition>
+
+        <condition property="install.is-ibmus-env">
+            <equals arg1="${input.install.device.platform}" arg2="IBMUS" />
+        </condition>
+
+        <if>
+            <or>
+                <istrue value="${install.is-ibm-env}"/>
+                <istrue value="${install.is-ibmus-env}"/>
+            </or>
+            <then>
+                <if>
+                    <istrue value="${installer.os.is-unix}"/>
+                    <then>
+                        <property name="install.ibmenv.classpath-property" value="${input.ibmjpos.javax-usb_etc.dir}${path.separator}${input.ibmjpos.dir}${path.separator}${input.ibmjpos_etc.dir}${path.separator}${input.ibmjpos.jsr80}${path.separator}${input.ibmjpos.jsr80_ri}${path.separator}${input.ibmjpos.jsr80_linux}${path.separator}${input.ibmjpos.IBMTouchMon}${path.separator}${input.ibmjpos.IBMTouchUtil}${path.separator}${input.ibmjpos.ibmjavapos}${path.separator}${input.ibmjpos.ibmjpos}${path.separator}${input.ibmjpos.ibmuposst}${path.separator}${input.ibmjpos.jpos1122}${path.separator}${input.ibmjpos.jpos_sysmgmt}${path.separator}${input.ibmjpos.xercesImpl}${path.separator}${input.ibmjpos.xmlParserAPIs}"/>
+                    </then>
+                    <else>
+                        <property name="install.ibmenv.classpath-property" value="${input.ibmjpos.config.dir}${path.separator}${input.ibmjpos.dir}${path.separator}${input.ibmjpos.ibmjavapos}${path.separator}${input.ibmjpos.jpos1122}${path.separator}${input.ibmjpos.jsr80}${path.separator}${input.ibmjpos.jsr80_ri}${path.separator}${input.ibmjpos.jsr80_ri_windows}${path.separator}${input.ibmjpos.jpos_sysmgmt}${path.separator}${input.ibmjpos.ibmjpos}${path.separator}${input.ibmjpos.ibmuposst}${path.separator}${input.ibmjpos.xmlParserAPIs}${path.separator}${input.ibmjpos.xercesImpl}${path.separator}${input.ibmjpos.comm}"/>
+                    </else>
+                </if>
+            </then>
+            <else>
+                <property name="install.ibmenv.classpath-property" value=""/>
+            </else>
+        </if>
+    </target>
+
+    <target name="init-install-properties-jposxml">
+
+        <!-- Construct a property that contains the classpath for the jpos.xml inputted by user-->
+
+        <property name="install.jposxml.classpath-property"
+            value="${input.jpos.xml.dir}"/>
+
+        <!-- Convert the property into a real ant classpath -->
+        <path id="install.jposxml.classpath">
+            <pathelement path="${install.jposxml.classpath-property}"/>
+        </path>
+
+        <!-- Create windows and unix versions of the classpaths that can referenced as properties -->
+        <pathconvert refid="install.jposxml.classpath" property="install.jposxml.classpath-property.windows" targetos="windows"/>
+
+        <pathconvert refid="install.jposxml.classpath" property="install.jposxml.classpath-property.unix" targetos="unix"/>
+
+    </target>
+
+    <!-- add this for digitalPersona figerprint device -->
+    <target name="init-install-properties-dpfingerprint">
+        <condition property="install.is-digitalpersona-fingerprint-enabled">
+            <equals arg1="${input.client.device.dpfingerprint}" arg2="true" />
+        </condition>
+
+        <!-- add this for digitalPersona figerprint device -->
+        <if>
+            <istrue value="${install.is-digitalpersona-fingerprint-enabled}"/>
+            <then>
+                <property name="install.dpfingerprint.classpath-property"
+                    value="${input.dpfingerprint.dpjavapos}${path.separator}${input.dpfingerprint.jpos}${path.separator}${input.dpfingerprint.dpenrollment}${path.separator}${input.dpfingerprint.dpverification}${path.separator}${input.dpfingerprint.dpotjni}${path.separator}"/>
+            </then>
+        </if>
+
+        <!-- Convert the property into a real ant classpath -->
+        <path id="install.dpfingerprint.classpath">
+            <pathelement path="${install.dpfingerprint.classpath-property}"/>
+        </path>
+
+        <!-- Create windows and unix versions of the classpaths that can referenced as properties -->
+        <pathconvert refid="install.dpfingerprint.classpath" property="install.dpfingerprint.classpath-property.windows" targetos="windows"/>
+
+        <pathconvert refid="install.dpfingerprint.classpath" property="install.dpfingerprint.classpath-property.unix" targetos="unix"/>
+
+    </target>
+
+    <target name="init-install-properties-db">
+
+        <!-- classpath for StringEncryptionUtility in common/lib/oracle.stores.secure.utility.jar; used in db.properties -->
+        <path id="install.db.encrypt.classpath">
+            <pathelement location="${install.deploy.common.lib.dir}/oracle.stores.utility.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/oracle.stores.secure.utility.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/oracle.stores.encryptionclient.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/log4j-1.2.16.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/commons-codec-1.3.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jacc-spi.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-api.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-common.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-ee.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-internal.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-manifest.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-mbeans.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-unsupported-api.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-upgrade.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jps-wls.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/jsr173_1.0_api.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/oraclepki.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/osdt_cert.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/osdt_core.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/retail-public-security-api.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/commons-logging-1.1.1.jar"/>
+            <pathelement location="${install.deploy.common.lib.dir}/ext/sjsxp.jar"/>
+        </path>
+
+        <!-- Create classpath for StringEncryptionUtility that can referenced as a property -->
+        <pathconvert refid="install.db.encrypt.classpath" property="install.db.encrypt.classpath-property" dirsep="/"/>
+
+        <!-- conditions required for initializing the DB properties -->
+
+        <condition property="install.is-secure-jdbc-enabled" >
+            <istrue value="${input.secure.jdbc}" />
+        </condition>
+
+        <condition property="install.is-secure-rmi-enabled" >
+            <or>
+                <istrue value="${input.client.secure.rmi}" />
+                <istrue value="${input.server.secure.rmi}" />
+            </or>
+        </condition>
+
+        <condition property="install.is-db-oracle">
+            <and>
+                <contains string="${input.db.type}" substring="oracle" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-db2">
+            <and>
+                <contains string="${input.db.type}" substring="ibm" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-oracle-windows">
+            <and>
+                <contains string="${input.db.type}" substring="oracle" casesensitive="false"/>
+                <os family="windows"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-oracle-unix">
+            <and>
+                <contains string="${input.db.type}" substring="oracle" casesensitive="false"/>
+                <os family="unix"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-db2">
+            <and>
+                <contains string="${input.db.type}" substring="ibm" casesensitive="false"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-db2-windows">
+            <and>
+                <contains string="${input.db.type}" substring="ibm" casesensitive="false"/>
+                <os family="windows"/>
+            </and>
+        </condition>
+
+        <condition property="install.is-db-db2-unix">
+            <and>
+                <contains string="${input.db.type}" substring="ibm" casesensitive="false"/>
+                <os family="unix"/>
+            </and>
+        </condition>
+
+        <if>
+            <istrue value="${install.is-db-oracle}"/>
+            <then>
+                <property name="install.db.version" value="oracle10g"/>
+                <property name="install.db.exception.map" value="classpath://oracle/retail/stores/domain/arts/oracleexceptionmap.xml"/>
+                <property name="install.db.helper.class" value="oracle.retail.stores.domain.arts.jdbchelper.OracleHelper"/>
+                <property name="install.db.dir" value="${input.db.jdbc.driver.dir}"/>
+                <property name="install.db.bin.dir" value="${input.db.jdbc.driver.dir}/bin"/>
+                <if>
+                    <isset property="install.is-secure-jdbc-enabled" />
+                    <!--  parse non secure URL build secure url -->
+                    <then>
+
+                      <propertyregex property="install.datasource.host"
+                        input="${input.db.jdbc.url}"
+                        regexp=".*@(.*):[0-9]{4}"
+                        select="\1" />
+
+                      <propertyregex property="install.datasource.service"
+                        input="${input.db.jdbc.url}"
+                        regexp=".*:(\w+)$"
+                        select="\1" />
+                      <property name= "install.db.jdbc.url.secure" value="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=${install.datasource.host})(PORT=${input.datasource.port.secure}))(CONNECT_DATA=(SERVICE_NAME=${install.datasource.service})))" />
+
+                    </then>
+                    <else>
+                    <!--  use use user entered URL as the secure URL -->
+                        <property name="install.db.jdbc.url.secure" value="${input.db.jdbc.url}" />
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <if>
+            <istrue value="${install.is-db-db2}"/>
+            <then>
+                <property name="install.db.version" value="db2"/>
+                <property name="install.db.exception.map" value="classpath://oracle/retail/stores/domain/arts/db2exceptionmap.xml"/>
+                <property name="install.db.helper.class" value="oracle.retail.stores.domain.arts.jdbchelper.Db2Helper"/>
+                <property name="install.db.dir" value="${input.db.jdbc.driver.dir}"/>
+                <property name="install.db.bin.dir" value="${install.db.dir}/bin"/>
+
+                <if>
+                    <isset property="install.is-secure-jdbc-enabled" />
+                    <!--  parse non secure URL build secure url currently a stub-->
+                    <then>
+                        <!-- swap out port for secure port and append ssl string to url -->
+                        <propertyregex property="datasource.url.tmp"
+                             input="${input.db.jdbc.url}"
+                             regexp=":([0-9]{4}|[0-9]{5})\/"
+                             replace=":${input.datasource.port.secure}\/"/>
+                        <propertyregex property="install.db.jdbc.url.secure"
+                             input="${datasource.url.tmp}"
+                             regexp="$"
+                             replace=":sslConnection=true;"/>
+                    </then>
+                    <else>
+                    <!--  use use user entered URL as the secure URL -->
+                        <property name="install.db.jdbc.url.secure" value="${input.db.jdbc.url}" />
+                    </else>
+                </if>
+
+            </then>
+        </if>
+
+        <!-- Set defaults if there is no database type (i.e. this is a client install) -->
+        <if>
+            <and>
+                <isset property="install.is-client-install"/>
+            </and>
+            <then>
+                <property name="install.db.version" value=""/>
+                <property name="install.db.exception.map" value=""/>
+                <property name="install.db.helper.class" value=""/>
+                <property name="install.db.dir" value=""/>
+                <property name="install.db.bin.dir" value=""/>
+            </then>
+        </if>
+
+        <property name="install.deploy.common.db.scripts.dir" value="${install.deploy.common.dir}/db/${input.db.type}"/>
+
+        <!-- Normalize the paths for consistency -->
+
+        <normalize-path property="install.deploy.common.db.scripts.dir"/>
+
+        <if>
+            <isset property="install.db.dir"/>
+            <then>
+                <normalize-path property="install.db.dir"/>
+                <normalize-path property="install.db.bin.dir"/>
+                <normalize-path property="input.db.jdbc.driver.dir"/>
+            </then>
+        </if>
+
+    </target>
+
+    <target name="init-install-properties-passwords" depends="init-install-properties-passwords-client,init-install-properties-passwords-server,init-install-properties-passwords-common"/>
+
+   <target  name="init-install-properties-passwords-common">
+
+        <if>
+           <or>
+            <equals arg1="${input.server.secure.rmi}" arg2="true" />
+            <equals arg1="${input.jms.ssl.level}" arg2="US" />
+            <equals arg1="${input.jms.ssl.level}" arg2="EXPORT" />
+            <equals arg1="${input.keystore.provider}" arg2="RSA" />
+            <equals arg1="${input.tender.authorization.pincomm.sslEnabled}" arg2="true" />
+           </or>
+           <then>
+               <if>
+                   <isset property="input.ssl.keystore.password"/>
+                   <then>
+                   <!-- make rsa client keystore password the same as ssl keystore password -->
+                       <property name="input.rsa.client.keystore.password" value="${input.ssl.keystore.password}"/>
+                       <saveCredential userNameAlias="SSLKeyStore" userName="SSLKeyStore" password="${input.ssl.keystore.password}" property="input.ssl.keystore.password-property"/>
+                   </then>
+                   <else>
+                       <retrieveCredential text="SSLKeyStore" property="input.ssl.keystore.password_temp"/>
+                       <condition property="ssl.keystore.password_exists">
+                           <and>
+                               <length string="${input.ssl.keystore.password_temp}" trim="true" when="greater" length="0"/>
+                           </and>
+                       </condition>
+                      <if>
+                       <isset property="ssl.keystore.password_exists"/>
+                       <then>
+                           <property name="input.ssl.keystore.password" value="${input.ssl.keystore.password_temp}"/>
+                           <property name="input.ssl.keystore.password-property" value="SSLKeyStore"/>
+                       </then>
+                      </if>
+                   </else>
+               </if>
+           </then>
+        </if>
+
+        <if>
+            <or>
+                <equals arg1="${input.possiebel.protocol}" arg2="https" />
+                <equals arg1="${input.rmpos.protocol}" arg2="https" />
+                <equals arg1="${input.posco.protocol}" arg2="https" />
+                <equals arg1="${input.jms.ssl.level}" arg2="US" />
+                <equals arg1="${input.jms.ssl.level}" arg2="EXPORT" />
+                <equals arg1="${needs.jdbc.keystore}" arg2="true" />
+                <equals arg1="${input.server.wl.secure.bo}" arg2="true" />
+                <equals arg1="${input.client.secure.rmi}" arg2="true" />
+                <equals arg1="${input.client.wl.secure.bo}" arg2="true" />
+                <equals arg1="${input.tender.authorization.pincomm.sslEnabled}" arg2="true" />
+            </or>
+            <then>
+               <if>
+                   <isset property="input.ssl.truststore.password"/>
+                   <then>
+                       <saveCredential userNameAlias="SSLTrustStore" userName="SSLTrustStore" password="${input.ssl.truststore.password}" property="input.ssl.truststore.password-property"/>
+                   </then>
+                   <else>
+                       <retrieveCredential text="SSLTrustStore" property="input.ssl.truststore.password_temp"/>
+                       <condition property="ssl.truststore.password_exists">
+                           <and>
+                               <length string="${input.ssl.truststore.password_temp}" trim="true" when="greater" length="0"/>
+                           </and>
+                       </condition>
+                       <if>
+                       <isset property="ssl.truststore.password_exists"/>
+                           <then>
+                               <property name="input.ssl.truststore.password" value="${input.ssl.truststore.password_temp}"/>
+                               <property name="input.ssl.truststore.password-property" value="SSLTrustStore"/>
+                           </then>
+                       </if>
+                   </else>
+               </if>
+            </then>
+        </if>
+
+        <if>
+            <!-- Save or retrieve RSA credentials only if the user has specified RSA -->
+            <equals arg1="${input.keystore.provider.internal}" arg2="RSA" casesensitive="false"/>
+            <then>
+                <if>
+                    <isset property="input.rsa.client.keystore.password"/>
+                    <then>
+                        <saveCredential userNameAlias="keyStoreClientPassword" userName="keyStoreClientPassword" password="${input.rsa.client.keystore.password}" property="install.rsa.client.keystore.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="keyStoreClientPassword" property="input.rsa.client.keystore.password"/>
+                        <property name="install.rsa.client.keystore.password-property" value="keyStoreClientPassword"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <if>
+           <equals arg1="${input.keystore.provider}" arg2="RSA" casesensitive="false"/>
+           <then>
+               <if>
+                   <isset property="input.rsa.cache.keystore.password"/>
+                   <then>
+                       <saveCredential userNameAlias="keyStoreCachePassword" userName="keyStoreCachePassword" password="${input.rsa.cache.keystore.password}" property="install.rsa.cache.keystore.password-property"/>
+                   </then>
+                   <else>
+                       <retrieveCredential text="keyStoreCachePassword" property="input.rsa.cache.keystore.password"/>
+                       <property name="install.rsa.cache.keystore.password-property" value="keyStoreCachePassword"/>
+                   </else>
+               </if>
+           </then>
+        </if>
+
+        <!-- Update application.properties and replace plain text derby database password -->
+        <property file="${installer.staging.pos.config.dir}/application.properties" />
+        <property name="derby.plaintext.password" value="${password}" />
+        <saveCredential userNameAlias="derbyUser" userName="derbyUser" password="${derby.plaintext.password}" property="install.derby.password-property"/>
+
+        <if>
+            <or>
+              <equals arg1="${input.keystore.provider.internal}" arg2="SunJCE" />
+              <equals arg1="${input.keystore.provider.internal}" arg2="IBMJCE" />
+            </or>
+            <then>
+                <if>
+                    <isset property="input.keystore.install.phrase"/>
+                    <then>
+                        <saveCredential userNameAlias="installPhrase" userName="installPhrase" password="${input.keystore.install.phrase}" property="install.keystore.install.phrase-property"/>
+                    </then>
+                </if>
+            </then>
+        </if>
+
+   </target>
+
+    <target if="install.is-client-install" name="init-install-properties-passwords-client">
+
+        <!-- If the user specified a plaintext BO admin password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties already has an encrypted password -->
+        <!-- Bug 10215052: Commenting out unneeded code -->
+         <!-- if>
+            <not>
+                <equals arg1="${input.appserver.type}" arg2="STANDALONE" casesensitive="false"/>
+            </not>
+            <then>
+                <if>
+                   <isset property="input.bo.admin.password"/>
+                   <then>
+                       <saveCredential userNameAlias="boAdmin" userName="input.bo.admin.username" password="${input.bo.admin.password}" property="install.bo.admin.password-property"/>
+                   </then>
+                   <else>
+                       <retrieveCredential text="${input.bo.admin.password-property}" property="input.bo.admin.password"/>
+                       <property name="install.bo.admin.password-property" value="${input.bo.admin.password-property}"/>
+                   </else>
+                </if>
+            </then>
+        </if -->
+
+       <!-- Prompt for jms password if CLIENT install and WAS or (WL and input.client.wl.secure.bo = true -->
+         <if>
+           <and>
+               <equals arg1="${input.install.type}" arg2="CLIENT" />
+                 <or>
+                   <and>
+                    <equals arg1="${input.appserver.type}" arg2="WL" />
+                    <equals arg1="${input.client.wl.secure.bo}" arg2="true" />
+                  </and>
+                   <equals arg1="${input.appserver.type}" arg2="WAS" />
+                  </or>
+           </and>
+            <then>
+                <if>
+                    <isset property="input.jms.password"/>
+                    <then>
+                        <saveCredential userNameAlias="jmsUser" userName="input.jms.username" password="${input.jms.password}" property="install.jms.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="jmsUser" property="input.jms.password_temp"/>
+                        <condition property="jms.password_exists">
+                            <and>
+                                <length string="${input.jms.password_temp}" trim="true" when="greater" length="0"/>
+                            </and>
+                        </condition>
+                        <if>
+                            <isset property="jms.password_exists"/>
+                            <then>
+                                <property name="input.jms.password" value="${input.jms.password_temp}"/>
+                                <property name="install.jms.password-property" value="jmsUser"/>
+                            </then>
+                        </if>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <saveCredential userNameAlias="offlineDerbyUser" userName="input.derby.admin.username" password="pos" property="install.derby.admin.password-property"/>
+
+        <!-- Servebase PC-Eft password. -->
+        <if>
+            <and>
+                <equals arg1="${input.install.type}" arg2="CLIENT" />
+                <equals arg1="${input.tender.authorization.type}" arg2="SERVEBASE" casesensitive="false"/>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.tender.authorization.servebase.password"/>
+                    <then>
+                        <saveCredential userNameAlias="servebasePceftUser" userName="input.tender.authorization.servebase.username" password="${input.tender.authorization.servebase.password}" property="install.tender.authorization.servebase.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="servebasePceftUser" property="input.tender.authorization.servebase.password"/>
+                        <property name="install.tender.authorization.servebase.password-property" value="servebasePceftUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+    </target>
+
+    <target if="install.is-server-install" name="init-install-properties-passwords-server">
+
+        <!-- If the user specified a plaintext administrator password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties has an encrypted password -->
+        <if>
+            <isset property="input.app.admin.password"/>
+            <then>
+                <saveCredential userNameAlias="adminUser" userName="input.app.admin.username" password="${input.app.admin.password}" property="install.app.admin.password-property"/>
+            </then>
+            <else>
+                <retrieveCredential text="adminUser" property="input.app.admin.password"/>
+                <property name="install.app.admin.password-property" value="adminUser"/>
+            </else>
+        </if>
+
+
+        <!-- If the user specified a plaintext DB password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties already has an encrypted password -->
+        <if>
+            <isset property="input.db.password"/>
+            <then>
+                <saveCredential userNameAlias="dataSourceUser" userName="input.db.username" password="${input.db.password}" property="install.db.password-alias"/>
+            </then>
+            <else>
+                <retrieveCredential text="dataSourceUser" property="input.db.password"/>
+                <property name="install.db.password-alias" value="dataSourceUser" />
+            </else>
+        </if>
+
+
+        <!-- If the user specified a plaintext DB owner password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties already has an encrypted password -->
+        <if>
+            <isset property="input.db.owner.password"/>
+            <then>
+                <saveCredential userNameAlias="schemaUser" userName="input.db.owner.username" password="${input.db.owner.password}" property="install.db.owner.password-property"/>
+            </then>
+            <else>
+                <retrieveCredential text="schemaUser" property="input.db.owner.password"/>
+                <property name="install.db.owner.password-property" value="schemaUser"/>
+            </else>
+        </if>
+
+        <!-- Sim Web Service Password -->
+        <if>
+            <equals arg1="${input.is.ws.passwd.enabled}" arg2="true" />
+            <then>
+                <if>
+                    <isset property="input.PSI.webservice.passwd"/>
+                    <then>
+                        <saveCredential userNameAlias="simWSUser" userName="input.PSI.webservice.uid" password="${input.PSI.webservice.passwd}" property="input.PSI.webservice.passwd-property"/>
+                    </then>
+                        <else>
+                        <retrieveCredential text="simWSUser" property="input.PSI.webservice.passwd"/>
+                        <property name="input.PSI.webservice.passwd-property" value="simWSUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <!-- POS LAT Webservice Password -->
+        <if>
+            <equals arg1="${input.enable.lat.integration}" arg2="true" />
+            <then>
+                 <if>
+                    <isset property="input.LAT.webservice.passwd"/>
+                    <then>
+                        <saveCredential userNameAlias="latWSUser" userName="input.LAT.webservice.uid" password="${input.LAT.webservice.passwd}" property="input.LAT.webservice.passwd-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="latWSUser" property="input.LAT.webservice.passwd"/>
+                         <property name="input.LAT.webservice.passwd-property" value="latWSUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <!-- Siebel configuration passwords -->
+        <if>
+            <equals arg1="${input.enable.siebel.integration}" arg2="true" />
+            <then>
+                <if>
+                    <isset property="input.siebel.myStorePassword"/>
+                    <then>
+                        <saveCredential userNameAlias="myStoreUser" userName="input.siebel.myStoreUser" password="${input.siebel.myStorePassword}" property="install.siebel.myStorePassword-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="myStoreUser" property="input.siebel.myStorePassword"/>
+                        <property name="install.siebel.myStorePassword-property" value="myStoreUser"/>
+                    </else>
+                </if>
+                <if>
+                    <isset property="input.siebel.globalPassword"/>
+                    <then>
+                        <saveCredential userNameAlias="globalUser" userName="input.siebel.globalUser" password="${input.siebel.globalPassword}" property="install.siebel.globalPassword-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="globalUser" property="input.siebel.globalPassword"/>
+                        <property name="install.siebel.globalPassword-property" value="globalUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+        <!-- End Siebel configuration passwords -->
+
+
+        <!-- If a scratchpad database is enabled AND the user specified a plaintext scratchpad DB password then encrypt the password -->
+        <!-- Otherwise, ant.install.properties already has an encrypted password -->
+        <if>
+            <and>
+                <equals arg1="${input.install.type}" arg2="SERVER"/>
+                <contains string="${input.transaction.retrieval.location}" substring="central" casesensitive="false"/>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.scratchpad.db.password"/>
+                    <then>
+                        <saveCredential userNameAlias="scratchpadSchemaUser" userName="input.scratchpad.db.username" password="${input.scratchpad.db.password}" property="install.scratchpad.db.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="scratchpadSchemaUser" property="input.scratchpad.db.password"/>
+                        <property name="install.scratchpad.db.password-property" value="scratchpadSchemaUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    	
+        <if>
+            <and>
+                <equals arg1="${input.install.type}" arg2="SERVER"/>
+            	<equals arg1="${input.enable.co.webservices}" arg2="true" casesensitive="false"/>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.posco.webservices.password"/>
+                    <then>
+                        <saveCredential userNameAlias="coWebserviceUser" userName="input.posco.webservices.username" password="${input.posco.webservices.password}" property="install.posco.webservices.password-property"/>
+                    </then>
+                </if>
+            </then>
+        </if>    	
+
+        <!-- If the server install is integrated, get the encrypted CO/BO passwords -->
+        <if>
+            <and>
+                <or>
+                    <equals arg1="${input.appserver.type}" arg2="WAS" casesensitive="false"/>
+                    <equals arg1="${input.appserver.type}" arg2="WL" casesensitive="false"/>
+                    <equals arg1="${input.appserver.type}" arg2="OAS" casesensitive="false"/>
+                </or>
+                <or>
+                    <equals arg1="${input.enable.co.webservices}" arg2="false" casesensitive="false"/>
+                    <equals arg1="${input.data.replication.jms.local.option}" arg2="false" casesensitive="false"/>
+                </or>
+            </and>
+            <then>
+                <!-- If the user specified a plaintext CO admin password, encrypt the password -->
+                <!-- Otherwise, ant.install.properties already has an encrypted password -->
+                <if>
+                    <isset property="input.co.admin.username"/>
+                    <then>
+                        <if>
+                            <isset property="input.co.admin.password"/>
+                            <then>
+                                <saveCredential userNameAlias="coAdminUser" userName="input.co.admin.username" password="${input.co.admin.password}" property="install.co.admin.password-property"/>
+                            </then>
+                            <else>
+                                <retrieveCredential text="coAdminUser" property="input.co.admin.password"/>
+                                <property name="install.co.admin.password-property" value="coAdminUser"/>
+                            </else>
+                        </if>
+                    </then>
+                </if>
+
+                <!-- If the user specified a plaintext BO admin password, encrypt the password -->
+                <!-- Otherwise, ant.install.properties already has an encrypted password -->
+                <if>
+                    <isset property="input.bo.admin.username"/>
+                    <then>
+                        <if>
+                            <isset property="input.bo.admin.password"/>
+                            <then>
+                                <saveCredential userNameAlias="boAdminUser" userName="input.bo.admin.username" password="${input.bo.admin.password}" property="install.bo.admin.password-property"/>
+                            </then>
+                            <else>
+                                <retrieveCredential text="boAdminUser" property="input.bo.admin.password"/>
+                                <property name="install.bo.admin.password-property" value="boAdminUser"/>
+                            </else>
+                        </if>
+                    </then>
+                </if>
+            </then>
+        </if>
+
+        <if>
+            <and>
+                <equals arg1="${input.install.type}" arg2="CLIENT" />
+                  <or>
+                    <and>
+                     <equals arg1="${input.appserver.type}" arg2="WL" />
+                     <equals arg1="${input.client.wl.secure.bo}" arg2="true" />
+                   </and>
+                    <equals arg1="${input.appserver.type}" arg2="WAS" />
+                   </or>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.jms.password"/>
+                    <then>
+                        <saveCredential userNameAlias="jmsUser" userName="input.jms.username" password="${input.jms.password}" property="install.jms.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="jmsUser" property="input.jms.password_temp"/>
+                        <condition property="jms.password_exists">
+                            <and>
+                                <length string="${input.jms.password_temp}" trim="true" when="greater" length="0"/>
+                            </and>
+                        </condition>
+                        <if>
+                            <isset property="jms.password_exists"/>
+                            <then>
+                                <property name="input.jms.password" value="${input.jms.password_temp}"/>
+                                <property name="install.jms.password-property" value="jmsUser"/>
+                            </then>
+                        </if>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+
+        <!-- If the user specified a plaintext MQ  owner password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties already has an encrypted password -->
+        <if>
+            <and>
+                <equals arg1="${input.enable.rm}" arg2="true"/>
+                <equals arg1="${input.message.rm}" arg2="JMS"/>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.rm.mq.password"/>
+                    <then>
+                        <saveCredential userNameAlias="mqUser" userName="input.rm.mq.userid" password="${input.rm.mq.password}" property="install.rm.mq.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="mqUser" property="input.rm.mq.password"/>
+                        <property name="install.rm.mq.password-property" value="mqUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+
+        <!-- If the user specified a plaintext RM password, encrypt the password -->
+        <!-- Otherwise, ant.install.properties has an encrypted password -->
+        <if>
+            <and>
+                <equals arg1="${input.enable.rm}" arg2="true"/>
+                <equals arg1="${input.install.type}" arg2="SERVER"/>
+            </and>
+            <then>
+                <if>
+                    <isset property="input.rm.admin.password"/>
+                    <then>
+                        <saveCredential userNameAlias="rmUser" userName="input.rm.admin.username" password="${input.rm.admin.password}" property="install.rm.admin.password-property"/>
+                    </then>
+                    <else>
+                        <retrieveCredential text="rmUser" property="input.rm.admin.password"/>
+                        <property name="install.rm.admin.password-property" value="rmUser"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="echo-env" description="prints installer environment">
+        <echo message="Installer environment:" />
+        <echo message="----------------------" />
+        <echo message="JAVA_HOME=${env.JAVA_HOME}" />
+        <echo message="ANT_HOME=${ant.home}" />
+        <echo message="Java version: ${java.version}" />
+        <echo message="----------------------" />
+    </target>
+
+    <!-- prints input properties to the console for debugging. To enable, set -Dverbose=true on the ANT command line -->
+    <target name="echo-input" if="${installer.verbose}"
+        description="Prints user inputs">
+        <propertyselector property="installer.input.properties"
+            delimiter=","
+            match="^(input)|(install)\..+"
+            select="\0" />
+        <foreach list="${installer.input.properties}"
+            delimiter=","
+            target="echo.property"
+            param="propname" />
+    </target>
+
+    <target name="echo.property">
+        <propertycopy name="myproperty" from="${propname}" />
+        <echo message="${propname}=${myproperty}" />
+    </target>
+
+    <target name="init-properties-macros">
+    </target>
+
+    <target name="remove-plaintext-passwords">
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.db.password-property *=.*"
+            replace="input.db.password-property=${install.db.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.db.password *=.*"
+            replace="input.db.password-property=${install.db.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.db.owner.password-property *=.*"
+            replace="input.db.owner.password-property=${install.db.owner.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.db.owner.password *=.*"
+            replace="input.db.owner.password-property=${install.db.owner.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.scratchpad.db.password-property *=.*"
+            replace="input.scratchpad.db.password-property=${install.scratchpad.db.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.scratchpad.db.password *=.*"
+            replace="input.scratchpad.db.password-property=${install.scratchpad.db.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.app.admin.password-property *=.*"
+            replace="input.app.admin.password-property=${install.app.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.app.admin.password *=.*"
+            replace="input.app.admin.password-property=${install.app.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.co.admin.password *=.*"
+            replace="input.co.admin.password-property=${install.co.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.co.admin.password-property *=.*"
+            replace="input.co.admin.password-property=${install.co.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.bo.admin.password *=.*"
+            replace="input.bo.admin.password-property=${install.bo.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.bo.admin.password-property *=.*"
+            replace="input.bo.admin.password-property=${install.bo.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.jms.password *=.*"
+            replace="input.jms.password-property=${install.jms.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.jms.password-property *=.*"
+            replace="input.jms.password-property=${install.jms.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.ssl.keystore.password *=.*"
+            replace="input.ssl.keystore.password-property=${input.ssl.keystore.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.ssl.keystore.password-property *=.*"
+            replace="input.ssl.keystore.password-property=${input.ssl.keystore.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.ssl.truststore.password *=.*"
+            replace="input.ssl.truststore.password-property=${input.ssl.truststore.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.ssl.truststore.password-property *=.*"
+            replace="input.ssl.truststore.password-property=${input.ssl.truststore.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.rsa.client.keystore.password *=.*"
+            replace="input.rsa.client.keystore.password-property=${install.rsa.client.keystore.password-property}" flags="gi" byline="true"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.rsa.cache.keystore.password *=.*"
+            replace="input.rsa.cache.keystore.password-property=${install.rsa.cache.keystore.password-property}" flags="gi" byline="true"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.rm.mq.password *=.*"
+            replace="input.rm.mq.password-property=${install.rm.mq.password-property}" flags="gi" byline="true"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.rm.admin.password *=.*"
+            replace="input.rm.admin.password-property=${install.rm.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.rm.admin.password-property *=.*"
+            replace="input.rm.admin.password-property=${install.rm.admin.password-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.siebel.myStorePassword-property *=.*"
+            replace="input.siebel.myStorePassword-property=${install.siebel.myStorePassword-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.siebel.myStorePassword *=.*"
+            replace="input.siebel.myStorePassword-property=${install.siebel.myStorePassword-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.siebel.globalPassword-property *=.*"
+            replace="input.siebel.globalPassword-property=${install.siebel.globalPassword-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.siebel.globalPassword *=.*"
+            replace="input.siebel.globalPassword-property=${install.siebel.globalPassword-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.PSI.webservice.passwd *=.*"
+            replace="input.PSI.webservice.passwd-property=${input.PSI.webservice.passwd-property}" flags="gi"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.keystore.install.phrase *=.*"
+            replace="input.keystore.install.phrase-property=${install.keystore.install.phrase-property}" flags="gi" byline="true"/>
+
+        <replaceregexp file="${installer.properties.file}"
+            match=" *input.LAT.webservice.passwd *=.*"
+            replace="input.LAT.webservice.passwd-property=${input.LAT.webservice.passwd-property}" flags="gi"/>
+
+    </target>
+
+</project>

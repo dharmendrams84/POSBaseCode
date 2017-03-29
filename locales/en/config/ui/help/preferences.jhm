@@ -1,0 +1,375 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+<map version="1.0">
+  <mapID target="DEFAULT_HELP_SCREEN"  url="helpnotenabled.htm" />
+  <!-- TENDER HELP SCREENS -->
+  <mapID target="COUPON_AMOUNT" url="couponentryhelp.htm" />
+  <mapID target="COUPON_ENTRY"	  url="couponentryhelp.htm" />
+  <mapID target="CERTIFICATE_ENTRY"	 url="giftcertificateentryhelp.htm" />
+  <mapID target="STORE_CREDIT_ID_ENTRY" url="storecredithelp.htm" />
+  <mapID target="STORE_CREDIT_INFO"  url="storecreditinfohelp.htm" />
+  <mapID target="TRAVELERS_CHECK" url="travelerscheckhelp.htm" />
+  <mapID target="CHECK_ENTRY"    url="scanorentercheckhelp.htm" />
+  <mapID target="CHECK_REFERRAL"  url="callcenterhelp.htm" />
+  <mapID target="CREDIT_CARD"  url="creditcardhelp.htm" />
+  <mapID target="CREDIT_REFERRAL"  url="creditreferralhelp.htm" />
+  <mapID target="DEBIT_CARD"  url="debitcardhelp.htm" />
+  <mapID target="GIFT_CARD"	url="giftcardhelp.htm" />
+  <mapID target="GIFT_CARD_INQUIRY"	  url="giftcardinquiryhelp.htm" />
+  <mapID target="SELL_GIFT_CARD"	  url="giftcardhelp.htm" />
+  <mapID target="ALT_CURRENCY"    url="altcurrencyhelp.htm" />
+  <mapID target="AUTHORIZATION"    url="authorizationhelp.htm" />
+  <mapID target="REFUND_OPTIONS"    url="refundoptionshelp.htm" />
+  <mapID target="TENDER_OPTIONS"    url="cashtenderhelp.htm" />
+  <mapID target="OTHER_TENDER_DETAIL"    url="othertenderdetailhelp.htm" />
+  <mapID target="PURCHASE_ORDER_NUMBER"    url="ponumberhelp.htm" />
+  <mapID target="PURCHASE_ORDER_AMOUNT"    url="purchaseorderamounttenderhelp.htm" />
+  <mapID target="CREDIT_DEBIT_CARD"    url="creditdebitcardhelp.htm" />
+  <!-- POS HELP SCREENS -->
+  <mapID target="SELL_ITEM"    url="sellitemhelp.htm" />
+  <mapID target="CUSTOMER_FIND_ID"    url="findcustomeridhelp.htm" />
+  <mapID target="CUSTOMER_OPTIONS"    url="customerhelp.htm" />
+  <mapID target="CUSTOMER_SEARCH_OPTIONS"    url="customersearchoptionshelp.htm" />
+  <mapID target="FIND_CUSTOMER_EMPLOYEE_ID"    url="findcustomeremployeeidhelp.htm" />
+  <mapID target="RETURN_ITEM"    url="returnitemhelp.htm" />
+  <mapID target="RETURN_NO_RECEIPT"    url="returnwithoutreceipthelp.htm" />
+  <mapID target="RETURN_OPTIONS"    url="returnoptionshelp.htm" />
+  <mapID target="RETURN_RECEIPT"    url="returnnumberhelp.htm" />
+  <mapID target="RETURN_LINKED_TRANS"    url="returndisplaytransactionshelp.htm" />
+  <mapID target="CUSTOMER_SELECT_ADD"    url="selectaddcustomerhelp.htm" />
+  <mapID target="CUSTOMER_SELECT_MODIFY"    url="modifycustomerinfohelp.htm" />
+  <mapID target="CUSTOMER_SELECT_DELETE"    url="selectcustomerdeletehelp.htm" />
+  <mapID target="ADD_CUSTOMER"    url="addcustomerhelp.htm" />
+  <mapID target="CUSTOMER_ADDRESS"    url="modifycustomerinfohelp.htm" />
+  <mapID target="CUSTOMER_ADDRESS_FIND"    url="modifycustomerinfohelp.htm" />
+  <mapID target="CUSTOMER_DELETE"    url="deletecustomerhelp.htm" />
+  <mapID target="CUSTOMER_INFO"    url="customerinformationhelp.htm" />
+  <mapID target="CUSTOMER_MASTER_FIND"    url="findcustomeridhelp.htm" />
+  <mapID target="DATE_RANGE_REPORT"    url="daterangereporthelp.htm" />
+  <mapID target="FIND_CUSTOMER"    url="findcustomeridhelp.htm" />
+  <mapID target="FIND_CUSTOMER_INFO"    url="findcustomerinfohelp.htm" />
+  <mapID target="MAIL_BANK_CHECK_INFO"    url="returnoptionshelp.htm" />
+  <mapID target="MANAGER_OPTIONS"    url="manageroptionshelp.htm" />
+  <mapID target="REPORT_OPTIONS"    url="reportoptionshelp.htm" />
+  <mapID target="REPORT_PRINTING"    url="reportoptionshelp.htm" />
+  <mapID target="RETURN_ITEM_INFO"    url="returniteminfohelp.htm" />
+  <mapID target="RETURN_SELECT_ITEM"    url="returnselectitemhelp.htm" />
+  <mapID target="SUMMARY_REPORT"    url="summaryreporthelp.htm" />
+  <mapID target="TILL_FUNCTIONS"    url="tillfunctionshelp.htm" />
+  <mapID target="IDENTIFICATION"    url="operatoridentificationhelp.htm" />
+  <mapID target="PASSWORD"    url="operatoridentificationhelp.htm" />
+  <mapID target="LOGIN"    url="operatoridentificationhelp.htm" />
+  <mapID target="OPERATOR_LOGIN"    url="operatoridentificationhelp.htm" />
+  <mapID target="SALES_ASSOCIATE_IDENTIFICATION"    url="operatoridentificationhelp.htm" />
+  <mapID target="OPERATOR_IDENTIFICATION"    url="operatoridentificationhelp.htm" />
+  <mapID target="OPERATOR_PASSWORD"    url="operatorpasswordhelp.htm" />
+  <mapID target="CHANGE_PASSWORD"    url="operatorchangepasswordhelp.htm" />
+  <mapID target="CASHIER_IDENTIFICATION"    url="operatoridentificationhelp.htm" />
+  <mapID target="HOUSE_ACCOUNT"    url="accountentryhelp.htm" />
+  <mapID target="ACCOUNT_INFORMATION"    url="accountinfohelp.htm" />
+  <mapID target="REPRINT_RECEIPT_OPTIONS"    url="reprintoptionshelp.htm" />
+  <mapID target="REPRINT_RECEIPT_TRANSACTION_SEARCH"    url="transsearchhelp.htm" />
+  <mapID target="SELECT_NO_SALE_REASON_CODE"    url="nosalereasonhelp.htm" />
+  <mapID target="PURCHASE_DATE"    url="purchasedatehelp.htm" />
+  <mapID target="PERSONALID_ENTRY"    url="personalidentryhelp.htm" />
+  <!-- ITEM HELP SCREENS  -->
+  <mapID target="ITEM_GIFT_REGISTRY"    url="giftregistryhelp.htm" />
+  <mapID target="ITEM_QUANTITY"    url="itemquantityhelp.htm" />
+  <mapID target="ITEM_QUANTITY_UOM"    url="unitofmeasurehelp.htm" />
+  <mapID target="ITEM_SALES_ASSC"    url="itemsalesasschelp.htm" />
+  <mapID target="ITEM_SERIAL_INPUT" url="serializeditemhelp.htm" />
+  <mapID target="ITEM_TAX_ON_OFF"    url="itemtaxonoffhelp.htm" />
+  <mapID target="ITEM_TAX_OVERRIDE_AMOUNT"    url="taxoverrideamounthelp.htm" />
+  <mapID target="ITEM_TAX_OVERRIDE_RATE"    url="taxoverrideratehelp.htm" />
+  <mapID target="NON_MERCHANDISE"    url="nonmerchandisehelp.htm" />
+  <mapID target="ITEM_OPTIONS"    url="itemoptionshelp.htm" />
+  <mapID target="ITEM_TAX_OPTIONS"    url="itemtaxoptionshelp.htm" />
+  <mapID target="ITEM_TAX_OVERRIDE_OPTIONS"    url="itemtaxoptionshelp.htm" />
+  <mapID target="ITEM_INFO"    url="iteminfohelp.htm" />
+  <mapID target="ITEMS_LIST"    url="itemlisthelp.htm" />
+  <mapID target="UNIT_OF_MEASURE"    url="unitofmeasurehelp.htm" />
+  <!-- PRICING HELP SCREENS  -->
+
+  <mapID target="MARKDOWN_OPTIONS"    url="markdownoptionshelp.htm" />
+  <mapID target="MARKDOWN_PERCENT"    url="markdownpercenthelp.htm" />
+  <mapID target="MARKDOWN_AMOUNT"    url="markdownamounthelp.htm" />
+  <mapID target="PRICING_OPTIONS"    url="pricingoptionshelp.htm" />
+  <mapID target="ITEM_DISC_AMT"    url="itemdiscountamounthelp.htm" />
+  <mapID target="ITEM_DISC_PCNT"    url="itemdiscountpercenthelp.htm" />
+  <mapID target="PRICE_OVERRIDE"    url="priceoverridehelp.htm" />
+  <mapID target="DAMAGE_DISCOUNT_OPTIONS"    url="damagediscountoptionshelp.htm" />
+  <mapID target="DAMAGE_PERCENT"    url="damagediscountpercenthelp.htm" />
+  <mapID target="DAMAGE_AMOUNT"    url="damagediscountamounthelp.htm" />
+  <mapID target="DISCOUNT_OPTIONS"    url="discountoptionshelp.htm" />
+  <!--  ADMIN HELP SCREENS -->
+  <mapID target="ADMIN_OPTIONS"    url="adminoptionshelp.htm" />
+  <mapID target="QUEUE_OPTIONS"    url="queueoptionshelp.htm" />
+  <mapID target="RESETTING_HARDTOTALS"    url="resettotalshelp.htm" />
+  <mapID target="ELECTRONIC_JOURNAL_FIND_RECEIPT"    url="ejournalfindtransactionhelp.htm" />
+  <mapID target="ELECTRONIC_JOURNAL_OPTIONS"    url="journaldisplayhelp.htm" />
+  <mapID target="ELECTRONIC_JOURNAL_SEARCH_CRITERIA"    url="ejournalfindtransactionhelp.htm" />
+  <mapID target="EMPLOYEE_FIND_ID"    url="employeefindidhelp.htm" />
+  <mapID target="EMPLOYEE_FIND_NAME"    url="employeefindnamehelp.htm" />
+  <mapID target="EMPLOYEE_ENROLL_FINGERPRINT"    url="employeeenrollfingerprinthelp.htm" />
+  <mapID target="EMPLOYEE_VERIFY_FINGERPRINT"    url="employeeverifyfingerprinthelp.htm" />
+  <mapID target="EMPLOYEE_MASTER"    url="employeemasterhelp.htm" />
+  <mapID target="EMPLOYEE_OPTIONS"    url="employeeoptionshelp.htm" />
+  <mapID target="EMPLOYEE_SEARCH_OPTIONS"    url="employeesearchoptionshelp.htm" />
+  <mapID target="EMPLOYEE_SELECT_ADD"    url="employeeselectaddhelp.htm" />
+  <mapID target="EMPLOYEE_SELECT_MODIFY"    url="employeeselectmodifyhelp.htm" />
+  <mapID target="TEMPORARY_EMPLOYEE_MASTER"    url="temporaryemployeemasterhelp.htm" />
+  <mapID target="DEVICE_STATUS"    url="devicestatushelp.htm" />
+  <mapID target="STORE_NUMBER"    url="storenumberhelp.htm" />
+    <!-- E.JOURNAL SCREENS -->
+  <mapID target="FIND_TRANSACTION"   url="ejournalfindtransactionhelp.htm" />
+  <!-- SECURITY SCREENS -->
+  <mapID target="SECURITY_OPTIONS"   url="securityoptionshelp.htm" />
+  <mapID target="ROLE_OPTIONS"    url="roleoptionshelp.htm" />
+  <mapID target="ADD_ROLE"    url="addrolehelp.htm" />
+  <mapID target="EDIT_ROLE"    url="editrolehelp.htm" />
+  <mapID target="FIND_ROLE"    url="findrolehelp.htm" />
+  <mapID target="SET_ACCESS"    url="setaccesshelp.htm" />
+  <!-- REASON CODE MANAGER SCREENS -->
+  <mapID target="PARAMETER_LIST_EDIT"    url="editparameterhelp.htm" />
+  <mapID target="PARM_REASON_CODE_LIST"    url="reasoncodeedithelp.htm" />
+  <mapID target="REASON_CODE_CONFIRM_DELETE"    url="reasoncodeedithelp.htm" />
+  <mapID target="REASON_CODE_EDIT"    url="reasoncodeedithelp.htm" />
+  <mapID target="REASON_CODE_EDIT_ALPHA"    url="reasoncodeedithelp.htm" />
+  <mapID target="REASON_CODE_NO_DELETE"    url="reasoncodeedithelp.htm" />
+  <mapID target="REASON_CODE_SELECT_GROUP"    url="reasoncodeselectgrouphelp.htm" />
+  <mapID target="REASON_CODE_SELECT_LEVEL"    url="reasoncodelevelhelp.htm" />
+  <mapID target="REASON_CODE_SELECT_STORE"    url="reasoncodehelp.htm" />
+  <!--  PARAMETER SCREENS  -->
+  <mapID target="PARAM_EDIT_CURRENCY"    url="parameditcurrhelp.htm" />
+  <mapID target="PARAM_EDIT_WHOLE"    url="parameditstringhelp.htm" />
+  <mapID target="PARAM_SELECT_GROUP"    url="paramselectgroup.htm" />
+  <mapID target="PARAM_SELECT_LEVEL"    url="paramselectgroup.htm" />
+  <mapID target="PARAM_SELECT_PARAMETER"    url="paramselectparameterhelp.htm" />
+  <mapID target="PARAM_SELECT_STORE"    url="paramselectgroup.htm" />
+  <mapID target="PARAM_EDIT_STRING"    url="parameditstringhelp.htm" />
+  <!--  ORDER HELP SCREENS  -->
+  <mapID target="ENTER_ORDER_NUMBER"    url="enterordernumberhelp.htm" />
+  <mapID target="ORDER_OPTIONS"    url="orderoptionshelp.htm" />
+  <mapID target="STATUS_SEARCH"    url="statussearchhelp.htm" />
+  <mapID target="ORDER_PRINTING"    url="orderprintinghelp.htm" />
+  <mapID target="ORDER_SEARCH_OPTIONS"    url="ordersearchhelp.htm" />
+  <mapID target="CANCEL_ORDER"    url="cancelorderhelp.htm" />
+  <mapID target="EDIT_ITEM_STATUS"    url="edititemstatushelp.htm" />
+  <mapID target="EDIT_LOCATION"    url="editlocationhelp.htm" />
+  <mapID target="ORDER_DETAILS"    url="orderdetailshelp.htm" />
+  <mapID target="ORDER_LIST"    url="orderlisthelp.htm" />
+  <mapID target="ORDER_LOCATION"    url="orderlocationhelp.htm" />
+  <mapID target="PRINT_ORDER"    url="printorderhelp.htm" />
+  <mapID target="SERVICE_ALERT_LIST"    url="servicealerthelp.htm" />
+  <!--  DAILY OPS HELP  -->
+  <mapID target="CURRENCY_DETAIL"    url="currencydetailhelp.htm" />
+  <mapID target="DAILY_OPS_OPTIONS"    url="dailyopsoptionshelp.htm" />
+  <mapID target="ENTER_TILL_ID"    url="entertillidhelp.htm" />
+  <mapID target="REGISTER_OPTIONS"    url="registeroptionshelp.htm" />
+  <mapID target="SELECT_CHARGE_TO_COUNT"    url="selectcredittocounthelp.htm" />
+  <mapID target="SELECT_CURRENCY_TYPE"    url="currencydetailhelp.htm" />
+  <mapID target="SUMMARY_COUNT"    url="summarycounthelp.htm" />
+  <mapID target="TILL_OPTIONS"    url="tilloptionshelp.htm" />
+  <mapID target="SELECT_TENDER_TO_COUNT"    url="selecttypetocounthelp.htm" />
+  <!-- TRANSACTION HELP SCREENS -->
+  <mapID target="TRANSACTION_GIFT_REGISTRY"    url="giftregistryhelp.htm" />
+  <mapID target="TRANSACTION_SALES_ASSOCIATE"    url="salesassociatehelp.htm" />
+  <mapID target="VOID_TRANSACTION"    url="voidtransactionhelp.htm" />
+  <mapID target="SELECT_SUSPEND_REASON_CODE"    url="suspendtransactionhelp.htm" />
+  <mapID target="TRANS_DISC_AMT"    url="transactiondiscountamounthelp.htm" />
+  <mapID target="TRANS_DISC_PCNT"    url="transactiondiscountpercenthelp.htm" />
+  <mapID target="TRANSACTION_TAX_EXEMPT"    url="taxexempthelp.htm" />
+  <mapID target="TRANSACTION_TAX_OVERRIDE_AMOUNT"    url="overridetaxamounthelp.htm" />
+  <mapID target="TRANSACTION_TAX_OVERRIDE_RATE"    url="transtaxoverrideperhelp.htm" />
+  <mapID target="PROMPT_RETRIEVE_TRANSACTION"    url="promptretrievetransactionhelp.htm" />
+  <mapID target="SUSPEND_LIST"    url="retrievetransactionhelp.htm" />
+  <!--  LAYAWAY SCREENS -->
+  <mapID target="CUSTOMER_LAYAWAY"    url="layawaycustomerhelp.htm" />
+  <mapID target="ENTER_LAYAWAY"    url="layawaynumberhelp.htm" />
+  <mapID target="FIND_LAYAWAY"    url="findlayawayhelp.htm" />
+  <mapID target="LAYAWAY_LIST"    url="layawaylisthelp.htm" />
+  <mapID target="LAYAWAY_OFFLINE"    url="offlinepaymenthelp.htm" />
+  <mapID target="LAYAWAY_OPTIONS"    url="layawayoptionshelp.htm" />
+  <mapID target="PAYMENT_DETAIL"    url="paymentdetailhelp.htm" />
+  <mapID target="REFUND_DETAIL"    url="layawayrefundhelp.htm" />
+  <!--  CROSSREACH HELP SCREENS  -->
+  <mapID target="ORDER_REPORT"    url="orderreporthelp.htm" />
+  <mapID target="ORDER_SUM_RPT"    url="ordersumrpthelp.htm" />
+  <mapID target="EMAIL_DETAIL"    url="emaildetailhelp.htm" />
+  <mapID target="EMAIL_LIST"    url="emaillisthelp.htm" />
+  <mapID target="EMAIL_REPLY"    url="emailreplyhelp.htm" />
+  <mapID target="EMAIL_SEARCH"    url="emailsearchhelp.htm" />
+
+  <!-- NEW SCREENS FOR 5.0 -->
+  <mapID target="GIFT_RECEIPT_ITEM"    url="giftreceipthelp.htm" />
+  <mapID target="GIFT_PRICE"    url="giftreceipthelp.htm" />
+  <mapID target="SPECIAL_ORDER_DEPOSIT"    url="specialorderhelp.htm" />
+  <mapID target="CUSTOMER_SPECIAL_ORDER"    url="specialorderhelp.htm" />
+  <mapID target="COMPONENT_OPTIONS"    url="componentoptionshelp.htm" />
+  <mapID target="INQUIRY_OPTIONS"    url="inquiryoptionshelp.htm" />
+  <mapID target="INVENTORY_SEARCH"    url="inventorysearchhelp.htm" />
+  <mapID target="ITEM_INVENTORY"    url="iteminventoryhelp.htm" />
+  <mapID target="HISTORY_LIST"    url="historylisthelp.htm" />
+  <mapID target="HISTORY_DETAIL"    url="historydetailhelp.htm" />
+  <mapID target="SHIPPING_ADDRESS"    url="shiptoaddresshelp.htm" />
+  <mapID target="SHIPPING_METHOD"    url="shippingmethodhelp.htm" />
+  <mapID target="NARROW_SEARCH"    url="narrowsearchhelp.htm" />
+  <mapID target="PROMPT_CUSTOMER_INFO"    url="customerinfohelp.htm" />
+    <!-- Help Screens new in 7.0 -->
+  <mapID target="ADV_SEARCH" url="advancedsearchhelp.htm" />
+  <mapID target="PURCHASE_ORDER_AGENCY_LIST" url="agencyselecthelp.htm" />
+  <mapID target="GIFT_CARD_REFERRAL" url="callreferralhelp.htm" />
+  <mapID target="CAPTURE_CUSTOMER_INFO_BANK_CHECK" url="capturecustomerhelp.htm" />
+  <mapID target="CAPTURE_CUSTOMER_INFO_DEFAULT" url="capturecustomerhelp.htm" />
+  <mapID target="CAPTURE_CUSTOMER_INFO_SEND" url="capturecustomerhelp.htm" />
+  <mapID target="HOUSE_ACCOUNT_NUMBER" url="cardinquiryhelp.htm" />
+  <mapID target="CHANGE_DUE_OPTIONS" url="changedueoptionshelp.htm" />
+  <mapID target="ENTER_CHECK_NUMBER" url="checknumberhelp.htm" />
+  <mapID target="RETURN_BY_CHECK" url="checksearchhelp.htm" />
+  <mapID target="RETURN_BY_CREDIT" url="creditdebitsearchhelp.htm" />
+  <mapID target="RETURN_BY_GIFTCARD" url="giftcardsearchhelp.htm"/>
+  <mapID target="RETURN_BY_UIN" url="serialsearchhelp.htm"/>
+  <mapID target="RETURN_TRANSACTION_SEARCH" url="returntransactionsearchhelp.htm" />
+  <mapID target="INSTANT_CREDIT_CUSTOMER_INFO" url="creditinfohelp.htm" />
+  <mapID target="INSTANT_CREDIT_OPTIONS" url="houseaccountoptionshelp.htm"/>
+  <mapID target="EMPLOYEE_FIND_ROLE" url="employeefindrolehelp.htm" />
+  <mapID target="ENROLL_RESPONSE" url="enrollresponsehelp.htm" />
+  <mapID target="GET_AMOUNT_FOR_GIFT_CARD" url="entergiftcardamounthelp.htm" />
+  <mapID target="ENTER_ID_NUMBER" url="enteridnumberhelp.htm" />
+  <mapID target="ENTER_PHONE" url="enterphonehelp.htm" />
+  <mapID target="ITEM_SIZE" url="entersizehelp.htm" />
+  <mapID target="ENTER_SSN" url="enterssnhelp.htm" />
+  <mapID target="RETRIEVE_TRANSACTION" url="findtransactionhelp.htm" />
+  <mapID target="FOREIGN_CURRENCY" url="foreigncurrencyhelp.htm" />
+  <mapID target="FOREIGN_TENDER_NUMBER" url="foreigntendernumberhelp.htm" />
+  <mapID target="GIFT_CARD_REDEEM" url="giftcardredeemhelp.htm" />
+  <mapID target="GIFT_CARD_REDEEM_INQUIRY" url="giftcardsearchhelp.htm" />
+  <mapID target="GIFT_CODE_INQUIRY" url="giftcodeinqhelp.htm" />
+  <mapID target="GIFT_OPTIONS" url="giftoptionshelp.htm" />
+  <mapID target="ENTER_STATE" url="idoriginhelp.htm" />
+  <mapID target="INSTANT_CREDIT_INQUIRY_INFO" url="inquirydisplayhelp.htm" />
+  <mapID target="INSTANT_CREDIT_ITEM_SALES_ASSC" url="itemsalesasschelp.htm" />
+  <mapID target="ENTER_CREDIT_INFO" url="instantcreditenrollhelp.htm" />
+  <mapID target="INVENTORY_OPTIONS" url="inventoryoptionshelp.htm" />
+  <mapID target="INVENTORY_OPTIONS_ITEM_AND_SIZE" url="inventoryoptionshelp.htm" />
+  <mapID target="GIFT_CERTIFICATE_AMOUNT" url="issueamountentryhelp.htm" />
+  <mapID target="ISSUING_STORE_NUMBER" url="issuingstorenumberhelp.htm" />
+  <mapID target="ITEM_NOT_FOUND" url="itemnotfoundhelp.htm" />
+  <mapID target="MALL_GIFT_TENDER_OPTIONS" url="mallgiftcertoptionshelp.htm" />
+  <mapID target="INVENTORY_MULTI_STORE" url="multistoreinventorysearchhelp.htm" />
+  <mapID target="RETURN_ITEM_NO_RECEIPT" url="norecptitemshelp.htm" />
+  <mapID target="PAY_IN" url="payinhelp.htm" />
+  <mapID target="PAY_OUT" url="payouthelp.htm" />
+  <mapID target="PAYROLL_PAY_OUT" url="payrollpayouthelp.htm" />
+  <mapID target="PICK_ONE_RELATED_ITEM" url="pickonerelateditemhelp.htm" />
+  <mapID target="REASON_CODE_LIST" url="reasoncodelisthelp.htm" />
+  <mapID target="RETURN_RECEIPT_NO_TRANS_DATE" url="receiptinfohelp.htm" />
+  <mapID target="REDEEM_AMOUNT" url="redeemamounthelp.htm" />
+  <mapID target="REDEEM_NUMBER" url="redeemnumberhelp.htm" />
+  <mapID target="REDEEM_OPTIONS" url="redeemoptionshelp.htm" />
+  <mapID target="REDEEM_REFUND_OPTIONS" url="redeemrefundoptionshelp.htm" />
+  <mapID target="RELATED_ITEMS" url="relateditemshelp.htm" />
+  <mapID target="ENTER_REFERENCE_NUMBER" url="refnumberinquiryhelp.htm" />
+  <mapID target="REGISTER_STATUS" url="registerstatushelp.htm" />
+  <mapID target="REQUEST_CUSTOMER_VERIFY" url="requestcustomerverifyhelp.htm" />
+  <mapID target="RETURN_ITEM_NON_RETRIEVED" url="returnenteritemhelp.htm" />
+  <mapID target="ENTER_ID" url="selectidtypehelp.htm" />
+  <mapID target="SUMMARY_COUNT_LOAN" url="summarycountloanhelp.htm" />
+  <mapID target="SUMMARY_COUNT_PICKUP" url="summarycountpickuphelp.htm" />
+  <mapID target="ENTER_ID_NUMBER_SWIPE" url="swipeidhelp.htm" />
+  <mapID target="STORE_CREDIT_TENDER_NUMBER" url="tendernumberhelp.htm" />
+  <mapID target="TENDER_OPTIONS2" url="tenderoptionshelp.htm" />
+  <mapID target="TILL_STATUS" url="tillstatushelp.htm" />
+  <mapID target="RETURN_TRANSACTION_DETAILS" url="transactiondetailhelp.htm" />
+  <mapID target="TRANSACTION_TAX_OPTIONS" url="transactiontaxoptionshelp.htm" />
+  <mapID target="TRANS_OPTIONS" url="transoptionshelp.htm" />
+  <mapID target="TRANSACTION_SALES_ASSOCIATE" url="transsalesasschelp.htm" />
+  <mapID target="VOID_CONFIRM" url="voidconfirmhelp.htm" />
+  <mapID target="SIGNATURE_CAPTURE" url="signaturecapturehelp.htm" />
+  <mapID target="BUSINESS_SEARCH" url="businesssearchhelp.htm" />
+  <mapID target="CUSTOMER_DETAILS" url="customerdetailshelp.htm" />
+  <mapID target="PIN_ENTRY" url="pinentryhelp.htm" />
+  <mapID target="STORE_FINANCIAL_TOTALS_SUMMARY" url="storefinancialstotalssummaryhelp.htm" />
+  <mapID target="PARAM_EDIT_DISCRETE" url="parameditdiscretehelp.htm" />
+  <mapID target="ALTERATION_TYPE" url="alterationtypehelp.htm" />
+  <mapID target="PURCHASE_ORDER_AGENCY_NAME" url="agcybusnamehelp.htm" />
+  <mapID target="PURCHASE_ORDER_AGENCY_NAME_360" url="agcybusnamehelp.htm" />
+  <mapID target="CREDIT_EXP_DATE" url="expirationdatehelp.htm" />
+  <mapID target="PANTS_ALTERATION" url="alterationhelp.htm" />
+  <mapID target="SHIRT_ALTERATION" url="alterationhelp.htm" />
+  <mapID target="COAT_ALTERATION" url="alterationhelp.htm" />
+  <mapID target="SKIRT_ALTERATION" url="alterationhelp.htm" />
+  <mapID target="DRESS_ALTERATION" url="alterationhelp.htm" />
+  <mapID target="REPAIRS_ALTERATION" url="repairshelp.htm" />
+  <mapID target="BUSINESS_CUSTOMER" url="businesscustomerhelp.htm" />
+  <mapID target="NEW_PASSWORD" url="newpasswordhelp.htm" />
+  <mapID target="EMPLOYEE_DISCOUNT_OPTIONS" url="employeediscountoptionshelp.htm" />
+  <mapID target="ENTER_EMPLOYEE_AMOUNT_DISCOUNT" url="employeediscountamounthelp.htm" />
+  <mapID target="ENTER_EMPLOYEE_PERCENT_DISCOUNT" url="employeediscountpercenthelp.htm" />
+  <mapID target="CURRENCY_DETAIL_PICKUP" url="currencydetailpickuphelp.htm" />
+  <mapID target="CURRENCY_DETAIL_LOAN" url="currencydetailloanhelp.htm" />
+  <mapID target="ENTER_BUSINESS_DATE" url="enterbusinessdatehelp.htm" />
+  <mapID target="FOREIGN_CURRENCY_COUNT" url="foreigncurrencycounthelp.htm" />
+  <mapID target="EMPLOYEE_ADD_OPTIONS" url="employeeaddoptionshelp.htm" />
+  <mapID target="REPRINT_SELECT" url="reprintselecthelp.htm" />
+  <mapID target="PARAM_EDIT_LIST_FROM_LIST" url="parameditlistfromlisthelp.htm" />
+  <mapID target="PARAM_EDIT_MULTILINE_STRING" url="parameditmultstringhelp.htm" />
+  <mapID target="PARAM_EDIT_INTEGER" url="parameditnumerichelp.htm" />
+  <mapID target="CONFIRM_SELECTION" url="confirmselectionhelp.htm" />
+  <mapID target="COUNTRY_CODE" url="countrycodehelp.htm" />
+  <mapID target="MAIN_OPTIONS" url="posmainoptionshelp.htm" />
+  <mapID target="EMPLOYEE_NUMBER" url="employeenumberhelp.htm" />
+  <mapID target="GET_CUSTOMER_NAME_AND_ID" url="customernametenderhelp.htm" />
+  <mapID target="DELETE_BUSINESS" url="deletecustomerhelp.htm" />
+  <mapID target="PRICE_INQUIRY" url="priceinquiryhelp.htm" />
+  <mapID target="CR_REPORT_OPTIONS" url="reportoptionshelp.htm" />
+  <mapID target="SPECIAL_ORDER_OPTIONS" url="specialorderoptionshelp.htm" />
+  <mapID target="INVENTORY_SPECIFIC_STORE" url="specificstorehelp.htm" />
+  <mapID target="ADD_BUSINESS" url="businesscustomerhelp.htm"/>
+  <mapID target="ENTER_DOB" url="dateofbirthhelp.htm"/>
+  <mapID target="ENTER_DOB_NO_SKIP" url="dateofbirthhelp.htm"/>
+  <mapID target="CAPTURE_IRS_CUSTOMER" url="patcustomerinfohelp.htm"/>
+
+  <!--  Item Inquiry HELP SCREENS  -->
+  <mapID target="INVENTORY_DETAIL" url="inventorydetailshelp.htm"/>
+  <mapID target="INVENTORY_RESULTS_LIST_SCREEN" url="inventoryresultshelp.htm"/>
+  <mapID target="INVENTORY_ITEM_INFO" url="iteminquirydisplayhelp.htm"/>
+  <mapID target="INVENTORY_ITEMS_LIST" url="iteminquirylisthelp.htm"/>
+  <mapID target="INVENTORY_ADV_SEARCH" url="iteminquiryhelp.htm"/>
+  <mapID target="MINIMUM_QTY_AVAIL_INPUT_SCREEN" url="minimumqtyavailhelp.htm"/>
+  <mapID target="STORE_INFO" url="storeinfohelp.htm"/>
+  <mapID target="HOME_STORE_INVENTORY_RESULTS_LIST_SCREEN" url="inventoryresultshelp.htm"/>
+
+  <!-- New Help Screens for 13.1 -->
+  <mapID target="ITEM_BASKET" url="findbaskethelp.htm"/>
+  <mapID target="FIND_CUSTOMER_BY_TAX_ID" url="findcustomertaxidhelp.htm"/>
+  <mapID target="ERECEIPT_EMAIL_SCREEN" url="ereceiptemailaddresshelp.htm"/>
+  <mapID target="RECEIPT_OPTIONS_SCREEN" url="receiptoptionshelp.htm"/>
+  <mapID target="GET_PICKUP_DATE_SCREEN" url="pickupdatehelp.htm"/>
+  <mapID target="GET_DELIVERY_DATE_SCREEN" url="deliverydatehelp.htm"/>
+  <mapID target="GET_DELIVERY_ADDRESS_SCREEN" url="deliveryaddresshelp.htm"/>
+  <mapID target="RETURN_RESPONSE_ITEM" url="returnresponsehelp.htm"/>
+
+  <!--  EXTERNAL ORDER HELP SCREENS  -->
+  <mapID target="EXT_ORDER_ADV_SEARCH"   url="externalorderadvsearchhelp.htm" />
+  <mapID target="EXTERNAL_ORDER_LIST"    url="externalorderlisthelp.htm" />
+
+  <!-- BILL PAY HELP SCREENS -->
+  <mapID target="BILLPAY_SEARCH_OPTIONS"  url="billpaysearchhelp.htm"/>
+  <mapID target="BILLPAY_OFFLINE"         url="billpaymentdetailsofflinehelp.htm"/>
+  <mapID target="BILLPAY_LIST"            url="billpaylisthelp.htm"/>
+  <mapID target="BILLPAY_PAYMENT_DETAILS" url="billpaymentdetailshelp.htm"/>
+  <mapID target="BILLPAY_MULTI_CUSTOMER"  url="selectcustomerhelp.htm"/>
+  
+  <mapID target="PRINT_PREVIEW"                   url="printpreview.htm"/>
+  <mapID target="INSTANT_CREDIT_INQUIRY_CRITERIA" url="instantcreditinquirycriteria.htm"/>
+  <mapID target="INSTANT_CREDIT_PAYMENT_ACCOUNT"  url="instantcreditpaymentaccount.htm"/>
+  
+  <!-- SCAN SHEET -->
+  <mapID target="SCAN_SHEET"         url="scansheethelp.htm"/>
+
+</map>
+
+

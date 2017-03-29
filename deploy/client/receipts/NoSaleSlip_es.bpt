@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/NoSaleSlip_es.bpt /main/13 2010/09/06 14:05:59 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   02/01/10 - changed cashier ID to cashier first name
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   04/22/09 - remove reentryMode from parameter bean since
+ *                         transaction knows and call transaction method from
+ *                         ankle and header
+ *    cgreene   03/25/09 - hide sales assoc label if assoc is null
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/03/09 - brought back header since Header.bpt did not work,
+ *                         i.e. getTransaction method is not available
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/23/09 - Test Automation Changes for NoSaleSlip
+ *    cgreene   11/14/08 - add copies attribute so it can be edited easily
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="NoSaleSlip" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <report name="Report" id="16879914">
+        <group id="908342820">
+            <line id="27182317">
+                <dateTimeElement precededBySpace="false" formatter="Date.SHORT" id="8439983" />
+                <element text=" " id="511877" stretch="true" />
+                <dateTimeElement formatter="Time.SHORT" id="29350564" />
+            </line>
+            <line id="9624795">
+                <element text="Trans.:" id="635315678" />
+                <methodElement fixedWidth="10" id="396957609">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="String" name="getFormattedTransactionSequenceNumber" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="Tienda:" id="1220036792" justified="2" stretch="true" />
+                <methodElement id="9699476">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="String" name="getFormattedStoreID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31571602">
+                <element text="Puesto:" id="1980528140" />
+                <methodElement fixedWidth="5" id="1609326572">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="String" name="getFormattedWorkstationID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="Caja:" id="802697176" justified="2" stretch="true" />
+                <methodElement id="1213286481">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="String" name="getTillID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="27682895">
+                <element text="Cajero:" id="1260931880" />
+                <methodElement fixedWidth="10" id="557261111">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="EmployeeIfc" name="getCashier" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="PersonNameIfc" name="getPersonName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                        </method>
+                    </method>
+                </method>
+                </methodElement>
+                <element text="Vent.:" id="1156990198" dependsOnPresenceOf="1848929844" justified="2" stretch="true" />
+                <methodElement printedWhenLengthZero="false" fixedWidth="10" id="1848929844">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="EmployeeIfc" name="getSalesAssociate" class="oracle.retail.stores.domain.transaction.TransactionIfc">
+                            <method returns="PersonNameIfc" name="getPersonName" class="oracle.retail.stores.domain.employee.EmployeeIfc">
+                                <method returns="String" name="getFirstName" class="oracle.retail.stores.domain.utility.PersonNameIfc" />
+                            </method>
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="2699074" dependsOnPresenceOf="29490417" />
+            <line id="28835650">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* No es recibo, Modo formación *" id="29490417" justified="1" stretch="true">
+                    <method returns="boolean" name="isTrainingMode" class="oracle.retail.stores.pos.receipt.PrintableDocumentParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="4159037" dependsOnPresenceOf="10985037" />
+            <line id="3808966">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Reentrada trans. *" id="10985037" justified="1" stretch="true">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="boolean" name="isReentryMode" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31325034" dependsOnPresenceOf="18567660" />
+            <line id="12968500">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Transac. suspendida *" id="18567660" justified="1" stretch="true">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="boolean" name="isSuspended" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="31667380" dependsOnPresenceOf="8470851" />
+            <line id="13540959">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Transac. cancelada *" id="8470851" justified="1" stretch="true">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="boolean" name="isCanceled" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="12814788" dependsOnPresenceOf="16512611" />
+            <line id="14187016">
+                <methodElement precededBySpace="false" printedWhenLengthZero="false" valuePrintedWhenFalse="" valuePrintedWhenTrue="* Recibo no original *" id="16512611" justified="1" stretch="true">
+                    <method returns="boolean" name="isDuplicateReceipt" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+            </line>
+            <line id="29665887" />
+            <line id="28991606">
+                <element text="SIN VEN" id="12779297" justified="1" stretch="true" />
+            </line>
+            <line id="14914801" />
+            <line id="3874616">
+                <methodElement precededBySpace="false" id="1551719549" printedAsBarcode="true" justified="1" stretch="true">
+                    <method returns="NoSaleTransactionIfc" name="getNoSaleTransaction" class="oracle.retail.stores.pos.receipt.NoSaleSlip">
+                        <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                    </method>
+                </methodElement>
+            </line>
+            <line id="25086455">
+                <element text="" id="561914238" fillChar="_" stretch="true" />
+            </line>
+            <line id="27671142" />
+        </group>
+        <group id="908342820">
+            <line id="5283099">
+                <element text="Cód. razón:" id="2528880" stretch="true" />
+                <methodElement id="20089466">
+                    <method returns="String" name="getReasonString" class="oracle.retail.stores.pos.receipt.NoSaleSlip" />
+                </methodElement>
+            </line>
+            <line id="13321136" />
+            <line id="19352564" />
+            <line id="29577497" />
+            <line id="26652655" />
+            <line id="11608737">
+                <element text="Firma del cajero:" id="26518117" fillChar="_" stretch="true" />
+            </line>
+            <line id="20000754" />
+            <line id="16988783">
+                <element text="Copia tienda" id="561914238" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

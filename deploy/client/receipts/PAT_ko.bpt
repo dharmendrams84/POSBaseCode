@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /* ===========================================================================
+* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/PAT_ko.bpt /main/5 2010/06/30 00:23:15 rajeekri Exp $
+ * ===========================================================================
+ * NOTES
+ * This document prints the Patriot Act Tender legal statement.
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   03/30/09 - moved line feed to top to match changes made to
+ *                         SaleReceipt
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/02/09 - fix PAT documentType
+ *    glwang    03/02/09 - link to PAT statement report
+ *    glwang    03/02/09 - tuning the format
+ *    glwang    03/02/09 - Add pat statement related
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="PAT" copies="1">
+    <report name="PATReport" id="2">
+        <group id="9202724">
+            <line id="6835601" />
+            <line id="6063382">
+                <element text="위에 반영된 금액은" id="5530287" justified="1" stretch="true" />
+            </line>
+            <line id="274293">
+                <element text="고객 이름," id="15363282" justified="1" stretch="true" />
+            </line>
+            <line id="26120601">
+                <element text="주소 및 ID 번호와 함께," id="6731749" justified="1" stretch="true" />
+            </line>
+            <line id="26263035">
+                <element text="미국 국세청(IRS)에" id="14531040" justified="1" stretch="true" />
+            </line>
+            <line id="32341589">
+                <element text="연방법에 관한 사안으로서" id="18690434" justified="1" stretch="true" />
+            </line>
+            <line id="9858171">
+                <element text="보고됩니다." id="9241164" justified="1" stretch="true" />
+            </line>
+        </group>
+    </report>
+</blueprint>
+
+

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!--
+/* ===========================================================================
+* Copyright (c) 2010, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/context/ServiceContext.xml /rgbustores_13.4x_generic_branch/5 2011/10/31 22:58:41 abondala Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    abondala  10/31/11 - centraloffice integration screens are updated to
+ *                         prompt for backoffice server information if BO is
+ *                         integrated with CO where POS post messages on the
+ *                         local queues hosted by BO and these local queues are
+ *                         integrated with the CO queues.
+ *    tzgarba   08/08/11 - Added chunk size setting to all data sets
+ *    jswan     06/22/11 - Added ImageUtility.
+ *    abondala  06/21/11 - refactoring based on review comments.
+ *    ohorne    07/13/10 - added service_SiebelMappingService
+ *    mchellap  06/22/10 - Added simulated billing service
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   05/10/10 - remove 360 form common folder
+ *    cgreene   04/09/10 - segregate client and server deployment files
+ *    tzgarba   02/22/10 - Separated IDDI set up into client and server files
+ *                         to ease confusion
+ *
+ * ===========================================================================
+ */
+-->
+
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+This is for Service type objects being managed by Spring Framework.
+Beans should be named starting with prefix service_ so that in Java code it is easier
+to identify which context file is being used for the Bean.
+-->
+
+<beans>
+
+    <!-- Bean which uses a DAO to get next ID. Must implement oracle.retail.stores.common.identifier.IdentifierServiceIfc-->
+    <bean id="service_IdentifierService" class="oracle.retail.stores.persistence.identifier.IdentifierService"
+        lazy-init="true">
+        <property name="reuseDao" value="true"/>
+    </bean>
+
+    <!-- Encryption Service -->
+    <bean id="service_KeyStoreEncryptionService" class="$KEYSTORE_IMPL_CLASS$"
+        lazy-init="true">
+        <constructor-arg index="0" type="java.lang.String" value="$KEYSTORE_PROVIDER$"/>
+        <constructor-arg index="1" type="java.lang.String" value="$KEYSTORE_HASH_ALGORITHM$"/>
+    </bean>
+
+    <!-- Simulated Billing Service -->
+    <!-- BEGIN BillPay
+    <bean id="service_BillingService" class="oracle.retail.stores.pos.simulator.service.SimulatedBillingService"
+        lazy-init="true">
+         <constructor-arg index="0" type="java.lang.String" value="../config/BillPaySimulatorConfig.xml"/>
+    </bean>
+    END BillPay -->
+
+    <!-- Password Policy Service -->
+    <bean id="service_PasswordPolicyService" class="oracle.retail.stores.commerceservices.security.PasswordPolicyService"
+             lazy-init="true">
+        <constructor-arg index="0" type="oracle.retail.stores.commerceservices.security.PasswordGeneratorIfc">
+            <ref bean="service_PasswordGenerator"/>
+        </constructor-arg>
+        <constructor-arg index="1" type="oracle.retail.stores.commerceservices.security.PasswordPolicyEvaluatorIfc">
+            <ref bean="service_PasswordPolicyEvaluator"/>
+        </constructor-arg>
+    </bean>
+    <bean id="service_PasswordGenerator" class="oracle.retail.stores.commerceservices.security.RandomPasswordGenerator"
+          lazy-init="true">
+    </bean>
+    <bean id="service_PasswordPolicyEvaluator" class="oracle.retail.stores.commerceservices.security.SinglePasswordPolicyEvaluator"
+          lazy-init="true">
+    </bean>
+
+    <!-- DateTime Service -->
+    <bean id="service_DateTimeService" class="oracle.retail.stores.commerceservices.common.datetime.DateTimeService"
+        lazy-init="true">
+        <constructor-arg index="0" type="oracle.retail.stores.commerceservices.common.datetime.DateTimeConverterIfc">
+            <ref bean="service_DateTimeConverter"/>
+        </constructor-arg>
+        <constructor-arg index="1" type="oracle.retail.stores.commerceservices.common.datetime.DateTimeValidatorIfc">
+            <ref bean="service_DateTimeValidator"/>
+        </constructor-arg>
+    </bean>
+    <bean id="service_DateTimeConverter" class="oracle.retail.stores.commerceservices.common.datetime.DateTimeConverter"
+          lazy-init="true">
+    </bean>
+    <bean id="service_DateTimeValidator" class="oracle.retail.stores.commerceservices.common.datetime.DateTimeValidator"
+          lazy-init="true">
+    </bean>
+
+     <!-- Currency Service -->
+    <bean id="service_CurrencyService" class="oracle.retail.stores.commerceservices.common.currency.CurrencyService"
+        lazy-init="true">
+        <constructor-arg index="0" type="oracle.retail.stores.commerceservices.common.currency.CurrencyFormatterIfc">
+            <ref bean="service_CurrencyFormatter"/>
+        </constructor-arg>
+        <constructor-arg index="1" type="oracle.retail.stores.commerceservices.common.currency.CurrencyValidatorIfc">
+            <ref bean="service_CurrencyValidator"/>
+        </constructor-arg>
+    </bean>
+    <bean id="service_CurrencyFormatter" class="oracle.retail.stores.commerceservices.common.currency.CurrencyFormatter"
+          lazy-init="true">
+    </bean>
+    <bean id="service_CurrencyValidator" class="oracle.retail.stores.commerceservices.common.currency.CurrencyValidator"
+          lazy-init="true">
+    </bean>
+
+
+<!-- IDDI configuration-->
+
+    <bean id="service_config_EMP_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="EMPLOYEE"/>
+    </bean>
+    <bean id="service_config_CUR_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="CURRENCY"/>
+    </bean>
+    <bean id="service_config_TAX_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="TAX"/>
+    </bean>
+    <bean id="service_config_ITM_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="ITEM"/>
+    </bean>
+    <bean id="service_config_PRC_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="ADVANCED_PRICING"/>
+    </bean>
+    <bean id="service_config_MER_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="MERCHANDISE"/>
+    </bean>
+    <bean id="service_config_STORE_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="STORE_INFO"/>
+    </bean>
+    <bean id="service_config_SHP_MTH_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="SHIPPING_METHOD"/>
+    </bean>
+    <bean id="service_config_DISCOUNT_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="DISCOUNT"/>
+    </bean>
+    <bean id="service_config_RSN_CODE_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="REASON_CODE"/>
+    </bean>
+    <bean id="service_config_OFFLINEDB_KEY" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="EXPORT_DB"/>
+    </bean>
+
+    <!-- File paths -->
+    <bean id="service_config_DataExportFilePath" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="IDDI"/>
+    </bean>
+    <bean id="service_config_DataExportZipFilePath" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="IDDI"/>
+    </bean>
+    <bean id="service_config_DataImportFilePath" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="IDDI_CACHE"/>
+    </bean>
+    <bean id="service_config_OfflineSchemaSQLFilePath" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="../../common/db/sql/offline/Create/CreateSchema.sql"/>
+    </bean>
+    <bean id="service_config_OfflineSchemaLogFilePath" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="../logs/CreateSchema.log"/>
+    </bean>
+
+    <!-- Helper classes -->
+    <bean id="service_OfflineDBHelper" class = "oracle.retail.stores.foundation.iddi.OfflineDerbyHelper">
+       <property name="dataImportFilePath" ref="service_config_DataImportFilePath"/>
+       <property name="offlineSchemaSQLFilePath" ref="service_config_OfflineSchemaSQLFilePath"/>
+       <property name="offlineSchemaLogFilePath" ref="service_config_OfflineSchemaLogFilePath"/>
+    </bean>
+    <bean id="service_ApplicationVersion" class = "oracle.retail.stores.pos.PosVersion" lazy-init="true"/>
+    <bean id="service_DataFormatter" class = "oracle.retail.stores.foundation.iddi.DerbyDataFormatter"/>
+    <!--  bean to format data read from store server datbase to derby format -->
+    <bean id="service_DerbyDBFormatter" class = "oracle.retail.stores.iddi.DerbyDBFormatter"/>
+    <bean id="service_FileWriter" class = "oracle.retail.stores.foundation.iddi.IDDIFileWriter">
+        <property name="formatter" ref="service_DataFormatter"/>
+    </bean>
+    <!-- Bean used to insert data read from store server database into server side offline derby database.
+         This bean implements IDDIWriterIfc -->
+    <bean id="service_DerbyWriter" class="oracle.retail.stores.iddi.IDDIDerbyWriter">
+        <property name="formatter" ref="service_DerbyDBFormatter"/>
+        <property name="offlineSchemaSQLFilePath" ref="service_config_OfflineSchemaSQLFilePath"/>
+        <property name="offlineSchemaLogFilePath" ref="service_config_OfflineSchemaLogFilePath"/>
+    </bean>
+
+    <!-- DataSetService initialization -->
+    <bean id="service_DataSetService" class="oracle.retail.stores.foundation.iddi.DataSetService" singleton="true">
+        <property name="producers">
+            <map>
+                <entry key-ref="service_config_EMP_KEY" value-ref="service_EmployeeProducer"/>
+                <entry key-ref="service_config_ITM_KEY" value-ref="service_ItemProducer"/>
+                <entry key-ref="service_config_PRC_KEY" value-ref="service_AdvancedPricingProducer"/>
+                <entry key-ref="service_config_TAX_KEY" value-ref="service_TaxProducer"/>
+                <entry key-ref="service_config_CUR_KEY" value-ref="service_CurrencyProducer"/>
+                <entry key-ref="service_config_MER_KEY" value-ref="service_MerchandiseProducer"/>
+                <entry key-ref="service_config_STORE_KEY" value-ref="service_StoreInfoProducer"/>
+                <entry key-ref="service_config_SHP_MTH_KEY" value-ref="service_ShippigMethodProducer"/>
+                <entry key-ref="service_config_DISCOUNT_KEY" value-ref="service_DiscountProducer"/>
+                <entry key-ref="service_config_RSN_CODE_KEY" value-ref="service_ReasonCodeProducer"/>
+                <entry key-ref="service_config_OFFLINEDB_KEY" value-ref="service_OfflineDBProducer"/>
+            </map>
+        </property>
+        <property name="generateAtStartup">
+            <list>
+                <ref local="service_config_OFFLINEDB_KEY"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Begin Producer Jobs -->
+
+    <!--
+        NOTE: It is not necessary to run both the InfrequentProducer and the
+        OfflineDBProducer since it would be redundant. The InfrequentProducer
+        is prefered when the datasets are small. The OfflineDBProducer should
+        be used for large volumes of data or when the client workstation
+        resources are limited.
+    -->
+
+    <!-- Job for OfflineDBProducer for generating entire offlinedb archive. -->
+    <bean id="service_OfflineDBProducerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass">
+            <value>oracle.retail.stores.foundation.iddi.DataSetProducerJob</value>
+        </property>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="producer" value-ref="service_DataSetService"/>
+                <entry key="dataSets">
+                    <list>
+                        <ref local="service_config_OFFLINEDB_KEY"/>
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Job for InfrequentProducer for daily changing datasets. -->
+    <bean id="service_InfrequentProducerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass">
+            <value>oracle.retail.stores.foundation.iddi.DataSetProducerJob</value>
+        </property>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="producer" value-ref="service_DataSetService"/>
+                <entry key="dataSets">
+                    <list>
+                        <ref local="service_config_CUR_KEY"/>
+                        <ref local="service_config_ITM_KEY"/>
+                        <ref local="service_config_MER_KEY"/>
+                        <ref local="service_config_STORE_KEY"/>
+                        <ref local="service_config_SHP_MTH_KEY"/>
+                        <ref local="service_config_DISCOUNT_KEY"/>
+                        <ref local="service_config_RSN_CODE_KEY"/>
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Job for FrequentProducer for volatile datasets. -->
+    <bean id="service_FrequentProducerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass">
+            <value>oracle.retail.stores.foundation.iddi.DataSetProducerJob</value>
+        </property>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="producer" value-ref="service_DataSetService"/>
+                <entry key="dataSets">
+                    <list>
+                        <ref local="service_config_EMP_KEY"/>
+                        <ref local="service_config_PRC_KEY"/>
+                        <ref local="service_config_TAX_KEY"/>
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- End Producer Jobs -->
+
+    <!-- Begin Producer Job Triggers -->
+
+     <!-- Trigger for OfflineDBProducer for exporting entire offline db. -->
+    <bean id="service_TriggerOfflineDBProducer" class = "org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref local="service_OfflineDBProducerJob" />
+        </property>
+        <!-- See http://en.wikipedia.org/wiki/CRON_expression for editing CRON expressions. -->
+        <!-- Schedule OfflineDB producer at 3:30 everyday, preferably after DIMP runs. -->
+        <property name="cronExpression" value="0 30 3 * * ?" />
+    </bean>
+
+    <!-- Trigger for InfrequentProducer for daily changing datasets. -->
+    <bean id="service_TriggerInfrequentProducer" class = "org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name = "jobDetail">
+            <ref local="service_InfrequentProducerJob"/>
+        </property>
+        <!-- See http://en.wikipedia.org/wiki/CRON_expression for editing CRON expressions. -->
+        <!-- Schedule Infrequent DataSets at 3:00 am everyday, preferably after DIMP runs. -->
+        <property name="cronExpression" value="0 0 3 * * ?"/>
+    </bean>
+
+    <!-- Trigger for FrequentProducer for volatile datasets. -->
+    <bean id="service_TriggerFrequentProducer" class = "org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name = "jobDetail">
+            <ref local="service_FrequentProducerJob"/>
+        </property>
+        <!-- See http://en.wikipedia.org/wiki/CRON_expression for editing CRON expressions. -->
+        <!-- Schedule Frequent DataSets at the top and bottom of every hour from 6AM till 10PM -->
+        <property name="cronExpression" value="0 0,30 6-22 * * ?"/>
+    </bean>
+
+    <!-- End Producer Job Triggers -->
+
+    <!-- Begin IDDI Server Scheduler -->
+    <bean id="service_ProducerSchedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="service_TriggerFrequentProducer"/>
+                <ref local="service_TriggerOfflineDBProducer"/>
+            </list>
+        </property>
+        <property name="autoStartup" value="false"/>
+    </bean>
+    <!-- End IDDI Server Scheduler -->
+
+    <!-- Begin DataSet Producer Definitions -->
+    <bean id="service_CurrencyProducer" class="oracle.retail.stores.domain.iddi.CurrencyDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_CUR_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_TaxProducer" class="oracle.retail.stores.domain.iddi.TaxDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_TAX_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_EmployeeProducer" class="oracle.retail.stores.domain.iddi.EmployeeDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_EMP_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_AdvancedPricingProducer" class="oracle.retail.stores.domain.iddi.AdvancedPricingDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_PRC_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_ItemProducer" class="oracle.retail.stores.domain.iddi.ItemDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_ITM_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_MerchandiseProducer" class="oracle.retail.stores.domain.iddi.MerchandiseDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_MER_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_StoreInfoProducer" class="oracle.retail.stores.domain.iddi.StoreInfoDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_STORE_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_ShippigMethodProducer" class="oracle.retail.stores.domain.iddi.ShippingMethodDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_SHP_MTH_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <!-- bean for discount producer -->
+    <bean id="service_DiscountProducer" class="oracle.retail.stores.domain.iddi.DiscountDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_DISCOUNT_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <bean id="service_ReasonCodeProducer" class="oracle.retail.stores.domain.iddi.ReasonCodeDataSetProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_RSN_CODE_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_FileWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <!-- bean for creating offlinedb archive at server, this bean implements DataSetProducerIfc  -->
+    <bean id="service_OfflineDBProducer" class="oracle.retail.stores.domain.iddi.OfflineDBProducer" lazy-init="true">
+        <property name="dataSetKey" ref="service_config_OFFLINEDB_KEY"/>
+        <property name="dataExportFilePath" ref="service_config_DataExportFilePath"/>
+        <property name="dataExportZipFilePath" ref="service_config_DataExportZipFilePath"/>
+        <property name="fileWriter" ref="service_DerbyWriter"/>
+        <property name="chunkSize" value="10485760"/> <!-- 10 MB -->
+    </bean>
+    <!-- End DataSet Producer Definitions -->
+
+    <!-- Begin centraloffice webservice integration
+    <bean id="service_EnterpriseWS" class="oracle.retail.stores.enterpriseconnection.manager.EnterpriseWebserviceOperation" singleton="false">
+        <property name="transactionWSUrl">
+            <value>$CO_WEBSERVICES_PROTOCOL$://$CO_WEBSERVICES_SERVER_NAME$:$CO_WEBSERVICES_PORT$/webservices/services/TransactionManager</value>
+        </property>
+        <property name="customerWSUrl">
+            <value>$CO_WEBSERVICES_PROTOCOL$://$CO_WEBSERVICES_SERVER_NAME$:$CO_WEBSERVICES_PORT$/webservices/services/CustomerManager</value>
+        </property>
+        <property name="dtmCompressEnabled">
+            <value>true</value>
+        </property>                
+        <property name="ctrCompressEnabled">
+            <value>false</value>
+        </property>
+        <property name="custCompressEnabled">
+            <value>false</value>
+        </property>        
+        <property name="webserviceUser">
+            <value>$CO_ADMIN_USERNAME$</value>
+        </property>
+        <property name="webservicePasswd">
+            <value>$CO_ADMIN_PASSWORD$</value>
+        </property>
+        <property name="serverConnectRetryInterval">
+            <value>300000</value>
+        </property>
+        <property name="wsTimeOutInMilliSeconds">
+            <value>10000</value>
+        </property>        
+    </bean>
+    End centraloffice webservice integration -->
+    
+    
+    <!-- Begin PSI Inventory Lookup Service Bean definition
+    <bean id="service_PSIInventoryLookup"
+           class="oracle.retail.stores.integration.psi.PSIInventoryLookupService" singleton="true">
+    </bean>
+    END PSI Inventory Lookup Service Bean definition -->
+
+    <bean id="service_AuditLoggerService" class="oracle.retail.stores.commerceservices.audit.AuditLoggerService"
+        lazy-init="true" singleton="true" />
+
+    <!-- Begin Siebel Mapping Service Bean definition
+    <bean id="service_SiebelMappingService" class="oracle.retail.stores.formatter.siebel.Translator" singleton="true">
+           <constructor-arg type="java.lang.String" value="./config/ExternalOrderMapping.xml"/>
+    </bean>
+    END Siebel Mapping Service Bean definition -->
+
+    <bean id="service_ImageUtility" class="oracle.retail.stores.image.ImageUtility"
+        lazy-init="true" singleton="true" />
+
+</beans>

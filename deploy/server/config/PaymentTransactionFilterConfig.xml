@@ -1,0 +1,28 @@
+<?xml version='1.0' ?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/server/config/PaymentTransactionFilterConfig.xml /rgbustores_13.4x_generic_branch/1 2011/05/31 16:27:58 ohorne Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    ohorne    05/23/11 - created file
+ *
+ * ===========================================================================
+ */
+-->
+
+<FILTER>
+    <INTEGRATIONTYPE name="HouseAccountPayment">
+       <TRANSACTION name="HOUSE_ACCOUNT_PAYMENT"/>
+
+       <TRANSACTION_METHOD name="isHouseAccountPayment"/>
+       <TRANSACTION_METHOD name="isTrainingMode" negate="true"/>
+       <TRANSACTION_METHOD name="isReentryMode" negate="true"/>
+
+       <STATUS name="COMPLETED"/>
+    </INTEGRATIONTYPE>
+</FILTER>

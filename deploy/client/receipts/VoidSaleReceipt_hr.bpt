@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* ===========================================================================
+* Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved. 
+ * ===========================================================================
+ * $Header: rgbustores/applications/pos/deploy/client/receipts/VoidSaleReceipt_hr.bpt /rgbustores_13.4x_generic_branch/1 2011/10/12 06:16:05 msarangi Exp $
+ * ===========================================================================
+ * NOTES
+ * <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *    cgreene   07/07/11 - remove footer messages per defect 237
+ *    cgreene   10/27/10 - update idePath
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/27/10 - convert to oracle packaging
+ *    cgreene   05/26/10 - convert to oracle packaging
+ *    cgreene   03/04/10 - added functionality for parameter
+ *                         AutoPrintCustomerCopy for voids
+ *    abondala  01/02/10 - Update Header date
+ *    cgreene   05/16/09 - use method getTotalTenderAmount
+ *    cgreene   05/13/09 - implement getReversedTenders method in order to be
+ *                         able to print all reversed tenders
+ *    cgreene   05/06/09 - siwtch retriving of store credit from transaction
+ *                         for voided returns
+ *    djenning  03/31/09 - updating receipts for placement of the VAT summary
+ *                         information
+ *    djenning  03/20/09 - the dependancy for the VAT Summary had a spelling
+ *                         error
+ *    cgreene   03/16/09 - added elements to print the reversal of coupons and
+ *                         other franked tenders
+ *    cgreene   03/16/09 - change text 'Check' to 'Deposited Check'
+ *    blarsen   03/16/09 - set barcode property to false for the transaction
+ *                         voided id, its barcode should not be printed
+ *    cgreene   03/13/09 - change Customer Signature to Employee Signature
+ *    cgreene   03/13/09 - insert totals and tenders reports
+ *    cgreene   03/10/09 - fix right-side indenting of transaction tax to line
+ *                         up with item unit price
+ *    cgreene   03/10/09 - add Store Copy element to bottom of all Void
+ *                         receipts
+ *    cgreene   03/06/09 - renamed _en blueprints with no extension so they
+ *                         become defaults. deleted all blueprints that have no
+ *                         translated text
+ *    cgreene   03/04/09 - fixed cancel receipt formatting and implemented
+ *                         unittest for testing receipt output
+ *    blarsen   02/27/09 - adding formatter for getReceiptCode()
+ *    cgreene   02/27/09 - implement Logo, Header, and ankle blueprints as
+ *                         linked reports for printing same across all
+ *                         blueprints
+ *    cgreene   02/25/09 - convert currencies with parentheses to call negate
+ *                         method
+ *    cgreene   02/24/09 - move vatsummary above copy element
+ *    cgreene   02/22/09 - standardize Copy element ss last element on receipt.
+ *                         move isDuplicated elements to header and footer
+ *    blarsen   02/20/09 - Making the blueprint I18N tolerant. For currency
+ *                         lines, changing the left hand side label text to
+ *                         stretch and changing the righ hand side currency to
+ *                         not have a fixed width.
+ *    arathore  02/20/09 - Updated as per review comments.
+ *    arathore  02/19/09 - Updated to add store credit deatails for sale post
+ *                         void transaction.
+ *    miparek   02/16/09 - fixing d#1782,removed fixwidth attribute from Sales
+ *                         to make it right justified
+ *    ddbaker   01/26/09 - Test Automation Changes for VoidSaleReceipt
+ *    atirkey   01/15/09 - Modified to show cumulative display for tender
+ *    ddbaker   01/14/09 - Updated to refer to Post Void as Post Void - was
+ *                         Even Exchange.
+ *    ddbaker   01/14/09 - Adding Alternate Currency to Post Void of Alternate
+ *                         Currency sale.
+ *    cgreene   12/22/08 - add copies attribute to blueprint
+ *    cgreene   12/17/08 - add formatter to payment type
+ *    cgreene   12/12/08 - limit space of item desc to 25 chars
+ *    cgreene   12/08/08 - add getReasonCode method to taxcontainer for bpts to
+ *                         query when there are no taxinfos
+ *    cgreene   11/20/08 - fix for Orig Receipt: None use isReturnLineItem
+ *                         method
+ *
+ * ===========================================================================
+ */
+-->
+<blueprint id="VoidSaleReceipt" copies="1">
+    <linkReport documentType="Logo" idePath="/pos/deploy/receipts/Logo.bpt" id="30686835" cutPaper="false" />
+    <linkReport documentType="Header" idePath="/pos/deploy/receipts/Header.bpt" id="30686836" cutPaper="false" />
+    <report name="Report" id="16879914" cutPaper="false">
+        <group id="908342820">
+            <line id="25086455">
+                <element text="Poništena transakcija:" id="24996368" />
+                <methodElement id="15535545">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="TenderableTransactionIfc" name="getOriginalTransaction" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="String" name="getTransactionID" class="oracle.retail.stores.domain.transaction.TransactionIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="" id="561914238" stretch="true" />
+            </line>
+            <line id="16631166" />
+        </group>
+    </report>
+    <linkReport documentType="Items" idePath="/pos/deploy/receipts/Items.bpt" id="16879915" cutPaper="false" />
+    <linkReport documentType="Totals" idePath="/pos/deploy/receipts/Totals.bpt" id="16879916" cutPaper="false" />
+    <linkReport documentType="Tenders" idePath="/pos/deploy/receipts/Tenders.bpt" id="16879917" cutPaper="false" />
+    <report name="ReversedReport" id="16879918" cutPaper="false">
+        <group id="26460711">
+            <line id="25497985" />
+            <line id="26049230">
+                <element text="Ukupno stornirano za način plaćanja" id="20988917" stretch="true" />
+                <methodElement id="1459554" justified="right">
+                    <method returns="CurrencyIfc" name="getTotalTenderAmount" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+                </methodElement>
+                <element text="   " id="5053284" dependsOnPresenceOf="2172104" />
+            </line>
+            <line id="20237898" dependsOnPresenceOf="15260515">
+                <element text="Stornirana promjena" id="5990634" dependsOnPresenceOf="15260515" stretch="true" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="15260515" justified="right">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="CurrencyIfc" name="calculateChangeDue" class="oracle.retail.stores.domain.transaction.TenderableTransactionIfc" />
+                    </method>
+                </methodElement>
+                <element text="   " id="7100820" dependsOnPresenceOf="15260515" />
+            </line>
+        </group>
+        <group id="26460712">
+            <line id="22637626" dependsOnPresenceOf="16937601">
+                <methodElement precededBySpace="false" formatter="-1#Nepoznato|0#Gotovina|1#Kredit|2#Deponirani ček|3#Putnički ček|4#Poklon-bon|5#Bankovni ček|6#Terećenje|7#Kupon|8#Poklon-kartica|9#Kredit prodavaonice|10#Poklon bon trgovačkog centra|11#Narudžbenica|12#Poštanska uputnica|13#e-ček" printedWhenLengthZero="false" id="6683108">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReversibleTenderIfc[]" name="getReversedTenders" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="int" name="getTypeCode" class="oracle.retail.stores.domain.tender.TenderLineItemIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text=" Stornirano" id="31388533" />
+                <methodElement printedWhenLengthZero="false" id="13084921">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReversibleTenderIfc[]" name="getReversedTenders" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="String" name="getStoreCreditID" class="oracle.retail.stores.domain.tender.TenderStoreCreditIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+            </line>
+            <line id="6659668">
+                <element text="       Poništeno:" id="5016576" dependsOnPresenceOf="16937601" />
+                <methodElement printedWhenLengthZero="false" printedWhenValueZero="false" id="16937601" justified="right" stretch="true">
+                    <method returns="TenderableTransactionIfc" name="getTransaction" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc">
+                        <method returns="ReversibleTenderIfc[]" name="getReversedTenders" class="oracle.retail.stores.domain.transaction.VoidTransactionIfc">
+                            <method returns="CurrencyIfc" name="getReversedAmount" class="oracle.retail.stores.domain.tender.ReversibleTenderIfc" />
+                        </method>
+                    </method>
+                </methodElement>
+                <element text="       " id="3854018" dependsOnPresenceOf="16937601" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="VATSummary" idePath="/pos/deploy/receipts/VATSummary.bpt" id="13926411" cutPaper="false">
+        <dependsOn returns="boolean" name="isVATSummaryShouldPrint" class="oracle.retail.stores.pos.receipt.ReceiptParameterBeanIfc" />
+    </linkReport>
+    <report name="SignatureAndMessageFooterReport" id="99" cutPaper="false">
+        <group id="26460713">
+            <line id="23471653" />
+            <line id="22654900" />
+            <line id="19460001" />
+            <line id="10125883">
+                <element text="Potpis zaposlenika: " id="28224185" fillChar="_" stretch="true" />
+            </line>
+            <line id="12594628" />
+            <line id="6979303" />
+            <line id="32829369" />
+            <line id="15734641">
+                <element text="Potpis upravitelja: " id="30587532" fillChar="_" stretch="true" />
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Ankle" idePath="/pos/deploy/receipts/Ankle.bpt" id="4830872" cutPaper="false" />
+    <report name="CopyReport" id="5" cutPaper="false">
+        <group id="6">
+            <line id="736613" />
+            <line id="31034430">
+                <copyElement id="9960643" justified="center" stretch="true">
+                    <copyText>Kopija za prodavaonicu</copyText>
+                    <copyText>Kopija za kupca</copyText>
+                </copyElement>
+            </line>
+        </group>
+    </report>
+    <linkReport documentType="Footer" idePath="/pos/deploy/receipts/Footer.bpt" id="4830873" />
+</blueprint>
